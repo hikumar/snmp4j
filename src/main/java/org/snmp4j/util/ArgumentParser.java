@@ -403,9 +403,9 @@ public class ArgumentParser {
 
   public static class ArgumentParseException extends ParseException {
 
-    private ArgumentParameter parameterFormatDetail;
-    private ArgumentFormat parameterFormat;
-    private String value;
+    private final ArgumentParameter parameterFormatDetail;
+    private final ArgumentFormat parameterFormat;
+    private final String value;
 
     public ArgumentParseException(int position,
                                   String value,

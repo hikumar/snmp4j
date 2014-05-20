@@ -34,7 +34,7 @@ public class UnsupportedAddressClassException extends MessageException {
 
   private static final long serialVersionUID = -864696255672171900L;
 
-  private Class addressClass;
+  private final Class addressClass;
 
   public UnsupportedAddressClassException(String message, Class addressClass) {
     super(message);

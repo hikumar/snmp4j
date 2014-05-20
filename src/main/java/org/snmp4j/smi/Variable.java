@@ -32,7 +32,7 @@ import org.snmp4j.asn1.BERSerializable;
  * @version 1.8
  * @since 1.8
  */
-public interface Variable extends Cloneable, Comparable<Variable>, BERSerializable {
+public interface Variable extends Comparable<Variable>, BERSerializable {
 
   /**
    * This definition of a serialVersionUID for the Variable interface
@@ -52,7 +52,7 @@ public interface Variable extends Cloneable, Comparable<Variable>, BERSerializab
    * @return
    *    a new instance of this <code>Variable</code> with the same value.
    */
-  Object clone();
+  public Object clone();
 
   /**
    * Gets the ASN.1 syntax identifier value of this SNMP variable.

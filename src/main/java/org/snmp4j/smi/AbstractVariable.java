@@ -32,6 +32,7 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Objects;
 import java.util.Properties;
 
 // For JavaDoc:
@@ -54,7 +55,7 @@ import java.util.Properties;
  * @version 1.8
  * @since 1.8
  */
-public abstract class AbstractVariable implements Variable, Serializable {
+public abstract class AbstractVariable implements Variable, Serializable, Cloneable {
 
   private static final long serialVersionUID = 1395840752909725320L;
 
@@ -236,6 +237,15 @@ public abstract class AbstractVariable implements Variable, Serializable {
           c.getName());
     }
   }
+
+  /**
+   * Clones this variable. Cloning can be used by the SNMP4J API to better
+   * support concurrency by creating a immutable clone for internal processing.
+   *
+   * @return
+   *    a new instance of this <code>Variable</code> with the same value.
+   */
+  public abstract Object clone();
 
   /**
    * Register SNMP syntax classes from a properties file. The registered

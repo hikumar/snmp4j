@@ -162,39 +162,8 @@ public class SnmpURI {
         break;
     }
   }
-  
-  public SnmpUriResponse browse(URI url) throws UnknownHostException {
-    SnmpUriResponse response = new SnmpUriResponse(PDU.genErr);
-    Request request = createSnmpRequest(url);
-    PDU pdu = request.getPdu();
-    switch (request.getType()) {
-      case GET:
-        pdu.setType(PDU.GET);
-        pdu.addAll(VariableBinding.createFromOIDs(request.getOIDs()));
-        response = sendSnmpRequest(request, pdu);
-        break;
-      case NEXT:
-        pdu.setType(PDU.GETNEXT);
-        pdu.addAll(VariableBinding.createFromOIDs(request.getOIDs()));
-        response = sendSnmpRequest(request, pdu);
-        break;
-      case SUBTREE:
-        TreeUtils treeUtils = new TreeUtils(snmp, pduFactory);
-        List<TreeEvent> treeEventList = treeUtils.walk(request.getTarget(), request.getOIDs());
-        List<VariableBinding[]> vbs = new ArrayList<VariableBinding[]>(treeEventList.size());
-        int errorStatus = PDU.noError;
-        for (TreeEvent treeEvent : treeEventList) {
-          vbs.add(treeEvent.getVariableBindings());
-          errorStatus = treeEvent.getStatus();
-        }
-        response = new SnmpUriResponse(vbs, errorStatus);
-        break;
-    }
-    return response;
-  }
 
-  public SnmpUriResponse updateByValue(URI url, List<Variable> values) throws UnknownHostException {
-    SnmpUriResponse response;
+  public void updateByValue(URI url, List<Variable> values, SnmpUriCallback callback, Object userObject) throws UnknownHostException {
     Request request = createSnmpRequest(url);
     PDU pdu = request.getPdu();
     pdu.setType(PDU.SET);
@@ -202,53 +171,23 @@ public class SnmpURI {
     for (int i=0; i<oids.length && i<values.size(); i++) {
       pdu.add(new VariableBinding(oids[i], values.get(i)));
     }
-    response = sendSnmpRequest(request, pdu);
-    return response;
+
+    sendSnmpRequest(request, pdu, url, callback, userObject);
   }
 
-  public SnmpUriResponse updateByBinding(URI url, List<VariableBinding> values) throws UnknownHostException {
-    return sendByBinding(url, values, PDU.SET);
+  public void updateByBinding(URI url, List<VariableBinding> values, SnmpUriCallback callback, Object userObject) throws UnknownHostException {
+    sendByBinding(url, values, PDU.SET, callback, userObject);
   }
 
-  public SnmpUriResponse sendByBinding(URI url, List<VariableBinding> values, int pduType) throws UnknownHostException {
-    SnmpUriResponse response;
+  public void sendByBinding(URI url, List<VariableBinding> values, int pduType, SnmpUriCallback callback, Object userObject) throws UnknownHostException {
     Request request = createSnmpRequest(url);
     PDU pdu = request.getPdu();
     pdu.setType(pduType);
     for (VariableBinding vb : values) {
       pdu.add(vb);
     }
-    response = sendSnmpRequest(request, pdu);
-    return response;
-  }
 
-  private SnmpUriResponse sendSnmpRequest(Request request, PDU pdu) {
-    SnmpUriResponse response =  new SnmpUriResponse(PDU.genErr);
-    try {
-      ResponseEvent responseEvent = snmp.send(pdu, request.getTarget());
-      if (responseEvent != null) {
-        PDU responsePDU = responseEvent.getResponse();
-        if (responsePDU != null) {
-          if (responsePDU.getErrorStatus() != PDU.noError) {
-            response = new SnmpUriResponse(responsePDU.getErrorStatus());
-          }
-          else {
-            response = new SnmpUriResponse(
-                Collections.<VariableBinding[]>singletonList(
-                    responsePDU.getVariableBindings().toArray(new VariableBinding[responsePDU.size()])));
-          }
-        }
-        else {
-          response = new SnmpUriResponse(SnmpUriResponse.Type.TIMEOUT);
-        }
-      }
-      else {
-        response = new SnmpUriResponse(SnmpUriResponse.Type.FINAL);
-      }
-    } catch (IOException e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-    }
-    return response;
+    sendSnmpRequest(request, pdu, url, callback, userObject);
   }
 
   private void sendSnmpRequest(Request request, PDU pdu, URI url, SnmpUriCallback callback, Object userObject) {

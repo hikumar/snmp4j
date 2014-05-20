@@ -19,8 +19,10 @@
   _##########################################################################*/
 package org.snmp4j.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.OID;
-import org.snmp4j.log.*;
+
 import javax.crypto.spec.SecretKeySpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.Cipher;
@@ -50,7 +52,7 @@ public class PrivDES
   protected Salt salt;
   protected CipherPool cipherPool;
 
-  private static final LogAdapter logger = LogFactory.getLogger(PrivDES.class);
+  private static final Logger logger = LoggerFactory.getLogger(PrivDES.class);
 
   public PrivDES()
   {

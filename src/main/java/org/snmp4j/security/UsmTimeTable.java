@@ -22,7 +22,9 @@ package org.snmp4j.security;
 import java.io.*;
 import java.util.*;
 
-import org.snmp4j.log.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.mp.*;
 import org.snmp4j.smi.*;
 
@@ -37,7 +39,7 @@ public class UsmTimeTable implements Serializable {
 
   private static final long serialVersionUID = -1538321547688349797L;
 
-  private static final LogAdapter logger = LogFactory.getLogger(UsmTimeTable.class);
+  private static final Logger logger = LoggerFactory.getLogger(UsmTimeTable.class);
 
   static final long TIME_PRECISION = 1000000000L;
 

@@ -24,8 +24,7 @@ package org.snmp4j.uri;
 import org.snmp4j.*;
 import org.snmp4j.event.ResponseEvent;
 import org.snmp4j.event.ResponseListener;
-import org.snmp4j.log.ConsoleLogFactory;
-import org.snmp4j.log.LogFactory;
+
 import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.security.*;
 import org.snmp4j.smi.*;

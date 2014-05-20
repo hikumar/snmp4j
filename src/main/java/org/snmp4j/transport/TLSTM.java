@@ -20,11 +20,13 @@
 
 package org.snmp4j.transport;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.SNMP4JSettings;
 import org.snmp4j.TransportStateReference;
 import org.snmp4j.event.CounterEvent;
-import org.snmp4j.log.LogAdapter;
-import org.snmp4j.log.LogFactory;
+
+
 import org.snmp4j.mp.CounterSupport;
 import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.security.SecurityLevel;
@@ -65,8 +67,8 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class TLSTM extends TcpTransportMapping {
 
-  private static final LogAdapter logger =
-      LogFactory.getLogger(TLSTM.class);
+  private static final Logger logger =
+      LoggerFactory.getLogger(TLSTM.class);
 
   private Map<Address, SocketEntry> sockets = new Hashtable<Address, SocketEntry>();
   private WorkerTask server;

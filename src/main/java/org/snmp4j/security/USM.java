@@ -23,9 +23,11 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.SNMP4JSettings;
 import org.snmp4j.TransportStateReference;
-import org.snmp4j.log.*;
+
 import org.snmp4j.asn1.*;
 import org.snmp4j.asn1.BER.*;
 import org.snmp4j.event.*;
@@ -46,7 +48,7 @@ public class USM extends SNMPv3SecurityModel {
 
   private static final int MAXLEN_USMUSERNAME = 32;
 
-  private static final LogAdapter logger = LogFactory.getLogger(USM.class);
+  private static final Logger logger = LoggerFactory.getLogger(USM.class);
 
   // Table containing localized and non-localized users
   private UsmUserTable userTable;

@@ -22,8 +22,10 @@ package org.snmp4j;
 import java.io.*;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.event.*;
-import org.snmp4j.log.*;
+
 import org.snmp4j.mp.*;
 import org.snmp4j.security.*;
 import org.snmp4j.smi.*;
@@ -136,7 +138,7 @@ import org.snmp4j.util.*;
  */
 public class Snmp implements Session, CommandResponder {
 
-  private static final LogAdapter logger = LogFactory.getLogger(Snmp.class);
+  private static final Logger logger = LoggerFactory.getLogger(Snmp.class);
 
   private static final int DEFAULT_MAX_REQUEST_STATUS = 2;
   private static final int ENGINE_ID_DISCOVERY_MAX_REQUEST_STATUS = 0;

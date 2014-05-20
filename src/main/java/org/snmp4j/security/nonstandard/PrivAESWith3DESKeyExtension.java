@@ -1,7 +1,7 @@
 package org.snmp4j.security.nonstandard;
 
-import org.snmp4j.log.LogAdapter;
-import org.snmp4j.log.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.security.AuthenticationProtocol;
 import org.snmp4j.security.PrivAES;
 import org.snmp4j.smi.OID;
@@ -20,7 +20,7 @@ import org.snmp4j.smi.OctetString;
  */
 public abstract class PrivAESWith3DESKeyExtension extends PrivAES {
 
-  private static final LogAdapter logger = LogFactory.getLogger(PrivAESWith3DESKeyExtension.class);
+  private static final Logger logger = LoggerFactory.getLogger(PrivAESWith3DESKeyExtension.class);
 
   /**
    * Constructor.

@@ -22,16 +22,18 @@ package org.snmp4j.util;
 import java.io.*;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.*;
 import org.snmp4j.event.*;
-import org.snmp4j.log.*;
+
 import org.snmp4j.mp.*;
 import org.snmp4j.smi.*;
 
 public class TreeUtils extends AbstractSnmpUtility {
 
-  private static final LogAdapter logger =
-      LogFactory.getLogger(TreeUtils.class);
+  private static final Logger logger =
+      LoggerFactory.getLogger(TreeUtils.class);
 
   private int maxRepetitions = 10;
   private boolean ignoreLexicographicOrder;

@@ -23,8 +23,10 @@ import java.io.IOException;
 import java.net.*;
 import java.nio.ByteBuffer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.TransportStateReference;
-import org.snmp4j.log.*;
+
 import org.snmp4j.security.SecurityLevel;
 import org.snmp4j.smi.*;
 import org.snmp4j.SNMP4JSettings;
@@ -41,8 +43,8 @@ import org.snmp4j.util.WorkerTask;
  */
 public class DefaultUdpTransportMapping extends UdpTransportMapping {
 
-  private static final LogAdapter logger =
-      LogFactory.getLogger(DefaultUdpTransportMapping.class);
+  private static final Logger logger =
+      LoggerFactory.getLogger(DefaultUdpTransportMapping.class);
 
   protected DatagramSocket socket = null;
   protected WorkerTask listener;

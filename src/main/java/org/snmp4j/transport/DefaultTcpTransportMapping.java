@@ -25,10 +25,12 @@ import java.nio.*;
 import java.nio.channels.*;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.TransportStateReference;
 import org.snmp4j.asn1.*;
 import org.snmp4j.asn1.BER.*;
-import org.snmp4j.log.*;
+
 import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.security.SecurityLevel;
 import org.snmp4j.smi.*;
@@ -49,8 +51,8 @@ import org.snmp4j.util.CommonTimer;
  */
 public class DefaultTcpTransportMapping extends TcpTransportMapping {
 
-  private static final LogAdapter logger =
-      LogFactory.getLogger(DefaultTcpTransportMapping.class);
+  private static final Logger logger =
+      LoggerFactory.getLogger(DefaultTcpTransportMapping.class);
 
   private Map<Address, SocketEntry> sockets = new Hashtable<Address, SocketEntry>();
   private WorkerTask server;

@@ -22,10 +22,13 @@
 
 package org.snmp4j.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Random;
 import java.security.SecureRandom;
 import java.security.NoSuchAlgorithmException;
-import org.snmp4j.log.*;
+
 
 /**
  * Class that holds a 64 bit salt value for crypto operations.
@@ -41,7 +44,7 @@ class Salt {
   private long salt;
 
   private static Salt instance = null;
-  private static final LogAdapter logger = LogFactory.getLogger(Salt.class);
+  private static final Logger logger = LoggerFactory.getLogger(Salt.class);
 
   /**
    * Default constructor, initializes the salt to a random value.

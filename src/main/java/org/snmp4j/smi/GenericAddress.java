@@ -21,7 +21,9 @@ package org.snmp4j.smi;
 
 import java.io.*;
 import java.util.*;
-import org.snmp4j.log.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.asn1.BERInputStream;
 import org.snmp4j.SNMP4JSettings;
 
@@ -63,7 +65,7 @@ public class GenericAddress extends SMIAddress {
   private static final String ADDRESS_TYPES_PROPERTIES_DEFAULT =
       "address.properties";
 
-  private static final LogAdapter logger = LogFactory.getLogger(GenericAddress.class);
+  private static final Logger logger = LoggerFactory.getLogger(GenericAddress.class);
 
   private SMIAddress address;
   private static Map<String, Class<? extends Address>> knownAddressTypes = null;

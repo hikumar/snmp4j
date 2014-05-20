@@ -19,8 +19,9 @@
   _##########################################################################*/
 package org.snmp4j.mp;
 
-import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.smi.Integer32;
+import org.snmp4j.smi.VariableBinding;
+
 import java.io.Serializable;
 
 /**

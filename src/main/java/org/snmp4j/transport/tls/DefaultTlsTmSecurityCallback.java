@@ -20,8 +20,8 @@
 
 package org.snmp4j.transport.tls;
 
-import org.snmp4j.log.LogAdapter;
-import org.snmp4j.log.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.Address;
 import org.snmp4j.smi.OctetString;
 import org.snmp4j.transport.TLSTM;
@@ -45,7 +45,7 @@ import java.util.*;
  */
 public class DefaultTlsTmSecurityCallback implements TlsTmSecurityCallback<X509Certificate> {
 
-  private LogAdapter LOGGER = LogFactory.getLogger(DefaultTlsTmSecurityCallback.class);
+  private Logger LOGGER = LoggerFactory.getLogger(DefaultTlsTmSecurityCallback.class);
 
   private Map<SecurityNameMapping, OctetString> securityNameMapping = new HashMap<SecurityNameMapping, OctetString>();
   private Map<Address, String> localCertMapping = new HashMap<Address, String>();

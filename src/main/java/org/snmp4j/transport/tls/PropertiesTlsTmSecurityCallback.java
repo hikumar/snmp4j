@@ -20,8 +20,10 @@
 
 package org.snmp4j.transport.tls;
 
-import org.snmp4j.log.LogAdapter;
-import org.snmp4j.log.LogFactory;
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.Address;
 import org.snmp4j.smi.OctetString;
 import org.snmp4j.util.SnmpConfigurator;
@@ -44,8 +46,8 @@ import java.util.Properties;
 public class PropertiesTlsTmSecurityCallback
     implements TlsTmSecurityCallback<X509Certificate> {
 
-  private static final LogAdapter LOGGER =
-      LogFactory.getLogger(PropertiesTlsTmSecurityCallback.class);
+  private static final Logger LOGGER =
+      LoggerFactory.getLogger(PropertiesTlsTmSecurityCallback.class);
 
   private boolean serverMode;
   private Properties properties;

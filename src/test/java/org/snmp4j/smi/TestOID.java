@@ -21,8 +21,10 @@
 package org.snmp4j.smi;
 
 import junit.framework.*;
-import org.snmp4j.log.LogAdapter;
-import org.snmp4j.log.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 import org.snmp4j.mp.SnmpConstants;
 
 /**
@@ -32,7 +34,7 @@ import org.snmp4j.mp.SnmpConstants;
 
 public class TestOID extends TestCase {
 
-  private final static LogAdapter logger = LogFactory.getLogger(TestOID.class);
+  private final static Logger logger = LoggerFactory.getLogger(TestOID.class);
 
   private OID oID = null;
 

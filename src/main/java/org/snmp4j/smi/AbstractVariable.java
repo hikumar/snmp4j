@@ -21,7 +21,9 @@ package org.snmp4j.smi;
 
 import java.io.*;
 import java.util.*;
-import org.snmp4j.log.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.asn1.*;
 import org.snmp4j.SNMP4JSettings;
 // For JavaDoc:
@@ -74,8 +76,8 @@ public abstract class AbstractVariable implements Variable, Serializable {
 
   private static Hashtable<Integer, Class<? extends Variable>> registeredSyntaxes = null;
 
-  private static final LogAdapter logger =
-      LogFactory.getLogger(AbstractVariable.class);
+  private static final Logger logger =
+      LoggerFactory.getLogger(AbstractVariable.class);
 
   /**
    * The abstract <code>Variable</code> class serves as the base class for all

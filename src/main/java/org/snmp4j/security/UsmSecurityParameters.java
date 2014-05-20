@@ -20,17 +20,19 @@
 package org.snmp4j.security;
 
 import java.io.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.asn1.*;
 import org.snmp4j.asn1.BER.*;
 import org.snmp4j.smi.*;
 import org.snmp4j.security.SecurityLevel;
-import org.snmp4j.log.LogFactory;
-import org.snmp4j.log.LogAdapter;
+
 
 public class UsmSecurityParameters implements SecurityParameters {
 
-  private static final LogAdapter logger =
-      LogFactory.getLogger(UsmSecurityParameters.class);
+  private static final Logger logger =
+      LoggerFactory.getLogger(UsmSecurityParameters.class);
 
   private static final int MAX_BER_LENGTH_WITHOU_SEC_PARAMS =
       32+2+ 6 + 6 + 32+2;

@@ -20,7 +20,9 @@
 package org.snmp4j.security;
 
 import java.security.MessageDigest;
-import org.snmp4j.log.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.OctetString;
 
 /**
@@ -33,7 +35,7 @@ import org.snmp4j.smi.OctetString;
 
 public abstract class AuthGeneric implements AuthenticationProtocol {
 
-  private static final LogAdapter logger = LogFactory.getLogger(AuthGeneric.class);
+  private static final Logger logger = LoggerFactory.getLogger(AuthGeneric.class);
   private int digestLength;
   private String protoName;
 

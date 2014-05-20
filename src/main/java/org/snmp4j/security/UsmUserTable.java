@@ -22,8 +22,10 @@ package org.snmp4j.security;
 import java.io.Serializable;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.OctetString;
-import org.snmp4j.log.*;
+
 
 /**
  * The <code>UsmUserTable</code> class stores USM user
@@ -36,7 +38,7 @@ public class UsmUserTable implements Serializable {
 
   private static final long serialVersionUID = 6936547777550957622L;
 
-  private static final LogAdapter logger = LogFactory.getLogger(UsmUserTable.class);
+  private static final Logger logger = LoggerFactory.getLogger(UsmUserTable.class);
 
   private Map<UsmUserKey, UsmUserEntry> table = new TreeMap<UsmUserKey, UsmUserEntry>();
 

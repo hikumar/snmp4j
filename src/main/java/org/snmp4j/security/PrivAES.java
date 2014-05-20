@@ -21,9 +21,12 @@ package org.snmp4j.security;
 
 import javax.crypto.*;
 
-import org.snmp4j.log.*;
+
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.OctetString;
 
 
@@ -42,7 +45,7 @@ public abstract class PrivAES
 
   private static final int DECRYPT_PARAMS_LENGTH = 8;
 
-  private static final LogAdapter logger = LogFactory.getLogger(PrivAES.class);
+  private static final Logger logger = LoggerFactory.getLogger(PrivAES.class);
   private int keyBytes;
   protected Salt salt;
   protected CipherPool cipherPool;

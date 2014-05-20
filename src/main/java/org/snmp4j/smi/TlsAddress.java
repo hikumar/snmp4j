@@ -20,8 +20,11 @@
 
 package org.snmp4j.smi;
 
-import org.snmp4j.log.LogAdapter;
-import org.snmp4j.log.LogFactory;
+
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
 
@@ -37,7 +40,7 @@ public class TlsAddress extends TcpAddress {
 
   static final long serialVersionUID = 0L;
 
-  private static final LogAdapter logger = LogFactory.getLogger(SshAddress.class);
+  private static final Logger logger = LoggerFactory.getLogger(SshAddress.class);
 
   public TlsAddress() {
     super();

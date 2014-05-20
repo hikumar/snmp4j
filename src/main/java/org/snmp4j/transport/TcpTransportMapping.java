@@ -23,6 +23,8 @@ package org.snmp4j.transport;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.SNMP4JSettings;
 import org.snmp4j.TransportStateReference;
 import org.snmp4j.smi.Address;
@@ -31,8 +33,8 @@ import org.snmp4j.smi.TcpAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import org.snmp4j.log.LogFactory;
-import org.snmp4j.log.LogAdapter;
+
+
 
 /**
  * The <code>TcpTransportMapping</code> is the abstract base class for
@@ -46,8 +48,8 @@ public abstract class TcpTransportMapping
     implements ConnectionOrientedTransportMapping<TcpAddress>
 {
 
-  private static final LogAdapter logger =
-      LogFactory.getLogger(TcpTransportMapping.class);
+  private static final Logger logger =
+      LoggerFactory.getLogger(TcpTransportMapping.class);
 
   protected TcpAddress tcpAddress;
   private transient Vector<TransportStateListener> transportStateListeners;

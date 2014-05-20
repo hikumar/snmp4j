@@ -20,11 +20,13 @@
 package org.snmp4j.security;
 
 import java.io.Serializable;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.OID;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.Enumeration;
-import org.snmp4j.log.*;
 import java.io.IOException;
 import java.util.Hashtable;
 import org.snmp4j.smi.OctetString;
@@ -53,7 +55,7 @@ public class SecurityProtocols implements Serializable {
       "org.snmp4j.securityProtocols";
   private static final String SECURITY_PROTOCOLS_PROPERTIES_DEFAULT =
       "SecurityProtocols.properties";
-  private static final LogAdapter logger = LogFactory.getLogger(SecurityProtocols.class);
+  private static final Logger logger = LoggerFactory.getLogger(SecurityProtocols.class);
 
   private static SecurityProtocols instance = null;
   private int maxAuthDigestLength = 0;

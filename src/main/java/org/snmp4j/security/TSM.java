@@ -20,12 +20,13 @@
 
 package org.snmp4j.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.TransportStateReference;
 import org.snmp4j.asn1.BERInputStream;
 import org.snmp4j.asn1.BEROutputStream;
 import org.snmp4j.event.CounterEvent;
-import org.snmp4j.log.LogAdapter;
-import org.snmp4j.log.LogFactory;
+
 import org.snmp4j.mp.CounterSupport;
 import org.snmp4j.mp.MPv3;
 import org.snmp4j.mp.SnmpConstants;
@@ -49,7 +50,7 @@ public class TSM extends SNMPv3SecurityModel  {
   private static final int MAX_PREFIX_LENGTH = 4;
   private static final byte PREFIX_SEPARATOR = 0x3a;
 
-  private static final LogAdapter logger = LogFactory.getLogger(TSM.class);
+  private static final Logger logger = LoggerFactory.getLogger(TSM.class);
 
   /**
    * The snmpTsmConfigurationUsePrefix flag as defined in RFC 5591.

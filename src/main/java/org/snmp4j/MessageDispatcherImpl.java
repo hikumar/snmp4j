@@ -22,9 +22,11 @@ package org.snmp4j;
 import java.io.IOException;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.asn1.*;
 import org.snmp4j.event.*;
-import org.snmp4j.log.*;
+
 import org.snmp4j.mp.*;
 import org.snmp4j.security.SecurityLevel;
 import org.snmp4j.security.TsmSecurityStateReference;
@@ -54,8 +56,8 @@ import org.snmp4j.transport.UnsupportedAddressClassException;
  */
 public class MessageDispatcherImpl implements MessageDispatcher {
 
-  private static final LogAdapter logger =
-      LogFactory.getLogger(MessageDispatcherImpl.class);
+  private static final Logger logger =
+      LoggerFactory.getLogger(MessageDispatcherImpl.class);
 
   private List<MessageProcessingModel> mpm = new ArrayList<MessageProcessingModel>(3);
   private Map<Class<? extends Address>, List<TransportMapping>> transportMappings =

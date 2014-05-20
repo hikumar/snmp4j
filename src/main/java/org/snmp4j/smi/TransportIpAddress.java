@@ -21,12 +21,15 @@ package org.snmp4j.smi;
 
 import java.util.StringTokenizer;
 import java.io.IOException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.asn1.BERInputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import org.snmp4j.log.LogFactory;
-import org.snmp4j.log.LogAdapter;
+
+
 import java.net.Inet6Address;
 import java.lang.reflect.Method;
 
@@ -39,8 +42,8 @@ import java.lang.reflect.Method;
  */
 public abstract class TransportIpAddress extends IpAddress {
 
-  private static final LogAdapter logger =
-      LogFactory.getLogger(TransportIpAddress.class);
+  private static final Logger logger =
+      LoggerFactory.getLogger(TransportIpAddress.class);
 
   static final long serialVersionUID = 695596530250216972L;
 

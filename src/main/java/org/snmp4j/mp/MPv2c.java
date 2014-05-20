@@ -19,23 +19,24 @@
   _##########################################################################*/
 package org.snmp4j.mp;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.*;
-import org.snmp4j.smi.Address;
+import org.snmp4j.asn1.BER;
+import org.snmp4j.asn1.BER.MutableByte;
 import org.snmp4j.asn1.BERInputStream;
+import org.snmp4j.asn1.BEROutputStream;
+
+import org.snmp4j.security.SecurityLevel;
+import org.snmp4j.security.SecurityModel;
+import org.snmp4j.security.SecurityModels;
+import org.snmp4j.smi.Address;
 import org.snmp4j.smi.Integer32;
 import org.snmp4j.smi.OctetString;
+import org.snmp4j.util.PDUFactory;
 
 import java.io.IOException;
-
-import org.snmp4j.log.*;
-import org.snmp4j.asn1.BER;
-import org.snmp4j.security.SecurityModel;
-import org.snmp4j.asn1.BER.MutableByte;
-import org.snmp4j.security.SecurityModels;
-import org.snmp4j.security.SecurityLevel;
-import org.snmp4j.asn1.BEROutputStream;
 import java.nio.ByteBuffer;
-import org.snmp4j.util.PDUFactory;
 
 /**
  * The <code>MPv2c</code> is the message processing model for SNMPv2c
@@ -47,7 +48,7 @@ import org.snmp4j.util.PDUFactory;
 public class MPv2c implements MessageProcessingModel {
 
   public static final int ID = MessageProcessingModel.MPv2c;
-  private static final LogAdapter logger = LogFactory.getLogger(MPv2c.class);
+  private static final Logger logger = LoggerFactory.getLogger(MPv2c.class);
 
   protected PDUFactory incomingPDUFactory = new PDUFactory() {
     @Override

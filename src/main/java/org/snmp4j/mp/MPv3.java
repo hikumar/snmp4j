@@ -19,18 +19,27 @@
   _##########################################################################*/
 package org.snmp4j.mp;
 
-import java.io.*;
-import java.net.*;
-import java.nio.ByteBuffer;
-import java.util.*;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.*;
-import org.snmp4j.asn1.*;
-import org.snmp4j.event.*;
-import org.snmp4j.log.*;
+import org.snmp4j.asn1.BER;
+import org.snmp4j.asn1.BERInputStream;
+import org.snmp4j.asn1.BEROutputStream;
+import org.snmp4j.asn1.BERSerializable;
+import org.snmp4j.event.CounterEvent;
+import org.snmp4j.event.SnmpEngineEvent;
+import org.snmp4j.event.SnmpEngineListener;
+
 import org.snmp4j.security.*;
 import org.snmp4j.smi.*;
 import org.snmp4j.util.PDUFactory;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
+import java.util.*;
 
 /**
  * The <code>MPv3</code> is the message processing model for SNMPv3.
@@ -67,7 +76,7 @@ public class MPv3
 
   private SecurityProtocols securityProtocols;
 
-  private static final LogAdapter logger = LogFactory.getLogger(MPv3.class);
+  private static final Logger logger = LoggerFactory.getLogger(MPv3.class);
   private SecurityModels securityModels;
 
   private Cache cache;

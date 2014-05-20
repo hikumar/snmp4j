@@ -19,6 +19,8 @@
   _##########################################################################*/
 package org.snmp4j.transport;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.Address;
 import org.snmp4j.TransportMapping;
 import java.io.InputStream;
@@ -26,7 +28,7 @@ import java.util.Properties;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Enumeration;
-import org.snmp4j.log.*;
+
 import java.lang.reflect.Constructor;
 import org.snmp4j.SNMP4JSettings;
 import org.snmp4j.smi.TcpAddress;
@@ -45,7 +47,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class TransportMappings {
 
-  private static final LogAdapter logger = LogFactory.getLogger(TransportMappings.class);
+  private static final Logger logger = LoggerFactory.getLogger(TransportMappings.class);
 
   public static final String TRANSPORT_MAPPINGS =
       "org.snmp4j.transportMappings";

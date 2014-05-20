@@ -20,10 +20,12 @@
 
 package org.snmp4j.transport;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.SNMP4JSettings;
 import org.snmp4j.TransportStateReference;
-import org.snmp4j.log.LogAdapter;
-import org.snmp4j.log.LogFactory;
+
+
 import org.snmp4j.security.SecurityLevel;
 import org.snmp4j.smi.Address;
 import org.snmp4j.smi.IpAddress;
@@ -52,7 +54,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class DummyTransport<A extends IpAddress> extends AbstractTransportMapping<A> {
 
-  private static final LogAdapter logger = LogFactory.getLogger(DummyTransport.class);
+  private static final Logger logger = LoggerFactory.getLogger(DummyTransport.class);
 
   private final Queue<OctetString> requests = new ConcurrentLinkedQueue<OctetString>();
   private final Queue<OctetString> responses = new ConcurrentLinkedQueue<OctetString>();

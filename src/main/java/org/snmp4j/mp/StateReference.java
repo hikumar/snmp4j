@@ -19,12 +19,17 @@
   _##########################################################################*/
 package org.snmp4j.mp;
 
-import java.util.*;
+import org.snmp4j.TransportMapping;
+import org.snmp4j.security.SecurityLevel;
+import org.snmp4j.security.SecurityModel;
+import org.snmp4j.security.SecurityStateReference;
+import org.snmp4j.smi.Address;
+import org.snmp4j.smi.OctetString;
 
-import org.snmp4j.*;
-import org.snmp4j.security.*;
-import org.snmp4j.smi.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**

@@ -21,9 +21,12 @@
 
 package org.snmp4j.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.LinkedList;
-import org.snmp4j.log.LogFactory;
-import org.snmp4j.log.LogAdapter;
+
+
 
 /**
  * The <code>TaskScheduler</code> uses a <code>ThreadPool</code> to recurrent
@@ -35,7 +38,7 @@ import org.snmp4j.log.LogAdapter;
  */
 public class TaskScheduler implements Runnable {
 
-  private LogAdapter logger = LogFactory.getLogger(TaskScheduler.class);
+  private Logger logger = LoggerFactory.getLogger(TaskScheduler.class);
 
   private static final long DEFAULT_SCHEDULER_TIMEOUT = 5;
 

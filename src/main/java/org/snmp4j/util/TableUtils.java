@@ -21,7 +21,8 @@ package org.snmp4j.util;
 
 import java.util.*;
 
-import org.snmp4j.log.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.*;
 import org.snmp4j.event.*;
 import org.snmp4j.mp.SnmpConstants;
@@ -38,8 +39,8 @@ import java.io.*;
  */
 public class TableUtils extends AbstractSnmpUtility {
 
-  private static final LogAdapter logger =
-      LogFactory.getLogger(TableUtils.class);
+  private static final Logger logger =
+      LoggerFactory.getLogger(TableUtils.class);
 
   // RowStatus TC enumerated values
   public static final int ROWSTATUS_ACTIVE = 1;

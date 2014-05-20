@@ -21,10 +21,13 @@ package org.snmp4j.smi;
 
 import java.io.*;
 import java.net.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.asn1.BER;
 import org.snmp4j.asn1.BERInputStream;
-import org.snmp4j.log.LogFactory;
-import org.snmp4j.log.LogAdapter;
+
+
 
 /**
  * The <code>IpAddress</code> class represents an IPv4 address SNMP variable.
@@ -37,8 +40,8 @@ public class IpAddress extends SMIAddress implements AssignableFromByteArray {
 
   private static final long serialVersionUID = -146846354059565449L;
 
-  private static final LogAdapter logger =
-      LogFactory.getLogger(AbstractVariable.class);
+  private static final Logger logger =
+      LoggerFactory.getLogger(AbstractVariable.class);
 
   private static final byte[] IPANYADDRESS = { 0,0,0,0 };
 

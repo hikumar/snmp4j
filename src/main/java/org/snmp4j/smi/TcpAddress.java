@@ -20,8 +20,11 @@
 
 package org.snmp4j.smi;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.InetAddress;
-import org.snmp4j.log.*;
+
 
 /**
  * The <code>TcpAddress</code> represents TCP/IP transport addresses.
@@ -33,7 +36,7 @@ public class TcpAddress extends TransportIpAddress {
 
   static final long serialVersionUID = 1165319744164017388L;
 
-  private static final LogAdapter logger = LogFactory.getLogger(TcpAddress.class);
+  private static final Logger logger = LoggerFactory.getLogger(TcpAddress.class);
 
   public TcpAddress() {
     super();

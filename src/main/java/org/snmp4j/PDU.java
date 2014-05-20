@@ -766,7 +766,7 @@ public class PDU implements BERSerializable, Serializable {
     buf.append("[requestID=");
     buf.append(requestID);
     buf.append(", errorStatus=");
-    buf.append(getErrorStatusText()+"("+errorStatus+")");
+    buf.append(getErrorStatusText()).append("(").append(errorStatus).append(")");
     buf.append(", errorIndex=");
     buf.append(errorIndex);
     buf.append(", VBS[");

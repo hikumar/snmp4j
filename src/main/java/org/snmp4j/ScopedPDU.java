@@ -159,7 +159,7 @@ public class ScopedPDU extends PDU {
   public String toString() {
     StringBuffer buf = new StringBuffer();
     buf.append(getTypeString(type));
-    buf.append("[{contextEngineID="+contextEngineID+", contextName="+contextName+"}, requestID=");
+    buf.append("[{contextEngineID=").append(contextEngineID).append(", contextName=").append(contextName).append("}, requestID=");
     buf.append(requestID);
     buf.append(", errorStatus=");
     buf.append(errorStatus);

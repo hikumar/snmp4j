@@ -88,7 +88,7 @@ public class DummyTransport<A extends IpAddress> extends AbstractTransportMappin
   public void sendMessage(A address, byte[] message, TransportStateReference tmStateReference) throws IOException {
     synchronized (requests) {
       if (logger.isDebugEnabled()) {
-        logger.debug("Send request message to '"+address+"': "+ new OctetString(message).toHexString());
+        logger.debug("Send request message to '{}': {}", address, new OctetString(message).toHexString());
       }
       requests.add(new OctetString(message));
     }
@@ -153,7 +153,7 @@ public class DummyTransport<A extends IpAddress> extends AbstractTransportMappin
           try {
             Thread.sleep(50);
           } catch (InterruptedException e) {
-            logger.warn("Interrupted QueueProcessor: "+e.getMessage());
+            logger.warn("Interrupted QueueProcessor: {}", e.getMessage());
           }
         }
       }
@@ -196,7 +196,7 @@ public class DummyTransport<A extends IpAddress> extends AbstractTransportMappin
     @Override
     public void sendMessage(A address, byte[] message, TransportStateReference tmStateReference) throws IOException {
       if (logger.isDebugEnabled()) {
-        logger.debug("Send response message to '"+address+"': "+ new OctetString(message).toHexString());
+        logger.debug("Send response message to '{}': {}", address, new OctetString(message).toHexString());
       }
       responses.add(new OctetString(message));
     }

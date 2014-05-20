@@ -72,16 +72,16 @@ public class TestPrivAES
     int engine_boots = 0xdeadc0de;
     int engine_time = 0xbeefdede;
 
-    cat.debug("Cleartext: " + asHex(plaintext));
+    cat.debug("Cleartext: {}", asHex(plaintext));
     ciphertext = pd.encrypt(plaintext, 0, plaintext.length, key, engine_boots,
                             engine_time, pp);
-    cat.debug("Encrypted: " + asHex(ciphertext));
+    cat.debug("Encrypted: {}", asHex(ciphertext));
     decrypted = pd.decrypt(ciphertext, 0, ciphertext.length, key, engine_boots, engine_time, pp);
-    cat.debug("Cleartext: " + asHex(decrypted));
+    cat.debug("Cleartext: {}", asHex(decrypted));
 
     assertEquals(asHex(plaintext), asHex(decrypted));
 
-    cat.info("pp length is: " + pp.length);
+    cat.info("pp length is: {}", pp.length);
     assertEquals(8, pp.length);
   }
 

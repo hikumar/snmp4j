@@ -98,7 +98,7 @@ public class TaskScheduler implements Runnable {
           SchedulerTask task = tasks.get(i);
           if (task.isDone()) {
             if (logger.isDebugEnabled()) {
-              logger.debug("Task '" + task + "' is done");
+              logger.debug("Task '{}' is done", task);
             }
             tasks.removeFirst();
           }

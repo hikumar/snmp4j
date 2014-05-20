@@ -97,7 +97,7 @@ public class SshAddress extends TcpAddress {
       return true;
     }
     catch (Exception ex) {
-      logger.error("Failed to parse address '"+address+"' as SSH address: "+ex.getMessage(), ex);
+      logger.error("Failed to parse address '{}' as SSH address: {}", address, ex.getMessage(), ex);
       return false;
     }
   }

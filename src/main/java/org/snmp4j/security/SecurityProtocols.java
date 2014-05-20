@@ -124,9 +124,7 @@ public class SecurityProtocols implements Serializable {
               addPrivacyProtocol((PrivacyProtocol) proto);
             }
             else {
-              logger.error(
-                  "Failed to register security protocol because it does " +
-                  "not implement required interfaces: " + className);
+              logger.error("Failed to register security protocol because it does not implement required interfaces: {}", className);
             }
           }
           catch (Exception cnfe) {

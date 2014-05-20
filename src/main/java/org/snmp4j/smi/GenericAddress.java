@@ -156,7 +156,7 @@ public class GenericAddress extends SMIAddress {
             logger.error(cnfe.getMessage(), cnfe);
           }
           catch (ClassCastException ccex) {
-            logger.error("Class name '"+className+"' is not a subclass of "+Address.class.getName());
+            logger.error("Class name '{}' is not a subclass of {}", className, Address.class.getName());
           }
         }
         knownAddressTypes = h;

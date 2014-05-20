@@ -68,7 +68,7 @@ class Salt {
       salt = (salt * 256) + ((int)rnd[i]) + 128;
     }
     if (logger.isDebugEnabled()) {
-      logger.debug("Initialized Salt to " + Long.toHexString(salt) + ".");
+      logger.debug("Initialized Salt to {}.", Long.toHexString(salt));
     }
   }
 

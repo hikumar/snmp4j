@@ -449,14 +449,14 @@ public class MPv3
      */
     public synchronized int addEntry(StateReference entry) {
       if (logger.isDebugEnabled()) {
-        logger.debug("Adding cache entry: "+entry);
+        logger.debug("Adding cache entry: {}", entry);
       }
       StateReference existing =
               entries.get(entry.getPduHandle());
       if (existing != null) {
         if (existing.equals(entry)) {
           if (logger.isDebugEnabled()) {
-            logger.debug("Doubled message: "+entry);
+            logger.debug("Doubled message: {}", entry);
           }
           return SnmpConstants.SNMP_MP_DOUBLED_MESSAGE;
         }
@@ -503,7 +503,7 @@ public class MPv3
           it.remove();
           e.setPduHandle(key);
           if (logger.isDebugEnabled()) {
-            logger.debug("Removed cache entry: "+e);
+            logger.debug("Removed cache entry: {}", e);
           }
           return e;
         }
@@ -593,10 +593,7 @@ public class MPv3
       }
       securityModel.decodeBER(message);
       if (logger.isDebugEnabled()) {
-        logger.debug("SNMPv3 header decoded: msgId=" + msgID +
-                     ", msgMaxSize=" + msgMaxSize +
-                     ", msgFlags=" + msgFlags.toHexString() +
-                     ", secModel=" + securityModel);
+        logger.debug("SNMPv3 header decoded: msgId={}, msgMaxSize={}, msgFlags={}, secModel={}", msgID, msgMaxSize, msgFlags.toHexString(), securityModel);
       }
       BER.checkSequenceLength(length, this);
     }
@@ -679,15 +676,13 @@ public class MPv3
             case PDU.INFORM: {
               OctetString localEngineID = new OctetString(getLocalEngineID());
               if (logger.isDebugEnabled()) {
-                logger.debug("Context engine ID of scoped PDU is empty! Setting it to local engine ID: "+
-                    localEngineID.toHexString());
+                logger.debug("Context engine ID of scoped PDU is empty! Setting it to local engine ID: {}", localEngineID.toHexString());
               }
               scopedPDU.setContextEngineID(localEngineID);
             }
             default:
               if (logger.isDebugEnabled()) {
-                logger.debug("Context engine ID of scoped PDU is empty! Setting it to authoritative engine ID: "+
-                    securityEngineID.toHexString());
+                logger.debug("Context engine ID of scoped PDU is empty! Setting it to authoritative engine ID: {}", securityEngineID.toHexString());
               }
               scopedPDU.setContextEngineID(new OctetString(secEngineID));
           }
@@ -959,12 +954,12 @@ public class MPv3
           stateReference,
           statusInformation);
       if (status != SnmpConstants.SNMP_ERROR_SUCCESS) {
-        logger.warn("Error while sending report: " + status);
+        logger.warn("Error while sending report: {}", status);
         return SnmpConstants.SNMP_MP_ERROR;
       }
     }
     catch (MessageException mex) {
-      logger.error("Error while sending report: " + mex.getMessage());
+      logger.error("Error while sending report: {}", mex.getMessage());
       return SnmpConstants.SNMP_MP_ERROR;
     }
     return SnmpConstants.SNMP_MP_OK;
@@ -1032,8 +1027,7 @@ public class MPv3
 
       SecurityModel secModel = securityModels.getSecurityModel(securityModel);
       if (secModel == null) {
-        logger.error("RFC3412 §7.2.4 - Unsupported security model: " +
-                     securityModel);
+        logger.error("RFC3412 §7.2.4 - Unsupported security model: {}", securityModel);
         CounterEvent event =
             new CounterEvent(this,
                              SnmpConstants.snmpUnknownSecurityModels);
@@ -1117,7 +1111,7 @@ public class MPv3
           }
         }
         catch (IOException iox) {
-          logger.warn("ASN.1 parse error: "+iox.getMessage(), iox);
+          logger.warn("ASN.1 parse error: {}", iox.getMessage(), iox);
           CounterEvent event = new CounterEvent(this,
                                                 SnmpConstants.
                                                 snmpInASNParseErrs);
@@ -1190,8 +1184,7 @@ public class MPv3
                          stateReference,
                          statusInformation.getErrorIndication());
           if (reportStatus != SnmpConstants.SNMP_MP_OK) {
-            logger.warn("Sending report failed with error code: " +
-                        reportStatus);
+            logger.warn("Sending report failed with error code: {}", reportStatus);
           }
         }
         return status;
@@ -1206,10 +1199,7 @@ public class MPv3
         StateReference cacheEntry = cache.popEntry(header.getMsgID());
         if (cacheEntry != null) {
           if (logger.isDebugEnabled()) {
-            logger.debug("RFC3412 §7.2.10 - Received PDU (msgID=" +
-                         header.getMsgID() + ") is a response or " +
-                         "an internal class message. PduHandle.transactionID = " +
-                         cacheEntry.getPduHandle().getTransactionID());
+            logger.debug("RFC3412 §7.2.10 - Received PDU (msgID={}) is a response or an internal class message. PduHandle.transactionID = {}", header.getMsgID(), cacheEntry.getPduHandle().getTransactionID());
           }
           sendPduHandle.copyFrom(cacheEntry.getPduHandle());
 
@@ -1225,10 +1215,7 @@ public class MPv3
                 ((!securityName.equalsValue(cacheEntry.getSecurityName()) &&
                   (securityName.length() != 0)))) {
               if (logger.isDebugEnabled()) {
-                logger.debug(
-                    "RFC 3412 §7.2.11 - Received report message does not match sent message. Cache entry is: "+
-                    cacheEntry+", received secName="+securityName+",secModel="+secModel+
-                    ",secEngineID="+securityEngineID);
+                logger.debug("RFC 3412 §7.2.11 - Received report message does not match sent message. Cache entry is: {}, received secName={},secModel={},secEngineID={}", cacheEntry, securityName, secModel, securityEngineID);
               }
               //cache.deleteEntry(cacheEntry.getPduHandle());
               mutableStateReference.setStateReference(null);
@@ -1236,10 +1223,7 @@ public class MPv3
             }
             if (!addEngineID(cacheEntry.getAddress(), securityEngineID)) {
               if (logger.isWarnEnabled()) {
-                logger.warn("Engine ID '"+securityEngineID+
-                            "' could not be added to engine ID cache for "+
-                            "target address '"+cacheEntry.getAddress()+
-                            "' because engine ID matches local engine ID");
+                logger.warn("Engine ID '{}' could not be added to engine ID cache for target address '{}' because engine ID matches local engine ID", securityEngineID, cacheEntry.getAddress());
               }
             }
             //cache.deleteEntry(cacheEntry.getPduHandle());
@@ -1271,18 +1255,13 @@ public class MPv3
         }
         else {
           if (logger.isDebugEnabled()) {
-            logger.debug("RFC3412 §7.2.10 - Received PDU (msgID=" +
-                         header.getMsgID() + ") is a response or " +
-                         "internal class message, but cached " +
-                         "information for the msgID could not be found");
+            logger.debug("RFC3412 §7.2.10 - Received PDU (msgID={}) is a response or internal class message, but cached information for the msgID could not be found", header.getMsgID());
           }
           return SnmpConstants.SNMP_MP_UNKNOWN_MSGID;
         }
       }
       else {
-        logger.debug("RFC3412 §7.2.10 - Received PDU is NOT a response or " +
-                     "internal class message -> unchanged PduHandle = "+
-                     sendPduHandle);
+        logger.debug("RFC3412 §7.2.10 - Received PDU is NOT a response or internal class message -> unchanged PduHandle = {}", sendPduHandle);
       }
       switch (scopedPdu.getType()) {
         case PDU.GET:
@@ -1295,10 +1274,7 @@ public class MPv3
           }
           else if (!securityEngineID.equalsValue(localEngineID)) {
             if (logger.isDebugEnabled()) {
-              logger.debug("RFC 3412 §7.2.13.a - Security engine ID " +
-                           securityEngineID.toHexString() +
-                           " does not match local engine ID " +
-                           new OctetString(localEngineID).toHexString());
+              logger.debug("RFC 3412 §7.2.13.a - Security engine ID {} does not match local engine ID {}", securityEngineID.toHexString(), new OctetString(localEngineID).toHexString());
             }
             mutableStateReference.setStateReference(null);
             return SnmpConstants.SNMP_MP_INVALID_ENGINEID;
@@ -1319,7 +1295,7 @@ public class MPv3
       return SnmpConstants.SNMP_MP_ERROR;
     }
     catch (IOException iox) {
-      logger.warn("MPv3 parse error: " + iox.getMessage(), iox);
+      logger.warn("MPv3 parse error: {}", iox.getMessage(), iox);
       return SnmpConstants.SNMP_MP_PARSE_ERROR;
     }
   }

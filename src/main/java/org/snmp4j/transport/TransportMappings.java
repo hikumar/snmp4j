@@ -113,7 +113,7 @@ public class TransportMappings {
             return cons.newInstance(transportAddress);
           }
         }
-        logger.error("NoSuchMethodException while instantiating "+c.getName(), nsme);
+        logger.error("NoSuchMethodException while instantiating {}", c.getName(), nsme);
         return null;
       }
     }

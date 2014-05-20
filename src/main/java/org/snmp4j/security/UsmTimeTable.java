@@ -152,12 +152,10 @@ public class UsmTimeTable implements Serializable {
           (Math.abs(now + localTime.getTimeDiff() - entry.getLatestReceivedTime())
            > 150)) {
         if (logger.isDebugEnabled()) {
-          logger.debug(
-              "CheckTime: received message outside time window (authoritative):"+
-              ((localTime.getEngineBoots() !=
-                entry.getEngineBoots()) ? "engineBoots differ "+localTime.getEngineBoots()+"!="+entry.getEngineBoots() :
-               ""+(Math.abs(now + localTime.getTimeDiff() -
-                            entry.getLatestReceivedTime()))+" > 150"));
+          logger.debug("CheckTime: received message outside time window (authoritative):{}", (localTime.getEngineBoots() !=
+              entry.getEngineBoots()) ? "engineBoots differ " + localTime.getEngineBoots() + "!=" + entry.getEngineBoots() :
+              "" + (Math.abs(now + localTime.getTimeDiff() -
+                  entry.getLatestReceivedTime())) + " > 150");
         }
         return SnmpConstants.SNMPv3_USM_NOT_IN_TIME_WINDOW;
       }

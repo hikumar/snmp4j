@@ -153,12 +153,9 @@ public abstract class AuthGeneric implements AuthenticationProtocol {
     int digestLength = hash.getDigestLength();
 
     if (logger.isDebugEnabled()) {
-      logger.debug(protoName + "oldKey: " +
-                   new OctetString(oldKey).toHexString());
-      logger.debug(protoName + "newKey: " +
-                   new OctetString(newKey).toHexString());
-      logger.debug(protoName + "random: " +
-                   new OctetString(random).toHexString());
+      logger.debug("{}oldKey: {}", protoName, new OctetString(oldKey).toHexString());
+      logger.debug("{}newKey: {}", protoName, new OctetString(newKey).toHexString());
+      logger.debug("{}random: {}", protoName, new OctetString(random).toHexString());
     }
     int iterations = (oldKey.length - 1) / hash.getDigestLength();
 
@@ -189,8 +186,7 @@ public abstract class AuthGeneric implements AuthenticationProtocol {
                      random.length + delta.length(), tmp.length());
 
     if (logger.isDebugEnabled()) {
-      logger.debug(protoName + "keyChange:" +
-                   new OctetString(keyChange).toHexString());
+      logger.debug("{}keyChange:{}", protoName, new OctetString(keyChange).toHexString());
     }
     return keyChange;
   }
@@ -217,8 +213,7 @@ public abstract class AuthGeneric implements AuthenticationProtocol {
     }
     digest = md.digest();
     if (logger.isDebugEnabled()) {
-      logger.debug(protoName + "First digest: " +
-                   new OctetString(digest).toHexString());
+      logger.debug("{}First digest: {}", protoName, new OctetString(digest).toHexString());
     }
 
     /*****************************************************/
@@ -231,8 +226,7 @@ public abstract class AuthGeneric implements AuthenticationProtocol {
     md.update(digest);
     digest = md.digest();
     if (logger.isDebugEnabled()) {
-      logger.debug(protoName + "localized key: " +
-                   new OctetString(digest).toHexString());
+      logger.debug("{}localized key: {}", protoName, new OctetString(digest).toHexString());
     }
 
     return digest;

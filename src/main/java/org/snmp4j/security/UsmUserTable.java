@@ -47,14 +47,14 @@ public class UsmUserTable implements Serializable {
 
   public synchronized UsmUserEntry addUser(UsmUserEntry user) {
     if (logger.isDebugEnabled()) {
-      logger.debug("Adding user "+user.getUserName()+" = "+user.getUsmUser());
+      logger.debug("Adding user {} = {}", user.getUserName(), user.getUsmUser());
     }
     return table.put(new UsmUserKey(user), user);
   }
 
   public synchronized void setUsers(Collection<UsmUserEntry> c) {
     if (logger.isDebugEnabled()) {
-      logger.debug("Setting users to "+c);
+      logger.debug("Setting users to {}", c);
     }
     table.clear();
     for (UsmUserEntry user : c) {
@@ -78,7 +78,7 @@ public class UsmUserTable implements Serializable {
       }
     }
     if (logger.isDebugEnabled()) {
-      logger.debug("Returning user entries for "+userName+" = "+users);
+      logger.debug("Returning user entries for {} = {}", userName, users);
     }
     return users;
   }
@@ -100,7 +100,7 @@ public class UsmUserTable implements Serializable {
           deleted.add(usmUserEntry);
           usmUserEntryIterator.remove();
           if (logger.isDebugEnabled()) {
-            logger.debug("Removed user "+usmUserEntry);
+            logger.debug("Removed user {}", usmUserEntry);
           }
         }
       }
@@ -109,8 +109,7 @@ public class UsmUserTable implements Serializable {
     UsmUserEntry entry =
         table.remove(new UsmUserKey(engineID, securityName));
     if (logger.isDebugEnabled()) {
-      logger.debug("Removed user with secName="+securityName+
-          " and engineID="+engineID);
+      logger.debug("Removed user with secName={} and engineID={}", securityName, engineID);
     }
     return (entry != null) ? Collections.singletonList(entry) : Collections.<UsmUserEntry>emptyList();
   }
@@ -120,8 +119,7 @@ public class UsmUserTable implements Serializable {
     UsmUserEntry entry =
             table.remove(new UsmUserKey(engineID, securityName));
     if (logger.isDebugEnabled()) {
-      logger.debug("Removed user with secName="+securityName+
-                   " and engineID="+engineID);
+      logger.debug("Removed user with secName={} and engineID={}", securityName, engineID);
     }
     return entry;
   }

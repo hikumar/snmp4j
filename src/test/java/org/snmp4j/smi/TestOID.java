@@ -102,8 +102,7 @@ public class TestOID extends TestCase {
 
   private static void printOIDs(OID oid) {
     if (logger.isDebugEnabled()) {
-      logger.debug("OID="+oid+", predecessor="+oid.predecessor()+
-                   ",successor="+oid.successor());
+      logger.debug("OID={}, predecessor={},successor={}", oid, oid.predecessor(), oid.successor());
     }
   }
 

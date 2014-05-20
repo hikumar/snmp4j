@@ -331,7 +331,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
           break;
         }
       }
-      logger.warn("statusInfo="+statusInfo+", status="+status);
+      logger.warn("statusInfo={}, status={}", statusInfo, status);
     }
   }
 
@@ -370,7 +370,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
       version.decodeBER(wholeMessage);
       MessageProcessingModel mp = getMessageProcessingModel(version.getValue());
       if (mp == null) {
-        logger.warn("SNMP version "+version+" is not supported");
+        logger.warn("SNMP version {} is not supported", version);
         CounterEvent event = new CounterEvent(this,
                                               SnmpConstants.snmpInBadVersions);
         fireIncrementCounter(event);
@@ -540,9 +540,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
   private static void checkListening4ConfirmedPDU(PDU pdu, Address target,
                                                   TransportMapping transport) {
     if ((transport != null) && (!transport.isListening())) {
-      logger.warn("Sending confirmed PDU "+pdu+" to target "+target+
-                  " although transport mapping "+transport+
-                  " is not listening for a response");
+      logger.warn("Sending confirmed PDU {} to target {} although transport mapping {} is not listening for a response", pdu, target, transport);
     }
   }
 
@@ -565,10 +563,10 @@ public class MessageDispatcherImpl implements MessageDispatcher {
       if (messageProcessingModel == MessageProcessingModel.MPv1 || SNMP4JSettings.isNoGetBulk()) {
         if (pdu.getType() == PDU.GETBULK) {
           if (messageProcessingModel == MessageProcessingModel.MPv1) {
-            logger.warn("Converting GETBULK PDU to GETNEXT for SNMPv1 target: " + transportAddress);
+            logger.warn("Converting GETBULK PDU to GETNEXT for SNMPv1 target: {}", transportAddress);
           }
           else {
-            logger.info("Converting GETBULK PDU to GETNEXT for target: " + transportAddress);
+            logger.info("Converting GETBULK PDU to GETNEXT for target: {}", transportAddress);
           }
           pdu.setType(PDU.GETNEXT);
           if (!(pdu instanceof PDUv1)) {

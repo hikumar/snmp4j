@@ -383,13 +383,12 @@ public class TLSTM extends TcpTransportMapping {
             SocketChannel sc = s.getChannel();
             s.close();
             if (logger.isDebugEnabled()) {
-              logger.debug("Socket to " + entry.getPeerAddress() + " closed");
+              logger.debug("Socket to {} closed", entry.getPeerAddress());
             }
             if (sc != null) {
               sc.close();
               if (logger.isDebugEnabled()) {
-                logger.debug("Socket channel to " +
-                    entry.getPeerAddress() + " closed");
+                logger.debug("Socket channel to {} closed", entry.getPeerAddress());
               }
             }
           }
@@ -422,7 +421,7 @@ public class TLSTM extends TcpTransportMapping {
    */
   public synchronized boolean close(TcpAddress remoteAddress) throws IOException {
     if (logger.isDebugEnabled()) {
-      logger.debug("Closing socket for peer address "+remoteAddress);
+      logger.debug("Closing socket for peer address {}", remoteAddress);
     }
     SocketEntry entry = sockets.remove(remoteAddress);
     if (entry != null) {
@@ -431,13 +430,12 @@ public class TLSTM extends TcpTransportMapping {
         SocketChannel sc = entry.getSocket().getChannel();
         entry.getSocket().close();
         if (logger.isInfoEnabled()) {
-          logger.info("Socket to " + entry.getPeerAddress() + " closed");
+          logger.info("Socket to {} closed", entry.getPeerAddress());
         }
         if (sc != null) {
           sc.close();
           if (logger.isDebugEnabled()) {
-            logger.debug("Closed socket channel for peer address "+
-                         remoteAddress);
+            logger.debug("Closed socket channel for peer address {}", remoteAddress);
           }
         }
       }
@@ -570,11 +568,9 @@ public class TLSTM extends TcpTransportMapping {
       md.update(cert.getEncoded());
       certFingerprint = new OctetString(md.digest());
     } catch (NoSuchAlgorithmException e) {
-      logger.error("No such digest algorithm exception while getting fingerprint from "+
-                   cert+": "+e.getMessage(), e);
+      logger.error("No such digest algorithm exception while getting fingerprint from {}: {}", cert, e.getMessage(), e);
     } catch (CertificateEncodingException e) {
-      logger.error("Certificate encoding exception while getting fingerprint from "+
-                   cert+": "+e.getMessage(), e);
+      logger.error("Certificate encoding exception while getting fingerprint from {}: {}", cert, e.getMessage(), e);
     }
     return certFingerprint;
   }
@@ -647,14 +643,14 @@ public class TLSTM extends TcpTransportMapping {
       if ((this.registrations & opKey) == 0) {
         this.registrations |= opKey;
         if (logger.isDebugEnabled()) {
-          logger.debug("Adding operation "+opKey+" for: " + toString());
+          logger.debug("Adding operation {} for: {}", opKey, toString());
         }
         socket.getChannel().register(selector, registrations, this);
       }
       else if (!socket.getChannel().isRegistered()) {
         this.registrations = opKey;
         if (logger.isDebugEnabled()) {
-          logger.debug("Registering new operation "+opKey+" for: " + toString());
+          logger.debug("Registering new operation {} for: {}", opKey, toString());
         }
         socket.getChannel().register(selector, opKey, this);
       }
@@ -756,7 +752,7 @@ public class TLSTM extends TcpTransportMapping {
             securityName = securityCallback.getSecurityName(
                 (X509Certificate[]) sslEngine.getSession().getPeerCertificates());
           } catch (SSLPeerUnverifiedException e) {
-            logger.error("SSL peer '" + peerAddress + "' is not verified: " + e.getMessage(), e);
+            logger.error("SSL peer '{}' is not verified: {}", peerAddress, e.getMessage(), e);
             sslEngine.setEnableSessionCreation(false);
           }
         }
@@ -805,7 +801,7 @@ public class TLSTM extends TcpTransportMapping {
                (result.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.NEED_WRAP));
 
       } catch (IOException e) {
-        logger.error("IOException while closing outbound channel of " + this + ": " + e.getMessage(), e);
+        logger.error("IOException while closing outbound channel of {}: {}", this, e.getMessage(), e);
       }
       /*
       if (sslEngine.isOutboundDone()) {
@@ -849,9 +845,7 @@ public class TLSTM extends TcpTransportMapping {
       if ((socketCleaner == null) ||
           ((now - entry.getLastUse())/SnmpConstants.MILLISECOND_TO_NANOSECOND >= connectionTimeout)) {
         if (logger.isDebugEnabled()) {
-          logger.debug("Socket has not been used for "+
-                       (now - entry.getLastUse())+
-                       " milliseconds, closing it");
+          logger.debug("Socket has not been used for {} milliseconds, closing it", now - entry.getLastUse());
         }
         sockets.remove(entry.getPeerAddress());
         SocketEntry entryCopy = entry;
@@ -859,8 +853,7 @@ public class TLSTM extends TcpTransportMapping {
           synchronized (entryCopy) {
             entryCopy.getSocket().close();
           }
-          logger.info("Socket to "+entryCopy.getPeerAddress()+
-                      " closed due to timeout");
+          logger.info("Socket to {} closed due to timeout", entryCopy.getPeerAddress());
         }
         catch (IOException ex) {
           logger.error(ex.getMessage(), ex);
@@ -870,7 +863,7 @@ public class TLSTM extends TcpTransportMapping {
         long nextRun = System.currentTimeMillis() +
             (now - entry.getLastUse())/SnmpConstants.MILLISECOND_TO_NANOSECOND + connectionTimeout;
         if (logger.isDebugEnabled()) {
-          logger.debug("Scheduling " + nextRun);
+          logger.debug("Scheduling {}", nextRun);
         }
         socketCleaner.schedule(new  SocketTimeout(entry), nextRun);
       }
@@ -930,11 +923,11 @@ public class TLSTM extends TcpTransportMapping {
               }
             }
           } catch (IOException iox) {
-            logger.error("IO exception caught while SSL processing: "+iox.getMessage(), iox);
+            logger.error("IO exception caught while SSL processing: {}", iox.getMessage(), iox);
             while (entry != null && inQueue.remove(entry)) {
             }
           } catch (InterruptedException e) {
-            logger.error("SSL processing interrupted: "+e.getMessage(), e);
+            logger.error("SSL processing interrupted: {}", e.getMessage(), e);
             return;
           }
         }
@@ -944,7 +937,7 @@ public class TLSTM extends TcpTransportMapping {
             entry = inQueue.take();
             synchronized (entry.inboundLock) {
               entry.inNetBuffer.flip();
-              logger.debug("TLS inNetBuffer = "+entry.inNetBuffer);
+              logger.debug("TLS inNetBuffer = {}", entry.inNetBuffer);
 /*
             if (entry.inNetBuffer.limit() < entry.inNetBuffer.capacity()) {
               entry.inNetBuffer.limit(entry.inNetBuffer.capacity());
@@ -971,7 +964,7 @@ public class TLSTM extends TcpTransportMapping {
                       writeMessage(entry, entry.getSocket().getChannel());
                     }
                     entry.inAppBuffer.flip();
-                    logger.debug("Dispatching inAppBuffer="+entry.inAppBuffer);
+                    logger.debug("Dispatching inAppBuffer={}", entry.inAppBuffer);
                     if (entry.inAppBuffer.limit() > 0) {
                       dispatchMessage(entry.getPeerAddress(),
                           entry.inAppBuffer, entry.inAppBuffer.limit(),
@@ -982,11 +975,11 @@ public class TLSTM extends TcpTransportMapping {
               }
             }
           } catch (IOException iox) {
-            logger.error("IO exception caught while SSL processing: "+iox.getMessage(), iox);
+            logger.error("IO exception caught while SSL processing: {}", iox.getMessage(), iox);
             while (entry != null && inQueue.remove(entry)) {
             }
           } catch (InterruptedException e) {
-            logger.error("SSL processing interrupted: "+e.getMessage(), e);
+            logger.error("SSL processing interrupted: {}", e.getMessage(), e);
             return;
           }
         }
@@ -1067,7 +1060,7 @@ public class TLSTM extends TcpTransportMapping {
     public boolean runDelegatedTasks(SSLEngineResult result,
                                      SocketEntry entry) throws IOException {
       if (logger.isDebugEnabled()) {
-        logger.debug("Running delegated task on "+entry+": "+result);
+        logger.debug("Running delegated task on {}: {}", entry, result);
       }
       SSLEngineResult.HandshakeStatus status = result.getHandshakeStatus();
       if (status == SSLEngineResult.HandshakeStatus.NEED_TASK) {
@@ -1080,7 +1073,7 @@ public class TLSTM extends TcpTransportMapping {
         if (status == SSLEngineResult.HandshakeStatus.NEED_TASK) {
           throw new IOException("Inconsistent Handshake status");
         }
-        logger.info("Handshake status = " + status);
+        logger.info("Handshake status = {}", status);
       }
       System.err.println("TASK:"+result);
       switch (result.getStatus()) {
@@ -1097,7 +1090,7 @@ public class TLSTM extends TcpTransportMapping {
 //          entry.addRegistration(selector, SelectionKey.OP_WRITE);
           break;
         case NEED_UNWRAP:
-          logger.debug("NEED_UNRWAP processing with inNetBuffer="+entry.inNetBuffer);
+          logger.debug("NEED_UNRWAP processing with inNetBuffer={}", entry.inNetBuffer);
           inQueue.add(entry);
           entry.addRegistration(selector, SelectionKey.OP_READ);
           break;
@@ -1133,8 +1126,7 @@ public class TLSTM extends TcpTransportMapping {
       Socket s = null;
       SocketEntry entry = sockets.get(address);
       if (logger.isDebugEnabled()) {
-        logger.debug("Looking up connection for destination '"+address+
-                     "' returned: "+entry);
+        logger.debug("Looking up connection for destination '{}' returned: {}", address, entry);
         logger.debug(sockets.toString());
       }
       if (entry != null) {
@@ -1149,8 +1141,7 @@ public class TLSTM extends TcpTransportMapping {
       }
       if ((s == null) || (s.isClosed()) || (!s.isConnected())) {
         if (logger.isDebugEnabled()) {
-          logger.debug("Socket for address '"+address+
-                       "' is closed, opening it...");
+          logger.debug("Socket for address '{}' is closed, opening it...", address);
         }
         synchronized (pending) {
           pending.remove(entry);
@@ -1186,8 +1177,7 @@ public class TLSTM extends TcpTransportMapping {
                 return;
               }
               else {
-                logger.error("TransportStateReferences refNew="+tmStateReference+
-                             ",refOld="+entry.tmStateReference+" do not match, message dropped");
+                logger.error("TransportStateReferences refNew={},refOld={} do not match, message dropped", tmStateReference, entry.tmStateReference);
                 throw new IOException("Transport state reference does not match existing reference"+
                     " for this session/target");
               }
@@ -1203,13 +1193,13 @@ public class TLSTM extends TcpTransportMapping {
           }
 
           selector.wakeup();
-          logger.debug("Trying to connect to "+address);
+          logger.debug("Trying to connect to {}", address);
         }
         catch (IOException iox) {
           logger.error(iox.getMessage(), iox);
           throw iox;
         } catch (NoSuchAlgorithmException e) {
-          logger.error("NoSuchAlgorithmException while sending message to "+address+": "+e.getMessage(), e);
+          logger.error("NoSuchAlgorithmException while sending message to {}: {}", address, e.getMessage(), e);
         }
       }
       else if (matchingStateReferences(tmStateReference, entry.tmStateReference)) {
@@ -1221,8 +1211,7 @@ public class TLSTM extends TcpTransportMapping {
         selector.wakeup();
       }
       else {
-        logger.error("TransportStateReferences refNew="+tmStateReference+
-            ",refOld="+entry.tmStateReference+" do not match, message dropped");
+        logger.error("TransportStateReferences refNew={},refOld={} do not match, message dropped", tmStateReference, entry.tmStateReference);
         throw new IOException("Transport state reference does not match existing reference"+
             " for this session/target");
 
@@ -1325,7 +1314,7 @@ public class TLSTM extends TcpTransportMapping {
                     logger.debug("Selection key cancelled, skipping it");
                   }
                 } catch (NoSuchAlgorithmException e) {
-                  logger.error("NoSuchAlgorithm while reading from server socket: "+e.getMessage(), e);
+                  logger.error("NoSuchAlgorithm while reading from server socket: {}", e.getMessage(), e);
                 }
               }
             }
@@ -1355,7 +1344,7 @@ public class TLSTM extends TcpTransportMapping {
         }
       }
       if (logger.isDebugEnabled()) {
-        logger.debug("Worker task finished: " + getClass().getName());
+        logger.debug("Worker task finished: {}", getClass().getName());
       }
     }
 
@@ -1366,7 +1355,7 @@ public class TLSTM extends TcpTransportMapping {
         if (!sc.isConnected()) {
           if (sc.finishConnect()) {
             sc.configureBlocking(false);
-            logger.debug("Connected to " + entry.getPeerAddress());
+            logger.debug("Connected to {}", entry.getPeerAddress());
             // make sure connection is closed if not used for timeout
             // micro seconds
             timeoutSocket(entry);
@@ -1380,7 +1369,7 @@ public class TLSTM extends TcpTransportMapping {
         if (entry != null) {
           Address addr = (incomingAddress == null) ?
                                       entry.getPeerAddress() : incomingAddress;
-          logger.debug("Fire connected event for "+addr);
+          logger.debug("Fire connected event for {}", addr);
           TransportStateEvent e =
               new TransportStateEvent(TLSTM.this,
                                       addr,
@@ -1460,8 +1449,8 @@ public class TLSTM extends TcpTransportMapping {
         long bytesRead = readChannel.read(inNetBuffer);
         inNetBuffer.flip();
         if (logger.isDebugEnabled()) {
-          logger.debug("Read " + bytesRead + " bytes from " + incomingAddress);
-          logger.debug("TLS inNetBuffer: "+inNetBuffer);
+          logger.debug("Read {} bytes from {}", bytesRead, incomingAddress);
+          logger.debug("TLS inNetBuffer: {}", inNetBuffer);
         }
         if (bytesRead < 0) {
           logger.debug("Socket closed remotely");
@@ -1500,7 +1489,7 @@ public class TLSTM extends TcpTransportMapping {
               logger.info("SSL session established");
               if (result.bytesProduced() > 0) {
                 entry.inAppBuffer.flip();
-                logger.debug("SSL established, dispatching inappBuffer="+entry.inAppBuffer);
+                logger.debug("SSL established, dispatching inappBuffer={}", entry.inAppBuffer);
                 // SSL session is established
                 entry.checkTransportStateReference();
                 dispatchMessage(incomingAddress, inAppBuffer, inAppBuffer.limit(),
@@ -1518,8 +1507,7 @@ public class TLSTM extends TcpTransportMapping {
       catch (ClosedChannelException ccex) {
         sk.cancel();
         if (logger.isDebugEnabled()) {
-          logger.debug("Read channel not open, no bytes read from " +
-                       incomingAddress);
+          logger.debug("Read channel not open, no bytes read from {}", incomingAddress);
         }
       }
     }
@@ -1540,10 +1528,8 @@ public class TLSTM extends TcpTransportMapping {
                                  TransportStateReference tmStateReference) {
       byteBuffer.flip();
       if (logger.isDebugEnabled()) {
-        logger.debug("Received message from " + incomingAddress +
-                     " with length " + bytesRead + ": " +
-                     new OctetString(byteBuffer.array(), 0,
-                                     (int)bytesRead).toHexString());
+        logger.debug("Received message from {} with length {}: {}", incomingAddress, bytesRead, new OctetString(byteBuffer.array(), 0,
+            (int) bytesRead).toHexString());
       }
       ByteBuffer bis;
       if (isAsyncMsgProcessingSupported()) {
@@ -1566,10 +1552,7 @@ public class TLSTM extends TcpTransportMapping {
           if (message != null) {
             entry.outAppBuffer = ByteBuffer.wrap(message);
             if (logger.isDebugEnabled()) {
-              logger.debug("Sending message with length " +
-                           message.length + " to " +
-                           entry.getPeerAddress() + ": " +
-                           new OctetString(message).toHexString());
+              logger.debug("Sending message with length {} to {}: {}", message.length, entry.getPeerAddress(), new OctetString(message).toHexString());
             }
           }
           else {
@@ -1613,9 +1596,9 @@ public class TLSTM extends TcpTransportMapping {
       entry.outNetBuffer.flip();
       // Send SSL/TLS encoded data to peer
       while (entry.outNetBuffer.hasRemaining()) {
-        logger.debug("Writing TLS outNetBuffer(PAYLOAD): "+entry.outNetBuffer);
+        logger.debug("Writing TLS outNetBuffer(PAYLOAD): {}", entry.outNetBuffer);
         int num = sc.write(entry.outNetBuffer);
-        logger.debug("Wrote TLS "+num+" bytes from outNetBuffer(PAYLOAD)");
+        logger.debug("Wrote TLS {} bytes from outNetBuffer(PAYLOAD)", num);
         if (num == -1) {
           throw new IOException("TLS connection closed");
         }
@@ -1639,20 +1622,20 @@ public class TLSTM extends TcpTransportMapping {
     public void terminate() {
       stop = true;
       if (logger.isDebugEnabled()) {
-        logger.debug("Terminated worker task: " + getClass().getName());
+        logger.debug("Terminated worker task: {}", getClass().getName());
       }
     }
 
     public void join() {
       if (logger.isDebugEnabled()) {
-        logger.debug("Joining worker task: " + getClass().getName());
+        logger.debug("Joining worker task: {}", getClass().getName());
       }
     }
 
     public void interrupt() {
       stop = true;
       if (logger.isDebugEnabled()) {
-        logger.debug("Interrupting worker task: " + getClass().getName());
+        logger.debug("Interrupting worker task: {}", getClass().getName());
       }
       selector.wakeup();
     }
@@ -1661,14 +1644,12 @@ public class TLSTM extends TcpTransportMapping {
   private boolean matchingStateReferences(TransportStateReference tmStateReferenceNew,
                                           TransportStateReference tmStateReferenceExisting) {
     if ((tmStateReferenceExisting == null) || (tmStateReferenceNew == null)) {
-      logger.error("Failed to compare TransportStateReferences refNew="+tmStateReferenceNew+
-                   ",refOld="+tmStateReferenceExisting);
+      logger.error("Failed to compare TransportStateReferences refNew={},refOld={}", tmStateReferenceNew, tmStateReferenceExisting);
       return false;
     }
     if ((tmStateReferenceNew.getSecurityName() == null) ||
         (tmStateReferenceExisting.getSecurityName() == null)) {
-      logger.error("Could not match TransportStateReferences refNew="+tmStateReferenceNew+
-                   ",refOld="+tmStateReferenceExisting);
+      logger.error("Could not match TransportStateReferences refNew={},refOld={}", tmStateReferenceNew, tmStateReferenceExisting);
       return false;
     }
     else if (!tmStateReferenceNew.getSecurityName().equals(tmStateReferenceExisting.getSecurityName())) {
@@ -1685,7 +1666,7 @@ public class TLSTM extends TcpTransportMapping {
       }
       result = entry.sslEngine.wrap(ByteBuffer.allocate(0), entry.outNetBuffer);
       entry.outNetBuffer.flip();
-      logger.debug("TLS outNetBuffer = "+entry.outNetBuffer);
+      logger.debug("TLS outNetBuffer = {}", entry.outNetBuffer);
       entry.socket.getChannel().write(entry.outNetBuffer);
       entry.outNetBuffer.clear();
     }
@@ -1723,10 +1704,7 @@ public class TLSTM extends TcpTransportMapping {
 
     @Override
     public void configure(SSLEngine sslEngine) {
-      logger.debug("Configuring SSL engine, supported protocols are " +
-          Arrays.asList(sslEngine.getSupportedProtocols()) + ", supported ciphers are " +
-          Arrays.asList(sslEngine.getSupportedCipherSuites())+", https defaults are "+
-                        System.getProperty("https.cipherSuites"));
+      logger.debug("Configuring SSL engine, supported protocols are {}, supported ciphers are {}, https defaults are {}", Arrays.asList(sslEngine.getSupportedProtocols()), Arrays.asList(sslEngine.getSupportedCipherSuites()), System.getProperty("https.cipherSuites"));
       String[] supportedCipherSuites = sslEngine.getEnabledCipherSuites();
       List<String> enabledCipherSuites = new ArrayList<String>(supportedCipherSuites.length);
       for (String cs : supportedCipherSuites) {
@@ -1742,9 +1720,7 @@ public class TLSTM extends TcpTransportMapping {
         sslEngine.setWantClientAuth(true);
         logger.info("Need client authentication set to true");
       }
-      logger.info("Configured SSL engine, enabled protocols are "+
-                  Arrays.asList(sslEngine.getEnabledProtocols())+", enabled ciphers are "+
-                  Arrays.asList(sslEngine.getEnabledCipherSuites()));
+      logger.info("Configured SSL engine, enabled protocols are {}, enabled ciphers are {}", Arrays.asList(sslEngine.getEnabledProtocols()), Arrays.asList(sslEngine.getEnabledCipherSuites()));
     }
 
     @Override
@@ -1765,7 +1741,7 @@ public class TLSTM extends TcpTransportMapping {
               new FileInputStream(getKeyStore());
           ks.load(fis, (getKeyStorePassword()  != null) ? getKeyStorePassword().toCharArray() : null);
           if (logger.isInfoEnabled()) {
-            logger.info("KeyStore '"+fis+"' contains: "+Collections.list(ks.aliases()));
+            logger.info("KeyStore '{}' contains: {}", fis, Collections.list(ks.aliases()));
           }
 
           filterCertificates(ks, transportStateReference);
@@ -1777,8 +1753,7 @@ public class TLSTM extends TcpTransportMapping {
           tmf.init(ks);
           trustManagers = tmf.getTrustManagers();
           if (logger.isDebugEnabled()) {
-            logger.debug("SSL context initializing with TrustManagers: " + Arrays.asList(trustManagers) +
-                         " and factory "+trustManagerFactory.getClass().getName());
+            logger.debug("SSL context initializing with TrustManagers: {} and factory {}", Arrays.asList(trustManagers), trustManagerFactory.getClass().getName());
           }
           sslContext.init(kmf.getKeyManagers(),
               new TrustManager[]{ trustManagerFactory.create((X509TrustManager) trustManagers[0],
@@ -1786,20 +1761,20 @@ public class TLSTM extends TcpTransportMapping {
               null);
           return sslContext;
         } catch (KeyStoreException e) {
-          logger.error("Failed to initialize SSLContext because of a KeyStoreException: " + e.getMessage(), e);
+          logger.error("Failed to initialize SSLContext because of a KeyStoreException: {}", e.getMessage(), e);
         } catch (KeyManagementException e) {
-          logger.error("Failed to initialize SSLContext because of a KeyManagementException: " + e.getMessage(), e);
+          logger.error("Failed to initialize SSLContext because of a KeyManagementException: {}", e.getMessage(), e);
         } catch (UnrecoverableKeyException e) {
-          logger.error("Failed to initialize SSLContext because of an UnrecoverableKeyException: " + e.getMessage(), e);
+          logger.error("Failed to initialize SSLContext because of an UnrecoverableKeyException: {}", e.getMessage(), e);
         } catch (CertificateException e) {
-          logger.error("Failed to initialize SSLContext because of a CertificateException: " + e.getMessage(), e);
+          logger.error("Failed to initialize SSLContext because of a CertificateException: {}", e.getMessage(), e);
         } catch (FileNotFoundException e) {
-          logger.error("Failed to initialize SSLContext because of a FileNotFoundException: " + e.getMessage(), e);
+          logger.error("Failed to initialize SSLContext because of a FileNotFoundException: {}", e.getMessage(), e);
         } catch (IOException e) {
-          logger.error("Failed to initialize SSLContext because of an IOException: " + e.getMessage(), e);
+          logger.error("Failed to initialize SSLContext because of an IOException: {}", e.getMessage(), e);
         }
       } catch (NoSuchAlgorithmException e) {
-        logger.error("Failed to initialize SSLContext because of an NoSuchAlgorithmException: " + e.getMessage(), e);
+        logger.error("Failed to initialize SSLContext because of an NoSuchAlgorithmException: {}", e.getMessage(), e);
       }
       return null;
     }
@@ -1816,8 +1791,7 @@ public class TLSTM extends TcpTransportMapping {
         try {
           Certificate[] chain = ks.getCertificateChain(localCertAlias);
           if (chain == null) {
-            logger.warn("Local certificate with alias '"+localCertAlias+"' not found. Known aliases are: "+
-                Collections.list(ks.aliases()));
+            logger.warn("Local certificate with alias '{}' not found. Known aliases are: {}", localCertAlias, Collections.list(ks.aliases()));
           }
           else {
             List<String> chainAliases = new ArrayList<String>(chain.length);
@@ -1835,8 +1809,7 @@ public class TLSTM extends TcpTransportMapping {
             }
           }
         } catch (KeyStoreException e) {
-          logger.error("Failed to get certificate chain for alias "+
-              localCertAlias+": "+e.getMessage(),e);
+          logger.error("Failed to get certificate chain for alias {}: {}", localCertAlias, e.getMessage(), e);
         }
       }
     }
@@ -1869,7 +1842,7 @@ public class TLSTM extends TcpTransportMapping {
       if (!useClientMode && (callback != null)) {
         if (callback.isClientCertificateAccepted(x509Certificates[0])) {
           if (logger.isInfoEnabled()) {
-            logger.info("Client is trusted with certificate '"+x509Certificates[0]+"'");
+            logger.info("Client is trusted with certificate '{}'", x509Certificates[0]);
           }
           return;
         }
@@ -1880,7 +1853,7 @@ public class TLSTM extends TcpTransportMapping {
       catch (CertificateException cex) {
         counterSupport.fireIncrementCounter(new CounterEvent(this, SnmpConstants.snmpTlstmSessionOpenErrors));
         counterSupport.fireIncrementCounter(new CounterEvent(this, SnmpConstants.snmpTlstmSessionInvalidClientCertificates));
-        logger.warn("Client certificate validation failed for '"+x509Certificates[0]+"'");
+        logger.warn("Client certificate validation failed for '{}'", x509Certificates[0]);
         throw cex;
       }
     }
@@ -1895,8 +1868,7 @@ public class TLSTM extends TcpTransportMapping {
       try {
         entry = TLSTM.getSubjAltName(x509Certificates[0].getSubjectAlternativeNames(), 2);
       } catch (CertificateParsingException e) {
-        logger.error("CertificateParsingException while verifying server certificate "+
-            Arrays.asList(x509Certificates));
+        logger.error("CertificateParsingException while verifying server certificate {}", Arrays.asList(x509Certificates));
       }
       if (entry == null) {
         X500Principal x500Principal = x509Certificates[0].getSubjectX500Principal();
@@ -1916,13 +1888,13 @@ public class TLSTM extends TcpTransportMapping {
           }
           if (hostName.equalsIgnoreCase(dNSName)) {
             if (logger.isInfoEnabled()) {
-              logger.info("Peer hostname "+hostName+" matches dNSName "+dNSName);
+              logger.info("Peer hostname {} matches dNSName {}", hostName, dNSName);
             }
             return;
           }
         }
         if (logger.isDebugEnabled()) {
-          logger.debug("Peer hostname "+hostName+" did not match dNSName "+dNSName);
+          logger.debug("Peer hostname {} did not match dNSName {}", hostName, dNSName);
         }
       }
       try {
@@ -1931,13 +1903,13 @@ public class TLSTM extends TcpTransportMapping {
       catch (CertificateException cex) {
         counterSupport.fireIncrementCounter(new CounterEvent(this, SnmpConstants.snmpTlstmSessionOpenErrors));
         counterSupport.fireIncrementCounter(new CounterEvent(this, SnmpConstants.snmpTlstmSessionUnknownServerCertificate));
-        logger.warn("Server certificate validation failed for '"+x509Certificates[0]+"'");
+        logger.warn("Server certificate validation failed for '{}'", x509Certificates[0]);
         throw cex;
       }
       TlsTmSecurityCallback<X509Certificate> callback = securityCallback;
       if (useClientMode && (callback != null)) {
         if (!callback.isServerCertificateAccepted(x509Certificates)) {
-          logger.info("Server is NOT trusted with certificate '"+Arrays.asList(x509Certificates)+"'");
+          logger.info("Server is NOT trusted with certificate '{}'", Arrays.asList(x509Certificates));
           throw new CertificateException("Server's certificate is not trusted by this application (although it was trusted by the JRE): "+
           Arrays.asList(x509Certificates));
         }
@@ -1950,16 +1922,14 @@ public class TLSTM extends TcpTransportMapping {
           OctetString certFingerprint = null;
           certFingerprint = getFingerprint(cert);
           if (logger.isDebugEnabled()) {
-            logger.debug("Comparing certificate fingerprint "+certFingerprint+
-                " with "+fingerprint);
+            logger.debug("Comparing certificate fingerprint {} with {}", certFingerprint, fingerprint);
           }
           if (certFingerprint == null) {
-            logger.error("Failed to determine fingerprint for certificate "+cert+
-                " and algorithm "+cert.getSigAlgName());
+            logger.error("Failed to determine fingerprint for certificate {} and algorithm {}", cert, cert.getSigAlgName());
           }
           else if (certFingerprint.equals(fingerprint)) {
             if (logger.isInfoEnabled()) {
-              logger.info("Peer is trusted by fingerprint '"+fingerprint+"' of certificate: '"+cert+"'");
+              logger.info("Peer is trusted by fingerprint '{}' of certificate: '{}'", fingerprint, cert);
             }
             return true;
           }

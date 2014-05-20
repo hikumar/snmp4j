@@ -131,7 +131,7 @@ public abstract class TcpTransportMapping
 
   protected void fireConnectionStateChanged(TransportStateEvent change) {
     if (logger.isDebugEnabled()) {
-      logger.debug("Firing transport state event: "+change);
+      logger.debug("Firing transport state event: {}", change);
     }
     final List<TransportStateListener> listenersFinalRef = transportStateListeners;
     if (listenersFinalRef != null) {
@@ -145,7 +145,7 @@ public abstract class TcpTransportMapping
         }
       }
       catch (RuntimeException ex) {
-        logger.error("Exception in fireConnectionStateChanged: "+ex.getMessage(), ex);
+        logger.error("Exception in fireConnectionStateChanged: {}", ex.getMessage(), ex);
         if (SNMP4JSettings.isForwardRuntimeExceptions()) {
           throw ex;
         }

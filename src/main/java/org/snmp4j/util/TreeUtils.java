@@ -85,7 +85,7 @@ public class TreeUtils extends AbstractSnmpUtility {
         listener.wait();
       }
       catch (InterruptedException ex) {
-        logger.warn("Tree retrieval interrupted: " + ex.getMessage());
+        logger.warn("Tree retrieval interrupted: {}", ex.getMessage());
       }
     }
     return l;
@@ -119,7 +119,7 @@ public class TreeUtils extends AbstractSnmpUtility {
         listener.wait();
       }
       catch (InterruptedException ex) {
-        logger.warn("Tree retrieval interrupted: " + ex.getMessage());
+        logger.warn("Tree retrieval interrupted: {}", ex.getMessage());
       }
     }
     return l;

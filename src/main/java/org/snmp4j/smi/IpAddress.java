@@ -44,7 +44,7 @@ public class IpAddress extends SMIAddress implements AssignableFromByteArray {
   private static final long serialVersionUID = -146846354059565449L;
 
   private static final Logger logger =
-      LoggerFactory.getLogger(AbstractVariable.class);
+      LoggerFactory.getLogger(IpAddress.class);
 
   private static final byte[] IPANYADDRESS = { 0,0,0,0 };
 
@@ -140,7 +140,7 @@ public class IpAddress extends SMIAddress implements AssignableFromByteArray {
       return new IpAddress(addr);
     }
     catch (Exception ex) {
-      logger.error("Unable to parse IpAddress from: "+address, ex);
+      logger.error("Unable to parse IpAddress from: {}", address, ex);
       return null;
     }
   }
@@ -214,7 +214,7 @@ public class IpAddress extends SMIAddress implements AssignableFromByteArray {
       return InetAddress.getByAddress(IPANYADDRESS);
     }
     catch (Exception ex) {
-      logger.error("Unable to create any IpAddress: "+ex.getMessage(), ex);
+      logger.error("Unable to create any IpAddress: {}", ex.getMessage(), ex);
     }
     return null;
   }

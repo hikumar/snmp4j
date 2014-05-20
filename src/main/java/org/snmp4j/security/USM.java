@@ -231,15 +231,14 @@ public class USM extends SNMPv3SecurityModel {
 
   public UsmUserEntry getUser(OctetString engineID, OctetString securityName) {
     if (logger.isDebugEnabled()) {
-      logger.debug("getUser(engineID="+engineID.toHexString()+
-                   ", securityName="+securityName.toString()+")");
+      logger.debug("getUser(engineID={}, securityName={})", engineID.toHexString(), securityName.toString());
     }
     UsmUserEntry entry = userTable.getUser(engineID, securityName);
     if (entry == null) {
       entry = userTable.getUser(securityName);
       if ((entry == null) && (securityName.length() > 0)) {
         if (logger.isDebugEnabled()) {
-          logger.debug("USM.getUser - User '"+securityName+"' unknown");
+          logger.debug("USM.getUser - User '{}' unknown", securityName);
         }
         return null;
       }
@@ -361,9 +360,7 @@ public class USM extends SNMPv3SecurityModel {
       }
       if (user == null) {
         if (logger.isDebugEnabled()) {
-          logger.debug("Security name not found for engineID=" +
-                       secEngineID.toHexString() + ", securityName=" +
-                       secName.toHexString());
+          logger.debug("Security name not found for engineID={}, securityName={}", secEngineID.toHexString(), secName.toHexString());
         }
         return SnmpConstants.SNMPv3_USM_UNKNOWN_SECURITY_NAME;
       }
@@ -381,18 +378,12 @@ public class USM extends SNMPv3SecurityModel {
 
     // Check length of userName and engineID
     if (usmSecurityParams.getAuthoritativeEngineID().length > MPv3.MAXLEN_ENGINE_ID) {
-      logger.error("Engine ID too long: "+
-                   usmSecurityParams.getAuthoritativeEngineID().length+">"+
-                   MPv3.MAXLEN_ENGINE_ID+ " for "+
-                   new OctetString(usmSecurityParams.getAuthoritativeEngineID())
-                   .toHexString());
+      logger.error("Engine ID too long: {}>" + MPv3.MAXLEN_ENGINE_ID + " for {}", usmSecurityParams.getAuthoritativeEngineID().length, new OctetString(usmSecurityParams.getAuthoritativeEngineID())
+          .toHexString());
       return SnmpConstants.SNMPv3_USM_ERROR;
     }
     if (securityName.length > MAXLEN_USMUSERNAME) {
-      logger.error("Security name too long: "+
-                   usmSecurityParams.getAuthoritativeEngineID().length+">"+
-                   MAXLEN_USMUSERNAME+ " for "+
-                   new OctetString(securityName).toHexString());
+      logger.error("Security name too long: {}>" + MAXLEN_USMUSERNAME + " for {}", usmSecurityParams.getAuthoritativeEngineID().length, new OctetString(securityName).toHexString());
       return SnmpConstants.SNMPv3_USM_ERROR;
     }
 
@@ -432,8 +423,7 @@ public class USM extends SNMPv3SecurityModel {
     if (securityLevel == SecurityLevel.AUTH_PRIV) {
       if (usmSecurityParams.getPrivacyProtocol() == null) {
         if (logger.isDebugEnabled()) {
-          logger.debug("Unsupported security level (missing or unsupported privacy protocol): Security params are "
-              +usmSecurityParams);
+          logger.debug("Unsupported security level (missing or unsupported privacy protocol): Security params are {}", usmSecurityParams);
         }
         return SnmpConstants.SNMPv3_USM_UNSUPPORTED_SECURITY_LEVEL;
       }
@@ -563,7 +553,7 @@ public class USM extends SNMPv3SecurityModel {
          SnmpConstants.SNMPv3_USM_OK)) {
       // generate report
       if (logger.isDebugEnabled()) {
-        logger.debug("RFC3414 §3.2.3 Unknown engine ID: " + securityEngineID.toHexString());
+        logger.debug("RFC3414 §3.2.3 Unknown engine ID: {}", securityEngineID.toHexString());
       }
       securityEngineID.setValue(usmSecurityParameters.getAuthoritativeEngineID());
       securityName.setValue(usmSecurityParameters.getUserName().getValue());
@@ -590,8 +580,7 @@ public class USM extends SNMPv3SecurityModel {
       OctetString secName = getSecurityName(securityEngineID, usmSecurityParameters.getUserName());
       if (secName == null) {
         if (logger.isDebugEnabled()) {
-          logger.debug("RFC3414 §3.2.4 Unknown security name: " +
-                       securityName.toHexString());
+          logger.debug("RFC3414 §3.2.4 Unknown security name: {}", securityName.toHexString());
         }
         if (statusInfo != null) {
           CounterEvent event = new CounterEvent(this,
@@ -616,9 +605,7 @@ public class USM extends SNMPv3SecurityModel {
       UsmUserEntry user = getUser(securityEngineID, securityName);
       if (user == null) {
         if (logger.isDebugEnabled()) {
-          logger.debug("RFC3414 §3.2.4 Unknown security name: " +
-                       securityName.toHexString()+ " for engine ID "+
-                       securityEngineID.toHexString());
+          logger.debug("RFC3414 §3.2.4 Unknown security name: {} for engine ID {}", securityName.toHexString(), securityEngineID.toHexString());
         }
         CounterEvent event =
             new CounterEvent(this, SnmpConstants.usmStatsUnknownUserNames);
@@ -650,8 +637,7 @@ public class USM extends SNMPv3SecurityModel {
       if (((securityLevel >= SecurityLevel.AUTH_NOPRIV) && (auth == null)) ||
           (((securityLevel >= SecurityLevel.AUTH_PRIV) && (priv == null)))) {
         if (logger.isDebugEnabled()) {
-          logger.debug("RFC3414 §3.2.5 - Unsupported security level: " +
-                       securityLevel + " by user "+user);
+          logger.debug("RFC3414 §3.2.5 - Unsupported security level: {} by user {}", securityLevel, user);
         }
         CounterEvent event =
             new CounterEvent(this, SnmpConstants.usmStatsUnsupportedSecLevels);
@@ -676,9 +662,7 @@ public class USM extends SNMPv3SecurityModel {
               AuthenticationProtocol.MESSAGE_AUTHENTICATION_CODE_LENGTH));
           if (!authentic) {
             if (logger.isDebugEnabled()) {
-              logger.debug(
-                  "RFC3414 §3.2.6 Wrong digest -> authentication failure: " +
-                  usmSecurityParameters.getAuthenticationParameters().toHexString());
+              logger.debug("RFC3414 §3.2.6 Wrong digest -> authentication failure: {}", usmSecurityParameters.getAuthenticationParameters().toHexString());
             }
             CounterEvent event =
                 new CounterEvent(this, SnmpConstants.usmStatsWrongDigests);
@@ -698,12 +682,7 @@ public class USM extends SNMPv3SecurityModel {
 
           switch (status) {
             case SnmpConstants.SNMPv3_USM_NOT_IN_TIME_WINDOW: {
-              logger.debug("RFC3414 §3.2.7.a Not in time window; engineID='" +
-                           securityEngineID +
-                           "', engineBoots=" +
-                           usmSecurityParameters.getAuthoritativeEngineBoots() +
-                           ", engineTime=" +
-                           usmSecurityParameters.getAuthoritativeEngineTime());
+              logger.debug("RFC3414 §3.2.7.a Not in time window; engineID='{}', engineBoots={}, engineTime={}", securityEngineID, usmSecurityParameters.getAuthoritativeEngineBoots(), usmSecurityParameters.getAuthoritativeEngineTime());
               CounterEvent event =
                   new CounterEvent(this, SnmpConstants.usmStatsNotInTimeWindows);
               fireIncrementCounter(event);
@@ -714,8 +693,7 @@ public class USM extends SNMPv3SecurityModel {
             }
             case SnmpConstants.SNMPv3_USM_UNKNOWN_ENGINEID: {
               if (logger.isDebugEnabled()) {
-                logger.debug("RFC3414 §3.2.7.b - Unkown engine ID: " +
-                             securityEngineID);
+                logger.debug("RFC3414 §3.2.7.b - Unkown engine ID: {}", securityEngineID);
               }
               CounterEvent event =
                   new CounterEvent(this, SnmpConstants.usmStatsUnknownEngineIDs);
@@ -759,7 +737,7 @@ public class USM extends SNMPv3SecurityModel {
             scopedPDU.setFilledBuffer(buf);
           }
           catch (Exception ex) {
-            logger.debug("RFC 3414 §3.2.8 Decryption error: "+ex.getMessage());
+            logger.debug("RFC 3414 §3.2.8 Decryption error: {}", ex.getMessage());
             return SnmpConstants.SNMPv3_USM_DECRYPTION_ERROR;
           }
         }

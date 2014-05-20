@@ -70,7 +70,7 @@ public class DefaultTlsTmSecurityCallback implements TlsTmSecurityCallback<X509C
           try {
             tmSecurityName = mapCertToTSN(cert, mappingType, data);
           } catch (CertificateParsingException e) {
-            LOGGER.warn("Failed to parse client certificate: " + e.getMessage());
+            LOGGER.warn("Failed to parse client certificate: {}", e.getMessage());
           }
           if ((tmSecurityName != null) && (tmSecurityName.length() <= 32)) {
             return tmSecurityName;

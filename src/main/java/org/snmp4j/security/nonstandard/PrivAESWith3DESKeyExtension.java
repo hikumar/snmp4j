@@ -49,7 +49,7 @@ public abstract class PrivAESWith3DESKeyExtension extends PrivAES {
       length += copyBytes;
     }
     if (logger.isDebugEnabled()) {
-       logger.debug("AES nonstandard key extend produced key "+new OctetString(extendedKey).toHexString());
+      logger.debug("AES nonstandard key extend produced key {}", new OctetString(extendedKey).toHexString());
     }
     return extendedKey;
   }

@@ -409,8 +409,7 @@ public class Snmp implements Session, CommandResponder {
         TransportMappings.getInstance().createTransportMapping(listenAddress);
     if (tm == null) {
       if (logger.isInfoEnabled()) {
-        logger.info("Failed to add notification listener for address: "+
-                    listenAddress);
+        logger.info("Failed to add notification listener for address: {}", listenAddress);
       }
       return false;
     }
@@ -426,14 +425,12 @@ public class Snmp implements Session, CommandResponder {
     try {
       tm.listen();
       if (logger.isInfoEnabled()) {
-        logger.info("Added notification listener for address: "+
-                    listenAddress);
+        logger.info("Added notification listener for address: {}", listenAddress);
       }
       return true;
     }
     catch (IOException ex) {
-      logger.warn("Failed to initialize notification listener for address '"+
-                  listenAddress+"': "+ex.getMessage());
+      logger.warn("Failed to initialize notification listener for address '{}': {}", listenAddress, ex.getMessage());
       return false;
     }
   }
@@ -451,8 +448,7 @@ public class Snmp implements Session, CommandResponder {
   {
     if (notificationDispatcher != null) {
       if (logger.isInfoEnabled()) {
-        logger.info("Removing notification listener for address: "+
-                    listenAddress);
+        logger.info("Removing notification listener for address: {}", listenAddress);
       }
       return notificationDispatcher.removeNotificationListener(listenAddress);
     }
@@ -798,7 +794,7 @@ public class Snmp implements Session, CommandResponder {
     AsyncRequestKey key = new AsyncRequestKey(request, listener);
     PduHandle pending = asyncRequests.remove(key);
     if (logger.isDebugEnabled()) {
-      logger.debug("Cancelling pending request with handle " + pending);
+      logger.debug("Cancelling pending request with handle {}", pending);
     }
     if (pending != null) {
       PendingRequest pendingRequest =
@@ -958,7 +954,7 @@ public class Snmp implements Session, CommandResponder {
       event.setProcessed(true);
       PendingRequest request;
       if (logger.isDebugEnabled()) {
-        logger.debug("Looking up pending request with handle " + handle);
+        logger.debug("Looking up pending request with handle {}", handle);
       }
       synchronized (pendingRequests) {
         request = pendingRequests.get(handle);
@@ -968,10 +964,7 @@ public class Snmp implements Session, CommandResponder {
       }
       if (request == null) {
         if (logger.isWarnEnabled()) {
-          logger.warn("Received response that cannot be matched to any " +
-              "outstanding request, address=" +
-              event.getPeerAddress() +
-              ", requestID=" + pdu.getRequestID());
+          logger.warn("Received response that cannot be matched to any outstanding request, address={}, requestID={}", event.getPeerAddress(), pdu.getRequestID());
         }
       }
       else if (!resendRequest(request, pdu)) {
@@ -987,7 +980,7 @@ public class Snmp implements Session, CommandResponder {
     }
     else {
       if (logger.isDebugEnabled()) {
-        logger.debug("Fire process PDU event: " + event.toString());
+        logger.debug("Fire process PDU event: {}", event.toString());
       }
       fireProcessPdu(event);
     }
@@ -1027,8 +1020,7 @@ public class Snmp implements Session, CommandResponder {
           sendMessage(request.pdu, request.target, request.transport, request);
         }
         catch (IOException e) {
-          logger.error("IOException while resending request after RFC 5343 context engine ID discovery: " +
-              e.getMessage(), e);
+          logger.error("IOException while resending request after RFC 5343 context engine ID discovery: {}", e.getMessage(), e);
         }
       }
       return true;
@@ -1042,8 +1034,7 @@ public class Snmp implements Session, CommandResponder {
       if (pdu instanceof ScopedPDU) {
         ((ScopedPDU)pdu).setContextEngineID((OctetString) contextEngineID);
         if (logger.isInfoEnabled()) {
-          logger.info("Discovered contextEngineID '"+contextEngineID+
-                      "' by RFC 5343 for " + target);
+          logger.info("Discovered contextEngineID '{}' by RFC 5343 for {}", contextEngineID, target);
         }
       }
     }
@@ -1053,7 +1044,7 @@ public class Snmp implements Session, CommandResponder {
 
     public void processReport(PduHandle handle, CommandResponderEvent e) {
       PDU pdu = e.getPDU();
-      logger.debug("Searching pending request with handle" + handle);
+      logger.debug("Searching pending request with handle{}", handle);
       PendingRequest request = pendingRequests.get(handle);
 
       VariableBinding vb = checkReport(e, pdu, request);
@@ -1094,8 +1085,7 @@ public class Snmp implements Session, CommandResponder {
           request.key = resentHandle;
         }
         catch (IOException iox) {
-          logger.error("Failed to send message to " + request.target + ": " +
-                       iox.getMessage());
+          logger.error("Failed to send message to {}: {}", request.target, iox.getMessage());
         }
       }
       else {
@@ -1122,9 +1112,7 @@ public class Snmp implements Session, CommandResponder {
         else {
           // silently drop late report
           if (logger.isInfoEnabled()) {
-            logger.info("Received late report from " +
-                        e.getPeerAddress() +
-                        " with request ID " + pdu.getRequestID());
+            logger.info("Received late report from {} with request ID {}", e.getPeerAddress(), pdu.getRequestID());
           }
         }
       }
@@ -1132,22 +1120,21 @@ public class Snmp implements Session, CommandResponder {
 
     protected VariableBinding checkReport(CommandResponderEvent e, PDU pdu, PendingRequest request) {
       if (request == null) {
-        logger.warn("Unmatched report PDU received from " + e.getPeerAddress());
+        logger.warn("Unmatched report PDU received from {}", e.getPeerAddress());
         return null;
       }
       if (pdu.size() == 0) {
-        logger.error("Illegal report PDU received from " + e.getPeerAddress() +
-                     " missing report variable binding");
+        logger.error("Illegal report PDU received from {} missing report variable binding", e.getPeerAddress());
         return null;
       }
       VariableBinding vb = pdu.get(0);
       if (vb == null) {
-        logger.error("Received illegal REPORT PDU from " + e.getPeerAddress());
+        logger.error("Received illegal REPORT PDU from {}", e.getPeerAddress());
         return null;
       }
       // RFC 7.2.11 (b):
       if (e.getSecurityModel() != request.target.getSecurityModel()) {
-        logger.warn("RFC3412 §7.2.11.b: Received REPORT PDU with different security model than cached one: "+e);
+        logger.warn("RFC3412 §7.2.11.b: Received REPORT PDU with different security model than cached one: {}", e);
         return null;
       }
       // RFC 7.2.11 (b):
@@ -1157,9 +1144,7 @@ public class Snmp implements Session, CommandResponder {
           ((e.getSecurityLevel() != request.target.getSecurityLevel()) &&
            (!SnmpConstants.usmStatsUnknownUserNames.equals(vb.getOid())) &&
            (!SnmpConstants.usmStatsUnknownEngineIDs.equals(vb.getOid())))) {
-        logger.warn("RFC3412 §7.2.11.b:Received REPORT PDU with security level noAuthNoPriv from '"+e+"'. "+
-                    "Ignoring it, because report strategy is set to "+
-                    SNMP4JSettings.getReportSecurityLevelStrategy());
+        logger.warn("RFC3412 §7.2.11.b:Received REPORT PDU with security level noAuthNoPriv from '{}'. Ignoring it, because report strategy is set to {}", e, SNMP4JSettings.getReportSecurityLevelStrategy());
         return null;
       }
       return vb;
@@ -1353,7 +1338,7 @@ public class Snmp implements Session, CommandResponder {
         if ((sm != null) && (!sm.supportsEngineIdDiscovery())) {
           // Perform context engine ID discovery according to RFC 5343
           if (logger.isInfoEnabled()) {
-            logger.info("Performing RFC 5343 contextEngineID discovery on "+target);
+            logger.info("Performing RFC 5343 contextEngineID discovery on {}", target);
           }
           ScopedPDU discoverPDU = new ScopedPDU();
           discoverPDU.setContextEngineID(MPv3.LOCAL_ENGINE_ID);
@@ -1409,9 +1394,7 @@ public class Snmp implements Session, CommandResponder {
           pendingRequests.put(handle, this);
           registerRequest(handle);
           if (logger.isDebugEnabled()) {
-            logger.debug("Running pending async" +
-                         " request with handle " + handle +
-                         " and retry count left " + retryCount);
+            logger.debug("Running pending async request with handle {} and retry count left {}", handle, retryCount);
           }
           long delay =
               timeoutModel.getRetryTimeout(t.getRetries() - retryCount,
@@ -1450,9 +1433,7 @@ public class Snmp implements Session, CommandResponder {
       if ((m_key == null) || (m_pdu == null) || (m_target == null) ||
           (m_listener == null)) {
         if (logger.isDebugEnabled()) {
-          logger.debug("PendingRequest canceled key="+m_key+", pdu="+m_pdu+
-              ", target="+m_target+", transport="+m_transport+", listener="+
-              m_listener);
+          logger.debug("PendingRequest canceled key={}, pdu={}, target={}, transport={}, listener={}", m_key, m_pdu, m_target, m_transport, m_listener);
         }
         return;
       }
@@ -1471,9 +1452,7 @@ public class Snmp implements Session, CommandResponder {
           catch (IOException ex) {
             ResponseListener l = listener;
             finished = true;
-            logger.error("Failed to send SNMP message to " + m_target +
-                         ": " +
-                         ex.getMessage());
+            logger.error("Failed to send SNMP message to {}: {}", m_target, ex.getMessage());
             messageDispatcher.releaseStateReference(m_target.getVersion(),
                 m_key);
             if (l != null) {
@@ -1488,7 +1467,7 @@ public class Snmp implements Session, CommandResponder {
           if (!cancelled) {
             // request timed out
             if (logger.isDebugEnabled()) {
-              logger.debug("Request timed out: " + m_key.getTransactionID());
+              logger.debug("Request timed out: {}", m_key.getTransactionID());
             }
             messageDispatcher.releaseStateReference(m_target.getVersion(),
                                                     m_key);
@@ -1503,8 +1482,7 @@ public class Snmp implements Session, CommandResponder {
         }
       }
       catch (RuntimeException ex) {
-        logger.error("Failed to process pending request " + m_key +
-                     " because " + ex.getMessage(), ex);
+        logger.error("Failed to process pending request {} because {}", m_key, ex.getMessage(), ex);
         throw ex;
       }
       catch (Error er) {
@@ -1668,8 +1646,7 @@ public class Snmp implements Session, CommandResponder {
         }
         catch (MessageException mex) {
           if (logger.isWarnEnabled()) {
-            logger.warn("Failed to send response on INFORM PDU event (" +
-                        event + "): " + mex.getMessage());
+            logger.warn("Failed to send response on INFORM PDU event ({}): {}", event, mex.getMessage());
           }
         }
       }

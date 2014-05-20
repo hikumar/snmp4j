@@ -93,8 +93,7 @@ public class PropertiesTlsTmSecurityCallback
       return true;
     }
     else {
-      LOGGER.warn("Certificate subject '"+subject+
-          "' does not match accepted peer '"+acceptedPeer+"'");
+      LOGGER.warn("Certificate subject '{}' does not match accepted peer '{}'", subject, acceptedPeer);
     }
     String acceptedCA = properties.getProperty(SnmpConfigurator.P_TLS_TRUST_CA, "");
     for (int i=1; i<peerCertificateChain.length; i++) {
@@ -103,8 +102,7 @@ public class PropertiesTlsTmSecurityCallback
         return true;
       }
       else {
-        LOGGER.warn("Certification authority '"+ca+
-            "' does not match accepted CA '"+acceptedCA+"'");
+        LOGGER.warn("Certification authority '{}' does not match accepted CA '{}'", ca, acceptedCA);
       }
     }
     return false;

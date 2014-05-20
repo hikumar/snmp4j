@@ -137,8 +137,7 @@ public abstract class TransportIpAddress extends IpAddress {
         setInetAddress((InetAddress)o);
       }
       catch (Exception ex) {
-        logger.warn("Java < 1.5 does not support scoped IPv6 addresses, "+
-                    "ignoring scope ID for " + transportAddress);
+        logger.warn("Java < 1.5 does not support scoped IPv6 addresses, ignoring scope ID for {}", transportAddress);
         setInetAddress(InetAddress.getByAddress(ipaddr));
       }
     }

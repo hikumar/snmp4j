@@ -207,13 +207,12 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
             SocketChannel sc = s.getChannel();
             s.close();
             if (logger.isDebugEnabled()) {
-              logger.debug("Socket to " + entry.getPeerAddress() + " closed");
+              logger.debug("Socket to {} closed", entry.getPeerAddress());
             }
             if (sc != null) {
               sc.close();
               if (logger.isDebugEnabled()) {
-                logger.debug("Socket channel to " +
-                    entry.getPeerAddress() + " closed");
+                logger.debug("Socket channel to {} closed", entry.getPeerAddress());
               }
             }
           }
@@ -246,7 +245,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
    */
   public synchronized boolean close(TcpAddress remoteAddress) throws IOException {
     if (logger.isDebugEnabled()) {
-      logger.debug("Closing socket for peer address "+remoteAddress);
+      logger.debug("Closing socket for peer address {}", remoteAddress);
     }
     SocketEntry entry = sockets.remove(remoteAddress);
     if (entry != null) {
@@ -255,13 +254,12 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
         SocketChannel sc = entry.getSocket().getChannel();
         entry.getSocket().close();
         if (logger.isInfoEnabled()) {
-          logger.info("Socket to " + entry.getPeerAddress() + " closed");
+          logger.info("Socket to {} closed", entry.getPeerAddress());
         }
         if (sc != null) {
           sc.close();
           if (logger.isDebugEnabled()) {
-            logger.debug("Closed socket channel for peer address "+
-                         remoteAddress);
+            logger.debug("Closed socket channel for peer address {}", remoteAddress);
           }
         }
       }
@@ -416,14 +414,14 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
       if ((this.registrations & opKey) == 0) {
         this.registrations |= opKey;
         if (logger.isDebugEnabled()) {
-          logger.debug("Adding operation "+opKey+" for: " + toString());
+          logger.debug("Adding operation {} for: {}", opKey, toString());
         }
         socket.getChannel().register(selector, registrations, this);
       }
       else if (!socket.getChannel().isRegistered()) {
         this.registrations = opKey;
         if (logger.isDebugEnabled()) {
-          logger.debug("Registering new operation "+opKey+" for: " + toString());
+          logger.debug("Registering new operation {} for: {}", opKey, toString());
         }
         socket.getChannel().register(selector, opKey, this);
       }
@@ -534,7 +532,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
       if ((socketCleaner == null) ||
           (idleMillis >= connectionTimeout)) {
         if (logger.isDebugEnabled()) {
-          logger.debug("Socket has not been used for " + idleMillis + " milliseconds, closing it");
+          logger.debug("Socket has not been used for {} milliseconds, closing it", idleMillis);
         }
         try {
           synchronized (entryCopy) {
@@ -542,7 +540,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
               sockets.remove(entryCopy.getPeerAddress());
               entryCopy.getSocket().close();
               if (logger.isInfoEnabled()) {
-                logger.info("Socket to " + entryCopy.getPeerAddress() + " closed due to timeout");
+                logger.info("Socket to {} closed due to timeout", entryCopy.getPeerAddress());
               }
             }
             else {
@@ -562,7 +560,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
     private void rescheduleCleanup(long idleMillisAlreadyElapsed, SocketEntry entry) {
       long nextRun = connectionTimeout - idleMillisAlreadyElapsed;
       if (logger.isDebugEnabled()) {
-        logger.debug("Scheduling " + nextRun);
+        logger.debug("Scheduling {}", nextRun);
       }
       socketCleaner.schedule(new SocketTimeout(entry), nextRun);
     }
@@ -677,8 +675,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
       Socket s = null;
       SocketEntry entry = sockets.get(address);
       if (logger.isDebugEnabled()) {
-        logger.debug("Looking up connection for destination '"+address+
-                     "' returned: "+entry);
+        logger.debug("Looking up connection for destination '{}' returned: {}", address, entry);
         logger.debug(sockets.toString());
       }
       if (entry != null) {
@@ -689,8 +686,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
       }
       if ((s == null) || (s.isClosed()) || (!s.isConnected())) {
         if (logger.isDebugEnabled()) {
-          logger.debug("Socket for address '"+address+
-                       "' is closed, opening it...");
+          logger.debug("Socket for address '{}' is closed, opening it...", address);
         }
         synchronized (pending) {
           pending.remove(entry);
@@ -723,7 +719,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
           }
 
           selector.wakeup();
-          logger.debug("Trying to connect to "+address);
+          logger.debug("Trying to connect to {}", address);
         }
         catch (IOException iox) {
           logger.error(iox.getMessage(), iox);
@@ -862,7 +858,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
         }
       }
       if (logger.isDebugEnabled()) {
-        logger.debug("Worker task finished: " + getClass().getName());
+        logger.debug("Worker task finished: {}", getClass().getName());
       }
     }
 
@@ -873,7 +869,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
         if (!sc.isConnected()) {
           if (sc.finishConnect()) {
             sc.configureBlocking(false);
-            logger.debug("Connected to " + entry.getPeerAddress());
+            logger.debug("Connected to {}", entry.getPeerAddress());
             // make sure conncetion is closed if not used for timeout
             // micro seconds
             timeoutSocket(entry);
@@ -887,7 +883,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
         if (entry != null) {
           Address addr = (incomingAddress == null) ?
                                       entry.getPeerAddress() : incomingAddress;
-          logger.debug("Fire connected event for "+addr);
+          logger.debug("Fire connected event for {}", addr);
           TransportStateEvent e =
               new TransportStateEvent(DefaultTcpTransportMapping.this,
                                       addr,
@@ -976,8 +972,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
       if (!readChannel.isOpen()) {
         sk.cancel();
         if (logger.isDebugEnabled()) {
-          logger.debug("Read channel not open, no bytes read from " +
-                       incomingAddress);
+          logger.debug("Read channel not open, no bytes read from {}", incomingAddress);
         }
         return;
       }
@@ -985,15 +980,13 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
       try {
         bytesRead = readChannel.read(byteBuffer);
         if (logger.isDebugEnabled()) {
-          logger.debug("Reading header " + bytesRead + " bytes from " +
-                       incomingAddress);
+          logger.debug("Reading header {} bytes from {}", bytesRead, incomingAddress);
         }
       }
       catch (ClosedChannelException ccex) {
         sk.cancel();
         if (logger.isDebugEnabled()) {
-          logger.debug("Read channel not open, no bytes read from " +
-                       incomingAddress);
+          logger.debug("Read channel not open, no bytes read from {}", incomingAddress);
         }
         return;
       }
@@ -1001,19 +994,16 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
         MessageLength messageLength =
             messageLengthDecoder.getMessageLength(ByteBuffer.wrap(buf));
         if (logger.isDebugEnabled()) {
-          logger.debug("Message length is "+messageLength);
+          logger.debug("Message length is {}", messageLength);
         }
         if ((messageLength.getMessageLength() > getMaxInboundMessageSize()) ||
             (messageLength.getMessageLength() <= 0)) {
-          logger.error("Received message length "+messageLength+
-                       " is greater than inboundBufferSize "+
-                       getMaxInboundMessageSize());
+          logger.error("Received message length {} is greater than inboundBufferSize {}", messageLength, getMaxInboundMessageSize());
           if (entry != null) {
             Socket s = entry.getSocket();
             if (s != null) {
               s.close();
-              logger.info("Socket to " + entry.getPeerAddress() +
-                          " closed due to an error");
+              logger.info("Socket to {} closed due to an error", entry.getPeerAddress());
             }
           }
         }
@@ -1061,10 +1051,8 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
                                  Object sessionID) {
       byteBuffer.flip();
       if (logger.isDebugEnabled()) {
-        logger.debug("Received message from " + incomingAddress +
-                     " with length " + bytesRead + ": " +
-                     new OctetString(byteBuffer.array(), 0,
-                                     (int)bytesRead).toHexString());
+        logger.debug("Received message from {} with length {}: {}", incomingAddress, bytesRead, new OctetString(byteBuffer.array(), 0,
+            (int) bytesRead).toHexString());
       }
       ByteBuffer bis;
       if (isAsyncMsgProcessingSupported()) {
@@ -1090,10 +1078,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
         ByteBuffer buffer = ByteBuffer.wrap(message);
         sc.write(buffer);
         if (logger.isDebugEnabled()) {
-          logger.debug("Send message with length " +
-                       message.length + " to " +
-                       entry.getPeerAddress() + ": " +
-                       new OctetString(message).toHexString());
+          logger.debug("Send message with length {} to {}: {}", message.length, entry.getPeerAddress(), new OctetString(message).toHexString());
         }
         entry.addRegistration(selector, SelectionKey.OP_READ);
       }
@@ -1120,20 +1105,20 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
     public void terminate() {
       stop = true;
       if (logger.isDebugEnabled()) {
-        logger.debug("Terminated worker task: " + getClass().getName());
+        logger.debug("Terminated worker task: {}", getClass().getName());
       }
     }
 
     public void join() {
       if (logger.isDebugEnabled()) {
-        logger.debug("Joining worker task: " + getClass().getName());
+        logger.debug("Joining worker task: {}", getClass().getName());
       }
     }
 
     public void interrupt() {
       stop = true;
       if (logger.isDebugEnabled()) {
-        logger.debug("Interrupting worker task: " + getClass().getName());
+        logger.debug("Interrupting worker task: {}", getClass().getName());
       }
       selector.wakeup();
     }

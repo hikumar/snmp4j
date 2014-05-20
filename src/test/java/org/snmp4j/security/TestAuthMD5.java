@@ -174,15 +174,15 @@ public class TestAuthMD5
     };
     AuthMD5 auth = new AuthMD5();
     cat.debug("start authenticate");
-    cat.debug("msg before: " + asHex(msg));
+    cat.debug("msg before: {}", asHex(msg));
     boolean res = auth.authenticate(key, msg, 0,
                                     msg.length,
                                     new ByteArrayWindow(msg, 59, 12));
-    cat.debug("msg after: " + asHex(msg));
+    cat.debug("msg after: {}", asHex(msg));
 
     assertEquals(true, res);
     for (int i = 0; i < 12; i++) {
-      cat.debug("" + i);
+      cat.debug("{}", i);
       assertEquals(expectedDigest[i], msg[59+i]);
     }
   }

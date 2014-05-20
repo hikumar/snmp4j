@@ -102,7 +102,7 @@ public abstract class PrivAES
     }
     System.arraycopy(initVect, 8, decryptParams.array, 0, 8);
     if (logger.isDebugEnabled()) {
-      logger.debug("initVect is " + asHex(initVect));
+      logger.debug("initVect is {}", asHex(initVect));
     }
 
     // allocate space for encrypted text
@@ -121,19 +121,17 @@ public abstract class PrivAES
       cipherPool.offerCipher(alg);
 
       if (logger.isDebugEnabled()) {
-        logger.debug("aes encrypt: Data to encrypt " + asHex(unencryptedData));
+        logger.debug("aes encrypt: Data to encrypt {}", asHex(unencryptedData));
 
-        logger.debug("aes encrypt: used key " + asHex(encryptionKey));
+        logger.debug("aes encrypt: used key {}", asHex(encryptionKey));
 
-        logger.debug("aes encrypt: created privacy_params " +
-                     asHex(decryptParams.array));
+        logger.debug("aes encrypt: created privacy_params {}", asHex(decryptParams.array));
 
-        logger.debug("aes encrypt: encrypted Data  " +
-                     asHex(encryptedData));
+        logger.debug("aes encrypt: encrypted Data  {}", asHex(encryptedData));
       }
     }
     catch (Exception e) {
-      logger.error("Encrypt Exception " + e);
+      logger.error("Encrypt Exception", e);
     }
 
     return encryptedData;
@@ -163,7 +161,7 @@ public abstract class PrivAES
     initVect[7] = (byte) ( (engineTime) & 0xFF);
     System.arraycopy(decryptParams.array, decryptParams.offset, initVect, 8, 8);
     if (logger.isDebugEnabled()) {
-      logger.debug("initVect is " + asHex(initVect));
+      logger.debug("initVect is {}", asHex(initVect));
     }
 
     byte[] decryptedData = null;
@@ -181,19 +179,17 @@ public abstract class PrivAES
       cipherPool.offerCipher(alg);
 
       if (logger.isDebugEnabled()) {
-        logger.debug("aes decrypt: Data to decrypt " + asHex(cryptedData));
+        logger.debug("aes decrypt: Data to decrypt {}", asHex(cryptedData));
 
-        logger.debug("aes decrypt: used key " + asHex(decryptionKey));
+        logger.debug("aes decrypt: used key {}", asHex(decryptionKey));
 
-        logger.debug("aes decrypt: used privacy_params " +
-                     asHex(decryptParams.array));
+        logger.debug("aes decrypt: used privacy_params {}", asHex(decryptParams.array));
 
-        logger.debug("aes decrypt: decrypted Data  " +
-                     asHex(decryptedData));
+        logger.debug("aes decrypt: decrypted Data  {}", asHex(decryptedData));
       }
     }
     catch (Exception e) {
-      logger.error("Decrypt Exception " + e);
+      logger.error("Decrypt Exception", e);
     }
 
     return decryptedData;

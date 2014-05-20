@@ -67,9 +67,7 @@ public class PrivDES
     int mySalt = (int)salt.getNext();
 
     if (encryptionKey.length < 16) {
-      logger.error("Wrong Key length: need at least 16 bytes, is " +
-                   encryptionKey.length +
-                   " bytes.");
+      logger.error("Wrong Key length: need at least 16 bytes, is {} bytes.", encryptionKey.length);
       throw new IllegalArgumentException("encryptionKey has illegal length "
                                          + encryptionKey.length
                                          + " (should be at least 16).");
@@ -175,9 +173,7 @@ public class PrivDES
           + decryptParams.length + ").");
     }
     if (decryptionKey.length < 16) {
-      logger.error("Wrong Key length: need at least 16 bytes, is " +
-                   decryptionKey.length +
-                   " bytes.");
+      logger.error("Wrong Key length: need at least 16 bytes, is {} bytes.", decryptionKey.length);
       throw new IllegalArgumentException("decryptionKey has illegal length "
                                          + decryptionKey.length
                                          + " (should be at least 16).");

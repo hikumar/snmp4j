@@ -40,7 +40,7 @@ public class TlsAddress extends TcpAddress {
 
   static final long serialVersionUID = 0L;
 
-  private static final Logger logger = LoggerFactory.getLogger(SshAddress.class);
+  private static final Logger logger = LoggerFactory.getLogger(TlsAddress.class);
 
   public TlsAddress() {
     super();

@@ -111,9 +111,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
         new InetSocketAddress(targetAddress.getInetAddress(),
                               targetAddress.getPort());
     if (logger.isDebugEnabled()) {
-      logger.debug("Sending message to "+targetAddress+" with length "+
-                   message.length+": "+
-                   new OctetString(message).toHexString());
+      logger.debug("Sending message to {} with length {}: {}", targetAddress, message.length, new OctetString(message).toHexString());
     }
     DatagramSocket s = ensureSocket();
     s.send(new DatagramPacket(message, message.length, targetSocketAddress));
@@ -364,9 +362,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
                                                       maxInboundMessageSize));
           }
           if (logger.isDebugEnabled()) {
-            logger.debug("UDP receive buffer size for socket " +
-                             getAddress() + " is set to: " +
-                             socketCopy.getReceiveBufferSize());
+            logger.debug("UDP receive buffer size for socket {} is set to: {}", getAddress(), socketCopy.getReceiveBufferSize());
           }
         } catch (SocketException ex) {
           logger.error(ex.getMessage(), ex);
@@ -392,11 +388,8 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
             }
           }
           if (logger.isDebugEnabled()) {
-            logger.debug("Received message from "+packet.getAddress()+"/"+
-                         packet.getPort()+
-                         " with length "+packet.getLength()+": "+
-                         new OctetString(packet.getData(), 0,
-                                         packet.getLength()).toHexString());
+            logger.debug("Received message from {}/{} with length {}: {}", packet.getAddress(), packet.getPort(), packet.getLength(), new OctetString(packet.getData(), 0,
+                packet.getLength()).toHexString());
           }
           ByteBuffer bis;
           // If messages are processed asynchronously (i.e. multi-threaded)
@@ -431,7 +424,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
         }
         catch (SocketException soex) {
           if (!stop) {
-            logger.warn("Socket for transport mapping " + toString() + " error: " + soex.getMessage());
+            logger.warn("Socket for transport mapping {} error: {}", toString(), soex.getMessage());
           }
           if (SNMP4JSettings.isForwardRuntimeExceptions()) {
             stop = true;
@@ -447,8 +440,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
             } catch (SocketException e) {
               stop = true;
               socket = null;
-              logger.error("Socket renewal for transport mapping " + toString() +
-                  " failed with: " + e.getMessage(), e);
+              logger.error("Socket renewal for transport mapping {} failed with: {}", toString(), e.getMessage(), e);
 
             }
           }
@@ -470,7 +462,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
         socket = null;
       }
       if (logger.isDebugEnabled()) {
-        logger.debug("Worker task stopped:" + getClass().getName());
+        logger.debug("Worker task stopped:{}", getClass().getName());
       }
     }
 
@@ -481,19 +473,19 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
     public void terminate() {
       close();
       if (logger.isDebugEnabled()) {
-        logger.debug("Terminated worker task: " + getClass().getName());
+        logger.debug("Terminated worker task: {}", getClass().getName());
       }
     }
 
     public void join() throws InterruptedException {
       if (logger.isDebugEnabled()) {
-        logger.debug("Joining worker task: " + getClass().getName());
+        logger.debug("Joining worker task: {}", getClass().getName());
       }
     }
 
     public void interrupt() {
       if (logger.isDebugEnabled()) {
-        logger.debug("Interrupting worker task: " + getClass().getName());
+        logger.debug("Interrupting worker task: {}", getClass().getName());
       }
       close();
     }

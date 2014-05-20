@@ -53,7 +53,7 @@ public class SnmpTest extends TestCase {
   static {
 //    LogFactory.setLogFactory(new ConsoleLogFactory());
 //    ConsoleLogAdapter.setDebugEnabled(true);
-  };
+  }
 
   private DummyTransport<UdpAddress> transportMappingCG;
   private AbstractTransportMapping<UdpAddress> transportMappingCR;

@@ -35,7 +35,7 @@ import java.util.List;
  */
 public class SnmpUriResponse {
 
-  public enum Type { FINAL, NEXT, TIMEOUT, SNMP_ERROR, IO_ERROR, SECURITY_ERROR, LEXICOGRAPHIC_ORDER_ERROR };
+  public enum Type { FINAL, NEXT, TIMEOUT, SNMP_ERROR, IO_ERROR, SECURITY_ERROR, LEXICOGRAPHIC_ORDER_ERROR }
 
   private List<VariableBinding[]> data;  
   private int errorStatus = PDU.noError;

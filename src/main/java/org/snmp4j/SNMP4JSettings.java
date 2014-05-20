@@ -55,7 +55,7 @@ public final class SNMP4JSettings {
      * Never use noAuthNoPriv security level for reports.
      */
     neverNoAuthNoPriv
-  };
+  }
 
   /**
    * Specifies whether SNMP4J can be extended by own implementation of

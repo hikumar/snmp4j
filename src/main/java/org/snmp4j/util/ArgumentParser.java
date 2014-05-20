@@ -452,7 +452,7 @@ public class ArgumentParser {
    *    <code>null</code> otherwise.
    * @since 1.9.2
    */
-  public static Object getFirstValue(List<? extends Object> optionValues) {
+  public static Object getFirstValue(List<?> optionValues) {
     if ((optionValues != null) && (optionValues.size()>0)) {
       return optionValues.get(0);
     }

@@ -49,7 +49,7 @@ import java.util.StringTokenizer;
  */
 public class SnmpURI {
 
-  public enum SnmpUriType { GET, NEXT, SUBTREE };
+  public enum SnmpUriType { GET, NEXT, SUBTREE }
 
   private Session snmp;
   private USM usm;

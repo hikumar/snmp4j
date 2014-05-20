@@ -704,9 +704,11 @@ public class TableUtils extends AbstractSnmpUtility {
    *    row creation was successful.
    * @since 1.6
    */
-  public ResponseEvent createRow(Target target,
+  public void createRow(Target target,
                                  OID rowStatusColumnOID, OID rowIndex,
-                                 VariableBinding[] values) {
+                                 VariableBinding[] values,
+                                 Object userHandle,
+                                 ResponseListener listener) {
     PDU pdu = pduFactory.createPDU(target);
     OID rowStatusID = new OID(rowStatusColumnOID);
     rowStatusID.append(rowIndex);
@@ -730,12 +732,11 @@ public class TableUtils extends AbstractSnmpUtility {
     }
     pdu.setType(PDU.SET);
     try {
-      return session.send(pdu, target);
+      session.send(pdu, target, userHandle, listener);
     }
     catch (IOException ex) {
       logger.error(ex);
     }
-    return null;
   }
 
   /**
@@ -756,8 +757,10 @@ public class TableUtils extends AbstractSnmpUtility {
    *    row creation was successful.
    * @since 1.7.6
    */
-  public ResponseEvent destroyRow(Target target,
-                                  OID rowStatusColumnOID, OID rowIndex) {
+  public void destroyRow(Target target,
+                                  OID rowStatusColumnOID, OID rowIndex,
+                                  Object userHandle,
+                                  ResponseListener listener) {
     PDU pdu = pduFactory.createPDU(target);
     OID rowStatusID = new OID(rowStatusColumnOID);
     rowStatusID.append(rowIndex);
@@ -766,13 +769,11 @@ public class TableUtils extends AbstractSnmpUtility {
     pdu.add(rowStatus);
     pdu.setType(PDU.SET);
     try {
-      ResponseEvent responseEvent = session.send(pdu, target);
-      return responseEvent;
+      session.send(pdu, target, userHandle, listener);
     }
     catch (IOException ex) {
       logger.error(ex);
     }
-    return null;
   }
 
   class Row extends Vector<VariableBinding> {

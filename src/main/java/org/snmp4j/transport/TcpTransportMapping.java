@@ -76,45 +76,6 @@ public abstract class TcpTransportMapping
     return tcpAddress;
   }
 
-  public abstract void sendMessage(TcpAddress address, byte[] message,
-                                   TransportStateReference tmStateReference)
-      throws IOException;
-
-  public abstract void listen() throws IOException;
-
-  public abstract void close() throws IOException;
-
-  /**
-   * Returns the <code>MessageLengthDecoder</code> used by this transport
-   * mapping.
-   * @return
-   *    a MessageLengthDecoder instance.
-   * @since 1.7
-   */
-  public abstract MessageLengthDecoder getMessageLengthDecoder();
-
-  /**
-   * Sets the <code>MessageLengthDecoder</code> that decodes the total
-   * message length from the header of a message.
-   *
-   * @param messageLengthDecoder
-   *    a MessageLengthDecoder instance.
-   * @since 1.7
-   */
-  public abstract void
-      setMessageLengthDecoder(MessageLengthDecoder messageLengthDecoder);
-
-  /**
-   * Sets the connection timeout. This timeout specifies the time a connection
-   * may be idle before it is closed.
-   * @param connectionTimeout
-   *    the idle timeout in milliseconds. A zero or negative value will disable
-   *    any timeout and connections opened by this transport mapping will stay
-   *    opened until they are explicitly closed.
-   * @since 1.7
-   */
-  public abstract void setConnectionTimeout(long connectionTimeout);
-
   public synchronized void addTransportStateListener(TransportStateListener l) {
     if (transportStateListeners == null) {
       transportStateListeners = new Vector<TransportStateListener>(2);

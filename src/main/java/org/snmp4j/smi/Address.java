@@ -51,14 +51,5 @@ public interface Address extends AssignableFromString, AssignableFromByteArray {
    */
   boolean parseAddress(String address);
 
-  /**
-   * Sets the address value from the supplied String. The string must match
-   * the format required for the Address instance implementing this interface.
-   * Otherwise an {@link IllegalArgumentException} runtime exception is thrown.
-   * @param address
-   *    an address String.
-   * @since 1.7
-   */
-  void setValue(String address);
 }
 

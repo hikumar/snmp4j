@@ -44,12 +44,6 @@ public abstract class AbstractTransportMapping<A extends Address>
   protected int maxInboundMessageSize = (1 << 16) - 1;
   protected boolean asyncMsgProcessingSupported = true;
 
-  public abstract Class<? extends Address> getSupportedAddressClass();
-
-  public abstract void sendMessage(A address, byte[] message,
-                                   TransportStateReference tmStateReference)
-      throws IOException;
-
   public synchronized void addTransportListener(TransportListener l) {
     if (!transportListener.contains(l)) {
       List<TransportListener> tlCopy =
@@ -76,10 +70,6 @@ public abstract class AbstractTransportMapping<A extends Address>
       }
     }
   }
-
-
-  public abstract void close() throws IOException;
-  public abstract void listen() throws IOException;
 
   public int getMaxInboundMessageSize() {
     return maxInboundMessageSize;

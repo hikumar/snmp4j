@@ -93,41 +93,9 @@ public abstract class AbstractVariable implements Variable, Serializable {
   public AbstractVariable() {
   }
 
-  public abstract boolean equals(Object o);
-
-  public abstract int compareTo(Variable o);
-
-  public abstract int hashCode();
-
-  /**
-   * Returns the length of this <code>Variable</code> in bytes when encoded
-   * according to the Basic Encoding Rules (BER).
-   * @return
-   *    the BER encoded length of this variable.
-   */
-  public abstract int getBERLength();
-
   public int getBERPayloadLength() {
     return getBERLength();
   }
-
-  /**
-   * Decodes a <code>Variable</code> from an <code>InputStream</code>.
-   * @param inputStream
-   *    an <code>InputStream</code> containing a BER encoded byte stream.
-   * @throws IOException
-   *    if the stream could not be decoded by using BER rules.
-   */
-  public abstract void decodeBER(BERInputStream inputStream) throws IOException;
-
-  /**
-   * Encodes a <code>Variable</code> to an <code>OutputStream</code>.
-   * @param outputStream
-   *    an <code>OutputStream</code>.
-   * @throws IOException
-   *    if an error occurs while writing to the stream.
-   */
-  public abstract void encodeBER(OutputStream outputStream) throws IOException;
 
   /**
    * Creates a <code>Variable</code> from a BER encoded <code>InputStream</code>.
@@ -322,15 +290,6 @@ public abstract class AbstractVariable implements Variable, Serializable {
   }
 
   /**
-   * Gets the ASN.1 syntax identifier value of this SNMP variable.
-   * @return
-   *    an integer value < 128 for regular SMI objects and a value >= 128
-   *    for exception values like noSuchObject, noSuchInstance, and
-   *    endOfMibView.
-   */
-  public abstract int getSyntax();
-
-  /**
    * Checks whether this variable represents an exception like
    * noSuchObject, noSuchInstance, and endOfMibView.
    * @return
@@ -345,38 +304,6 @@ public abstract class AbstractVariable implements Variable, Serializable {
   public boolean isException() {
     return Null.isExceptionSyntax(getSyntax());
   }
-
-  /**
-   * Gets a string representation of the variable.
-   * @return
-   *    a string representation of the variable's value.
-   */
-  public abstract String toString();
-
-  /**
-   * Returns an integer representation of this variable if
-   * such a representation exists.
-   * @return
-   *    an integer value (if the native representation of this variable
-   *    would be a long, then the long value will be casted to int).
-   * @throws UnsupportedOperationException if an integer representation
-   * does not exists for this Variable.
-   * @since 1.7
-   */
-  public abstract int toInt();
-
-  /**
-   * Returns a long representation of this variable if
-   * such a representation exists.
-   * @return
-   *    a long value.
-   * @throws UnsupportedOperationException if a long representation
-   * does not exists for this Variable.
-   * @since 1.7
-   */
-  public abstract long toLong();
-
-  public abstract Object clone();
 
   /**
    * Gets a textual description of the supplied syntax type.
@@ -450,35 +377,6 @@ public abstract class AbstractVariable implements Variable, Serializable {
     }
     return BER.NULL;
   }
-
-  /**
-   * Converts the value of this <code>Variable</code> to a (sub-)index
-   * value.
-   * @param impliedLength
-   *    specifies if the sub-index has an implied length. This parameter applies
-   *    to variable length variables only (e.g. {@link OctetString} and
-   *    {@link OID}). For other variables it has no effect.
-   * @return
-   *    an OID that represents this value as an (sub-)index.
-   * @throws UnsupportedOperationException
-   *    if this variable cannot be used in an index.
-   * @since 1.7
-   */
-  public abstract OID toSubIndex(boolean impliedLength);
-
-  /**
-   * Sets the value of this <code>Variable</code> from the supplied (sub-)index.
-   * @param subIndex
-   *    the sub-index OID.
-   * @param impliedLength
-   *    specifies if the sub-index has an implied length. This parameter applies
-   *    to variable length variables only (e.g. {@link OctetString} and
-   *    {@link OID}). For other variables it has no effect.
-   * @throws UnsupportedOperationException
-   *    if this variable cannot be used in an index.
-   * @since 1.7
-   */
-  public abstract void fromSubIndex(OID subIndex, boolean impliedLength);
 
   /**
    * Indicates whether this variable is dynamic, which means that it might

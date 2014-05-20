@@ -95,13 +95,6 @@ public interface PrivacyProtocol extends SecurityProtocol {
                  DecryptParams decryptParams);
 
   /**
-   * Gets the OID uniquely identifying the privacy protocol.
-   * @return
-   *    an <code>OID</code> instance.
-   */
-  OID getID();
-
-  /**
    * Gets the length of a scoped PDU when encrypted with this security protocol.
    * @param scopedPDULength
    *    the length of the (unencrypted) scoped PDU.

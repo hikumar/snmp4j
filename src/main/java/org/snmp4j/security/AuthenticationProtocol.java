@@ -120,13 +120,6 @@ public interface AuthenticationProtocol extends SecurityProtocol {
                      byte[] random);
 
   /**
-   * Gets the OID uniquely identifying the authentication protocol.
-   * @return
-   *    an <code>OID</code> instance.
-   */
-  OID getID();
-
-  /**
    * Generates the localized key for the given password and engine id.
    *
    * @param passwordString

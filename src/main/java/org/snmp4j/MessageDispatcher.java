@@ -264,27 +264,6 @@ public interface MessageDispatcher extends TransportListener {
                         StatusInformation statusInformation)
        throws MessageException;
 
-  /**
-   * Process an incoming SNMP message. The message is processed and dispatched
-   * according to the message's content, the message processing models, and the
-   * command responder available to the dispatcher.
-   * @param sourceTransport
-   *    a <code>TransportMapping</code> instance denoting the transport that
-   *    received the message and that will be used to send any responses to
-   *    this message. The <code>sourceTransport</code> has to support the
-   *    <code>incomingAddress</code>'s implementation class.
-   * @param incomingAddress
-   *    the <code>Address</code> from which the message has been received.
-   * @param wholeMessage
-   *    an <code>ByteBuffer</code> containing the received SNMP message.
-   * @param tmStateReference
-   *    the transport model state reference as defined by RFC 5590.
-   */
-  void processMessage(TransportMapping sourceTransport,
-                      Address incomingAddress,
-                      ByteBuffer wholeMessage,
-                      TransportStateReference tmStateReference);
-
 
   /**
    * Release any state references associated with the supplied

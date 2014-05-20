@@ -61,12 +61,4 @@ public abstract class UdpTransportMapping
     return udpAddress;
   }
 
-  public abstract void listen() throws IOException;
-
-  public abstract void close() throws IOException;
-
-  public abstract void sendMessage(UdpAddress address, byte[] message,
-                                   TransportStateReference tmStateReference)
-      throws IOException;
-
 }

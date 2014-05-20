@@ -43,8 +43,6 @@ public interface Variable extends Cloneable, Comparable<Variable>, BERSerializab
 
   boolean equals(Object o);
 
-  int compareTo(Variable o);
-
   int hashCode();
 
   /**

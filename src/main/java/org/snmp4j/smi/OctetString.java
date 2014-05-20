@@ -547,7 +547,7 @@ public class OctetString extends AbstractVariable
    */
   public static Collection<OctetString> split(OctetString octetString,
                                               OctetString delimOctets) {
-    List<OctetString> parts = new LinkedList<OctetString>();
+    List<OctetString> parts = new LinkedList<>();
     int maxDelim = -1;
     for (int i = 0; i<delimOctets.length(); i++) {
       int delim = delimOctets.get(i) & 0xFF;

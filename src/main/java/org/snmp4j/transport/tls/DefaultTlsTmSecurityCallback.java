@@ -50,10 +50,10 @@ public class DefaultTlsTmSecurityCallback implements TlsTmSecurityCallback<X509C
 
   private Logger LOGGER = LoggerFactory.getLogger(DefaultTlsTmSecurityCallback.class);
 
-  private Map<SecurityNameMapping, OctetString> securityNameMapping = new HashMap<SecurityNameMapping, OctetString>();
-  private Map<Address, String> localCertMapping = new HashMap<Address, String>();
-  private Set<String> acceptedSubjectDN = new HashSet<String>();
-  private Set<String> acceptedIssuerDN = new HashSet<String>();
+  private Map<SecurityNameMapping, OctetString> securityNameMapping = new HashMap<>();
+  private Map<Address, String> localCertMapping = new HashMap<>();
+  private Set<String> acceptedSubjectDN = new HashSet<>();
+  private Set<String> acceptedIssuerDN = new HashSet<>();
 
   @Override
   public OctetString getSecurityName(X509Certificate[] peerCertificateChain) {

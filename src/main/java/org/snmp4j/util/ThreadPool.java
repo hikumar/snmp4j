@@ -48,7 +48,7 @@ public class ThreadPool implements WorkerPool {
 
   protected void setup(String name, int size) {
     this.name = name;
-    taskManagers = new Vector<TaskManager>(size);
+    taskManagers = new Vector<>(size);
     for (int i=0; i<size; i++) {
       TaskManager tm = new TaskManager(getTaskManagerName(name, i));
       taskManagers.add(tm);

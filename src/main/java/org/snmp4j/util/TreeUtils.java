@@ -76,7 +76,7 @@ public class TreeUtils extends AbstractSnmpUtility {
    *    in depth-first-order.
    */
   public List<TreeEvent> getSubtree(Target target, OID rootOID) {
-    List<TreeEvent> l = new LinkedList<TreeEvent>();
+    List<TreeEvent> l = new LinkedList<>();
     TreeListener listener = new InternalTreeListener(l);
     synchronized (listener) {
       OID[] rootOIDs = new OID[] { rootOID };
@@ -111,7 +111,7 @@ public class TreeUtils extends AbstractSnmpUtility {
    * @since 2.1
    */
   public List<TreeEvent> walk(Target target, OID[] rootOIDs) {
-    List<TreeEvent> l = new LinkedList<TreeEvent>();
+    List<TreeEvent> l = new LinkedList<>();
     TreeListener listener = new InternalTreeListener(l);
     synchronized (listener) {
       walk(target, rootOIDs, null, listener);
@@ -280,10 +280,10 @@ public class TreeUtils extends AbstractSnmpUtility {
         listener.finished(new TreeEvent(this, userObject, respPDU));
       }
       else {
-        List<VariableBinding> l = new ArrayList<VariableBinding>(respPDU.size());
+        List<VariableBinding> l = new ArrayList<>(respPDU.size());
         List<OID> lastOIDs = null;
         if (!ignoreLexicographicOrder) {
-          lastOIDs = new ArrayList<OID>(request.size());
+          lastOIDs = new ArrayList<>(request.size());
           for (int i=0; i<request.size(); i++) {
             lastOIDs.add(request.get(i).getOid());
           }

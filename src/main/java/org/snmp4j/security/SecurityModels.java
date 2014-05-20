@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class SecurityModels {
 
-  private Map<Integer32, SecurityModel> securityModels = new Hashtable<Integer32, SecurityModel>(3);
+  private Map<Integer32, SecurityModel> securityModels = new Hashtable<>(3);
 
   private static SecurityModels instance = null;
 

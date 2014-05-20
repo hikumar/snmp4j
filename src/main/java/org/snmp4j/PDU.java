@@ -204,7 +204,7 @@ public class PDU implements BERSerializable, Serializable {
   public static final int inconsistentName =
       SnmpConstants.SNMP_ERROR_INCONSISTENT_NAME;
 
-  protected Vector<VariableBinding> variableBindings = new Vector<VariableBinding>();
+  protected Vector<VariableBinding> variableBindings = new Vector<>();
   protected Integer32 errorStatus = new Integer32();
   protected Integer32 errorIndex = new Integer32();
   protected Integer32 requestID = new Integer32();
@@ -223,7 +223,7 @@ public class PDU implements BERSerializable, Serializable {
    *    the <code>PDU</code> to copy from.
    */
   public PDU(PDU other) {
-    variableBindings = new Vector<VariableBinding>(other.size());
+    variableBindings = new Vector<>(other.size());
     for (VariableBinding vb : other.variableBindings) {
       variableBindings.add((VariableBinding) vb.clone());
     }
@@ -248,7 +248,7 @@ public class PDU implements BERSerializable, Serializable {
    */
   public PDU(int pduType, List<? extends VariableBinding> vbs) {
     this.type = pduType;
-    variableBindings = new Vector<VariableBinding>(vbs.size());
+    variableBindings = new Vector<>(vbs.size());
     for (VariableBinding vb : vbs) {
       variableBindings.add((VariableBinding) vb.clone());
     }
@@ -369,7 +369,7 @@ public class PDU implements BERSerializable, Serializable {
    *    could be found, an empty List is returned.
    */
   public List<VariableBinding> getBindingList(OID prefix) {
-    List<VariableBinding> list = new ArrayList<VariableBinding>(variableBindings.size());
+    List<VariableBinding> list = new ArrayList<>(variableBindings.size());
     for (VariableBinding vb : variableBindings) {
       if (vb.getOid().startsWith(prefix)) {
         list.add(vb);
@@ -434,7 +434,7 @@ public class PDU implements BERSerializable, Serializable {
     if (vbs == null) {
       throw new NullPointerException();
     }
-    this.variableBindings = new Vector<VariableBinding>(vbs);
+    this.variableBindings = new Vector<>(vbs);
   }
 
   /**
@@ -568,7 +568,7 @@ public class PDU implements BERSerializable, Serializable {
     }
     // rest read count
     int startPos = (int)inputStream.getPosition();
-    variableBindings = new Vector<VariableBinding>();
+    variableBindings = new Vector<>();
     while (inputStream.getPosition() - startPos < vbLength) {
       VariableBinding vb = new VariableBinding();
       vb.decodeBER(inputStream);

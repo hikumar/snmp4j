@@ -141,7 +141,7 @@ public class TransportMappings {
       try {
         props.load(is);
         Hashtable<String, Class<? extends TransportMapping>> t =
-            new Hashtable<String, Class<? extends TransportMapping>>(props.size());
+            new Hashtable<>(props.size());
         for (Enumeration en = props.propertyNames(); en.hasMoreElements(); ) {
           String addressClassName = en.nextElement().toString();
           String className = props.getProperty(addressClassName);
@@ -173,7 +173,7 @@ public class TransportMappings {
     }
     else {
       Hashtable<String, Class<? extends TransportMapping>> t =
-          new Hashtable<String, Class<? extends TransportMapping>>(2);
+          new Hashtable<>(2);
       t.put(UdpAddress.class.getName(), DefaultUdpTransportMapping.class);
       t.put(TcpAddress.class.getName(), DefaultTcpTransportMapping.class);
       t.put(TlsAddress.class.getName(), TLSTM.class);

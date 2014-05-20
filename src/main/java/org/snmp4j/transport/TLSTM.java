@@ -72,7 +72,7 @@ public class TLSTM extends TcpTransportMapping {
   private static final Logger logger =
       LoggerFactory.getLogger(TLSTM.class);
 
-  private Map<Address, SocketEntry> sockets = new Hashtable<Address, SocketEntry>();
+  private Map<Address, SocketEntry> sockets = new Hashtable<>();
   private WorkerTask server;
   private ServerThread serverThread;
 
@@ -600,7 +600,7 @@ public class TLSTM extends TcpTransportMapping {
     private Socket socket;
     private TcpAddress peerAddress;
     private long lastUse;
-    private LinkedList<byte[]> message = new LinkedList<byte[]>();
+    private LinkedList<byte[]> message = new LinkedList<>();
     private ByteBuffer inNetBuffer;
     private ByteBuffer inAppBuffer;
     private ByteBuffer outAppBuffer;
@@ -884,9 +884,9 @@ public class TLSTM extends TcpTransportMapping {
     private ServerSocketChannel ssc;
     private Selector selector;
 
-    private LinkedList<SocketEntry> pending = new LinkedList<SocketEntry>();
-    private BlockingQueue<SocketEntry> outQueue = new LinkedBlockingQueue<SocketEntry>();
-    private BlockingQueue<SocketEntry> inQueue = new LinkedBlockingQueue<SocketEntry>();
+    private LinkedList<SocketEntry> pending = new LinkedList<>();
+    private BlockingQueue<SocketEntry> outQueue = new LinkedBlockingQueue<>();
+    private BlockingQueue<SocketEntry> inQueue = new LinkedBlockingQueue<>();
 
     public ServerThread() throws IOException, NoSuchAlgorithmException {
       // Selector for incoming requests
@@ -1706,7 +1706,7 @@ public class TLSTM extends TcpTransportMapping {
     public void configure(SSLEngine sslEngine) {
       logger.debug("Configuring SSL engine, supported protocols are {}, supported ciphers are {}, https defaults are {}", Arrays.asList(sslEngine.getSupportedProtocols()), Arrays.asList(sslEngine.getSupportedCipherSuites()), System.getProperty("https.cipherSuites"));
       String[] supportedCipherSuites = sslEngine.getEnabledCipherSuites();
-      List<String> enabledCipherSuites = new ArrayList<String>(supportedCipherSuites.length);
+      List<String> enabledCipherSuites = new ArrayList<>(supportedCipherSuites.length);
       for (String cs : supportedCipherSuites) {
         if (!cs.contains("_anon_") && (!cs.contains("_NULL_"))) {
           enabledCipherSuites.add(cs);
@@ -1794,7 +1794,7 @@ public class TLSTM extends TcpTransportMapping {
             logger.warn("Local certificate with alias '{}' not found. Known aliases are: {}", localCertAlias, Collections.list(ks.aliases()));
           }
           else {
-            List<String> chainAliases = new ArrayList<String>(chain.length);
+            List<String> chainAliases = new ArrayList<>(chain.length);
             for (Certificate certificate : chain) {
               String alias = ks.getCertificateAlias(certificate);
               if (alias != null) {
@@ -1943,7 +1943,7 @@ public class TLSTM extends TcpTransportMapping {
       TlsTmSecurityCallback<X509Certificate> callback = securityCallback;
       X509Certificate[] accepted = trustManager.getAcceptedIssuers();
       if ((accepted != null) && (callback != null)) {
-        ArrayList<X509Certificate> acceptedIssuers = new ArrayList<X509Certificate>(accepted.length);
+        ArrayList<X509Certificate> acceptedIssuers = new ArrayList<>(accepted.length);
         for (X509Certificate cert : accepted) {
           if (callback.isAcceptedIssuer(cert)) {
             acceptedIssuers.add(cert);

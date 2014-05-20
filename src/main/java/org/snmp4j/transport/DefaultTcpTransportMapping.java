@@ -56,7 +56,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
   private static final Logger logger =
       LoggerFactory.getLogger(DefaultTcpTransportMapping.class);
 
-  private Map<Address, SocketEntry> sockets = new Hashtable<Address, SocketEntry>();
+  private Map<Address, SocketEntry> sockets = new Hashtable<>();
   private WorkerTask server;
   private ServerThread serverThread;
 
@@ -398,7 +398,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
     private Socket socket;
     private TcpAddress peerAddress;
     private long lastUse;
-    private LinkedList<byte[]> message = new LinkedList<byte[]>();
+    private LinkedList<byte[]> message = new LinkedList<>();
     private ByteBuffer readBuffer = null;
     private volatile int registrations = 0;
 
@@ -579,7 +579,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
     private ServerSocketChannel ssc;
     private Selector selector;
 
-    private LinkedList<SocketEntry> pending = new LinkedList<SocketEntry>();
+    private LinkedList<SocketEntry> pending = new LinkedList<>();
 
     public ServerThread() throws IOException {
       buf = new byte[getMaxInboundMessageSize()];

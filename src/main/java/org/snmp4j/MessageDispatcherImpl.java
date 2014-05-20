@@ -66,9 +66,9 @@ public class MessageDispatcherImpl implements MessageDispatcher {
   private static final Logger logger =
       LoggerFactory.getLogger(MessageDispatcherImpl.class);
 
-  private List<MessageProcessingModel> mpm = new ArrayList<MessageProcessingModel>(3);
+  private List<MessageProcessingModel> mpm = new ArrayList<>(3);
   private Map<Class<? extends Address>, List<TransportMapping>> transportMappings =
-      new Hashtable<Class<? extends Address>, List<TransportMapping>>(5);
+      new Hashtable<>(5);
 
   private int nextTransactionID = new Random().nextInt(Integer.MAX_VALUE-2)+1;
   private transient List<CommandResponder> commandResponderListeners;
@@ -126,7 +126,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
     List<TransportMapping> transports =
             transportMappings.get(transport.getSupportedAddressClass());
     if (transports == null) {
-      transports = new LinkedList<TransportMapping>();
+      transports = new LinkedList<>();
       transportMappings.put(transport.getSupportedAddressClass(), transports);
     }
     transports.add(transport);
@@ -157,7 +157,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
    *    a Collection instance.
    */
   public Collection<TransportMapping> getTransportMappings() {
-    ArrayList<TransportMapping> l = new ArrayList<TransportMapping>(transportMappings.size());
+    ArrayList<TransportMapping> l = new ArrayList<>(transportMappings.size());
     synchronized (transportMappings) {
       for (List<TransportMapping> tm : transportMappings.values()) {
         l.addAll(tm);
@@ -652,7 +652,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
 
   public synchronized void addCommandResponder(CommandResponder l) {
     if (commandResponderListeners == null) {
-      commandResponderListeners = new Vector<CommandResponder>(2);
+      commandResponderListeners = new Vector<>(2);
     }
     if (!commandResponderListeners.contains(l)) {
       commandResponderListeners.add(l);
@@ -719,7 +719,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
    */
   public synchronized void addCounterListener(CounterListener counterListener) {
     if (counterListeners == null) {
-      counterListeners = new Vector<CounterListener>(2);
+      counterListeners = new Vector<>(2);
     }
     if (!counterListeners.contains(counterListener)) {
       counterListeners.add(counterListener);
@@ -779,7 +779,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
   public synchronized void addAuthenticationFailureListener(
       AuthenticationFailureListener l) {
       if (authenticationFailureListeners == null) {
-        authenticationFailureListeners = new Vector<AuthenticationFailureListener>(2);
+        authenticationFailureListeners = new Vector<>(2);
       }
       if (!authenticationFailureListeners.contains(l)) {
         authenticationFailureListeners.add(l);

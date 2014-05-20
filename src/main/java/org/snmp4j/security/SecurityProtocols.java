@@ -62,8 +62,8 @@ public class SecurityProtocols implements Serializable {
   private int maxPrivDecryptParamsLength = 0;
 
   protected SecurityProtocols() {
-    authProtocols = new Hashtable<OID, AuthenticationProtocol>(5);
-    privProtocols = new Hashtable<OID, PrivacyProtocol>(5);
+    authProtocols = new Hashtable<>(5);
+    privProtocols = new Hashtable<>(5);
   }
 
   /**

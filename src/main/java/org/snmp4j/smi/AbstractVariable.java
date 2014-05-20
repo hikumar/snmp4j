@@ -264,7 +264,7 @@ public abstract class AbstractVariable implements Variable, Serializable, Clonea
     Properties props = new Properties();
     try {
       props.load(is);
-      Hashtable<Integer, Class<? extends Variable>> regSyntaxes = new Hashtable<Integer, Class<? extends Variable>>(props.size());
+      Hashtable<Integer, Class<? extends Variable>> regSyntaxes = new Hashtable<>(props.size());
       for (Enumeration en = props.propertyNames(); en.hasMoreElements(); ) {
         String id = en.nextElement().toString();
         String className = props.getProperty(id);

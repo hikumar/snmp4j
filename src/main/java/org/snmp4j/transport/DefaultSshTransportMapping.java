@@ -48,7 +48,7 @@ public class DefaultSshTransportMapping extends AbstractTransportMapping<SshAddr
   private static final Logger logger =
       LoggerFactory.getLogger(DefaultSshTransportMapping.class);
 
-  private final Map<SessionID, SshSession> sessions = new HashMap<SessionID, SshSession>();
+  private final Map<SessionID, SshSession> sessions = new HashMap<>();
   private SshTransportAdapter transportAdapter;
   private CounterSupport counterSupport;
 

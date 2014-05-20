@@ -43,7 +43,7 @@ public class UsmTimeTable implements Serializable {
 
   static final long TIME_PRECISION = 1000000000L;
 
-  private Hashtable<Variable, UsmTimeEntry> table = new Hashtable<Variable, UsmTimeEntry>(10);
+  private Hashtable<Variable, UsmTimeEntry> table = new Hashtable<>(10);
   private long lastLocalTimeChange = System.nanoTime();
   private UsmTimeEntry localTime;
 

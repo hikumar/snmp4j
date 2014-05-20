@@ -154,13 +154,13 @@ public class Snmp implements Session, CommandResponder {
    * The <code>pendingRequests</code> table contains pending requests
    * accessed trough the key <code>PduHandle</code>
    */
-  private final Map<PduHandle, PendingRequest> pendingRequests = new Hashtable<PduHandle, PendingRequest>(50);
+  private final Map<PduHandle, PendingRequest> pendingRequests = new Hashtable<>(50);
 
   /**
    * The <code>asyncRequests</code> table contains pending requests
    * accessed trough the key userObject
    */
-  private final Map<Object, PduHandle> asyncRequests = new Hashtable<Object, PduHandle>(50);
+  private final Map<Object, PduHandle> asyncRequests = new Hashtable<>(50);
 
   // Timer for retrying pending requests
   private CommonTimer timer;
@@ -177,7 +177,7 @@ public class Snmp implements Session, CommandResponder {
   private ReportHandler reportHandler = new ReportProcessor();
 
   private Map<Address,OctetString> contextEngineIDs =
-      Collections.synchronizedMap(new HashMap<Address,OctetString>());
+      Collections.synchronizedMap(new HashMap<>());
   private boolean contextEngineIdDiscoveryDisabled;
 
   /**
@@ -514,7 +514,7 @@ public class Snmp implements Session, CommandResponder {
     }
     List<PendingRequest> pr;
     synchronized (pendingRequests) {
-      pr = new ArrayList<PendingRequest>(pendingRequests.values());
+      pr = new ArrayList<>(pendingRequests.values());
     }
     for (PendingRequest pending : pr) {
       pending.cancel();
@@ -1155,7 +1155,7 @@ public class Snmp implements Session, CommandResponder {
   public synchronized void removeCommandResponder(CommandResponder listener) {
     if (commandResponderListeners != null &&
         commandResponderListeners.contains(listener)) {
-      ArrayList<CommandResponder> v = new ArrayList<CommandResponder>(commandResponderListeners);
+      ArrayList<CommandResponder> v = new ArrayList<>(commandResponderListeners);
       v.remove(listener);
       commandResponderListeners = v;
     }
@@ -1172,8 +1172,8 @@ public class Snmp implements Session, CommandResponder {
    */
   public synchronized void addCommandResponder(CommandResponder listener) {
     ArrayList<CommandResponder> v = (commandResponderListeners == null) ?
-        new ArrayList<CommandResponder>(2) :
-        new ArrayList<CommandResponder>(commandResponderListeners);
+        new ArrayList<>(2) :
+        new ArrayList<>(commandResponderListeners);
     if (!v.contains(listener)) {
       v.add(listener);
       commandResponderListeners = v;
@@ -1583,8 +1583,8 @@ public class Snmp implements Session, CommandResponder {
   class NotificationDispatcher implements CommandResponder {
     // A mapping of transport addresses to transport mappings of notification
     // listeners
-    private Hashtable<Address, TransportMapping> notificationListeners = new Hashtable<Address, TransportMapping>(10);
-    private Hashtable<TransportMapping, CommandResponder> notificationTransports = new Hashtable<TransportMapping, CommandResponder>(10);
+    private Hashtable<Address, TransportMapping> notificationListeners = new Hashtable<>(10);
+    private Hashtable<TransportMapping, CommandResponder> notificationTransports = new Hashtable<>(10);
 
     protected NotificationDispatcher() {
     }

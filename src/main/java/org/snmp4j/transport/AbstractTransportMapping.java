@@ -40,14 +40,14 @@ import java.util.List;
 public abstract class AbstractTransportMapping<A extends Address>
     implements TransportMapping<A> {
 
-  protected List<TransportListener> transportListener = new ArrayList<TransportListener>(1);
+  protected List<TransportListener> transportListener = new ArrayList<>(1);
   protected int maxInboundMessageSize = (1 << 16) - 1;
   protected boolean asyncMsgProcessingSupported = true;
 
   public synchronized void addTransportListener(TransportListener l) {
     if (!transportListener.contains(l)) {
       List<TransportListener> tlCopy =
-          new ArrayList<TransportListener>(transportListener);
+          new ArrayList<>(transportListener);
       tlCopy.add(l);
       transportListener = tlCopy;
     }
@@ -56,7 +56,7 @@ public abstract class AbstractTransportMapping<A extends Address>
   public synchronized void removeTransportListener(TransportListener l) {
     if (transportListener != null && transportListener.contains(l)) {
       List<TransportListener> tlCopy =
-          new ArrayList<TransportListener>(transportListener);
+          new ArrayList<>(transportListener);
       tlCopy.remove(l);
       transportListener = tlCopy;
     }

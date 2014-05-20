@@ -49,8 +49,8 @@ public class DummyTransport<A extends IpAddress> extends AbstractTransportMappin
 
   private static final Logger logger = LoggerFactory.getLogger(DummyTransport.class);
 
-  private final Queue<OctetString> requests = new ConcurrentLinkedQueue<OctetString>();
-  private final Queue<OctetString> responses = new ConcurrentLinkedQueue<OctetString>();
+  private final Queue<OctetString> requests = new ConcurrentLinkedQueue<>();
+  private final Queue<OctetString> responses = new ConcurrentLinkedQueue<>();
   private boolean listening;
   private A listenAddress;
   private A receiverAddress;

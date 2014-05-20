@@ -103,7 +103,7 @@ public class ArgumentParser {
   }
 
   protected static Map<String, ArgumentFormat> parseFormat(String format, boolean parameterFormat) {
-    Map<String, ArgumentFormat> options = new LinkedHashMap<String, ArgumentFormat>();
+    Map<String, ArgumentFormat> options = new LinkedHashMap<>();
     ArgumentFormat last = null;
     StringTokenizer st = new StringTokenizer(format, " ");
     while (st.hasMoreTokens()) {
@@ -126,7 +126,7 @@ public class ArgumentParser {
         af.option = token.substring(0, token.indexOf('['));
         token = token.substring(af.option.length()+1, token.length()-1);
         StringTokenizer pt = new StringTokenizer(token, ",", true);
-        List<ArgumentParameter> params = new ArrayList<ArgumentParameter>();
+        List<ArgumentParameter> params = new ArrayList<>();
         String inRegex = null;
         for (int i=1; (pt.hasMoreTokens()); i++) {
           String param = pt.nextToken();
@@ -202,7 +202,7 @@ public class ArgumentParser {
    */
   @SuppressWarnings("unchecked")
   public Map<String,List> parse(String[] args) throws ParseException {
-    Map<String,List> options = new LinkedHashMap<String,List>();
+    Map<String,List> options = new LinkedHashMap<>();
     Iterator<? extends ArgumentFormat> params = parameterFormat.values().iterator();
     ArgumentFormat lastFormat = null;
     for (int i=0; i<args.length; i++) {
@@ -282,7 +282,7 @@ public class ArgumentParser {
 
   protected List parseValues(String[] args, int offset, ArgumentFormat format) throws ParseException {
     int numParams = format.getParameters().length;
-    List<Object> values = new ArrayList<Object>(numParams);
+    List<Object> values = new ArrayList<>(numParams);
     for (int i=0; (i+offset < args.length) && (i < numParams); i++) {
       try {
         values.add(parseParameterValue(format.getParameters()[i],

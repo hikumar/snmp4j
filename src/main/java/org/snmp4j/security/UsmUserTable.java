@@ -40,7 +40,7 @@ public class UsmUserTable implements Serializable {
 
   private static final Logger logger = LoggerFactory.getLogger(UsmUserTable.class);
 
-  private Map<UsmUserKey, UsmUserEntry> table = new TreeMap<UsmUserKey, UsmUserEntry>();
+  private Map<UsmUserKey, UsmUserEntry> table = new TreeMap<>();
 
   public UsmUserTable() {
   }
@@ -71,7 +71,7 @@ public class UsmUserTable implements Serializable {
    *    the specified <code>userName</code>.
    */
   public synchronized List<UsmUserEntry> getUserEntries(OctetString userName) {
-    LinkedList<UsmUserEntry> users = new LinkedList<UsmUserEntry>();
+    LinkedList<UsmUserEntry> users = new LinkedList<>();
     for (UsmUserEntry value : table.values()) {
       if (userName.equals(value.getUserName())) {
         users.add(value);
@@ -84,7 +84,7 @@ public class UsmUserTable implements Serializable {
   }
 
   public synchronized List<UsmUserEntry> getUserEntries() {
-    LinkedList<UsmUserEntry> l = new LinkedList<UsmUserEntry>();
+    LinkedList<UsmUserEntry> l = new LinkedList<>();
     for (UsmUserEntry usmUserEntry : table.values()) {
       l.add(usmUserEntry);
     }
@@ -93,7 +93,7 @@ public class UsmUserTable implements Serializable {
 
   public synchronized List<UsmUserEntry> removeAllUsers(OctetString securityName, OctetString engineID) {
     if (engineID == null) {
-      List<UsmUserEntry> deleted = new ArrayList<UsmUserEntry>();
+      List<UsmUserEntry> deleted = new ArrayList<>();
       for (Iterator<UsmUserEntry> usmUserEntryIterator = table.values().iterator(); usmUserEntryIterator.hasNext(); ) {
         UsmUserEntry usmUserEntry = usmUserEntryIterator.next();
         if (securityName.equals(usmUserEntry.getUsmUser().getSecurityName())) {

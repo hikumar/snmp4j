@@ -278,13 +278,13 @@ public class StateReference implements Serializable {
 
   public synchronized void addMessageIDs(List<Integer> msgIDs) {
     if (retryMsgIDs == null) {
-      retryMsgIDs = new ArrayList<Integer>(msgIDs.size());
+      retryMsgIDs = new ArrayList<>(msgIDs.size());
     }
     retryMsgIDs.addAll(msgIDs);
   }
 
   public synchronized List<Integer> getMessageIDs() {
-    List<Integer> msgIDs = new ArrayList<Integer>(1 + ((retryMsgIDs != null) ? retryMsgIDs.size() : 0));
+    List<Integer> msgIDs = new ArrayList<>(1 + ((retryMsgIDs != null) ? retryMsgIDs.size() : 0));
     msgIDs.add(msgID);
     if (retryMsgIDs != null) {
       msgIDs.addAll(retryMsgIDs);

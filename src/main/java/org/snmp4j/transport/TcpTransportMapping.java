@@ -78,7 +78,7 @@ public abstract class TcpTransportMapping
 
   public synchronized void addTransportStateListener(TransportStateListener l) {
     if (transportStateListeners == null) {
-      transportStateListeners = new Vector<TransportStateListener>(2);
+      transportStateListeners = new Vector<>(2);
     }
     transportStateListeners.add(l);
   }
@@ -99,7 +99,7 @@ public abstract class TcpTransportMapping
       try {
         List<TransportStateListener> listeners;
         synchronized (listenersFinalRef) {
-          listeners = new ArrayList<TransportStateListener>(listenersFinalRef);
+          listeners = new ArrayList<>(listenersFinalRef);
         }
         for (TransportStateListener listener : listeners) {
           listener.connectionStateChanged(change);

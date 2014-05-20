@@ -48,7 +48,7 @@ import java.util.Map;
  */
 public class DefaultCounterListener implements CounterListener {
 
-  private Map<OID, Counter32> counters = new Hashtable<OID, Counter32>();
+  private Map<OID, Counter32> counters = new Hashtable<>();
   private boolean countRegisteredOnly;
 
   /**

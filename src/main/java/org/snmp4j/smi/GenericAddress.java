@@ -144,7 +144,7 @@ public class GenericAddress extends SMIAddress {
       Properties props = new Properties();
       try {
         props.load(is);
-        Map<String, Class<? extends Address>> h = new TreeMap<String, Class<? extends Address>>();
+        Map<String, Class<? extends Address>> h = new TreeMap<>();
         for (Enumeration en = props.propertyNames(); en.hasMoreElements(); ) {
           String id = en.nextElement().toString();
           String className = props.getProperty(id);
@@ -177,7 +177,7 @@ public class GenericAddress extends SMIAddress {
       }
     }
     else {
-      Map<String, Class<? extends Address>> h = new TreeMap<String, Class<? extends Address>>();
+      Map<String, Class<? extends Address>> h = new TreeMap<>();
       h.put(TYPE_UDP, UdpAddress.class);
       h.put(TYPE_TCP, TcpAddress.class);
       h.put(TYPE_IP, IpAddress.class);

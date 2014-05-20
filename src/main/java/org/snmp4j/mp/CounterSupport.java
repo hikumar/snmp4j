@@ -60,7 +60,7 @@ public class CounterSupport {
    */
   public synchronized void addCounterListener(CounterListener listener) {
     if (counterListeners == null) {
-      counterListeners = new Vector<CounterListener>(2);
+      counterListeners = new Vector<>(2);
     }
     if (!counterListeners.contains(listener)) {
       counterListeners.add(listener);

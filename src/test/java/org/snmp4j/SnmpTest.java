@@ -85,7 +85,7 @@ public class SnmpTest extends TestCase {
 
   @Before
   public void setUp() throws Exception {
-    transportMappingCG = new DummyTransport<UdpAddress>(new UdpAddress("127.0.0.1/4967"));
+    transportMappingCG = new DummyTransport<>(new UdpAddress("127.0.0.1/4967"));
     transportMappingCR = transportMappingCG.getResponder(new UdpAddress("127.0.0.1/161"));
     snmpCommandGenerator = new Snmp(transportMappingCG);
     MPv3 mpv3CG = (MPv3) snmpCommandGenerator.getMessageDispatcher().getMessageProcessingModel(MPv3.ID);
@@ -217,7 +217,7 @@ public class SnmpTest extends TestCase {
     pdu.setType(PDU.GET);
     // test it
     pdu.setRequestID(new Integer32(snmpCommandGenerator.getNextRequestID()));
-    Map<Integer, RequestResponse> queue = new HashMap<Integer, RequestResponse>(2);
+    Map<Integer, RequestResponse> queue = new HashMap<>(2);
     queue.put(pdu.getRequestID().getValue(), new RequestResponse(pdu, makeResponse(pdu, target.getVersion())));
     TestCommandResponder responder = new TestCommandResponder(queue);
     snmpCommandResponder.addCommandResponder(responder);
@@ -253,7 +253,7 @@ public class SnmpTest extends TestCase {
     addTestVariableBindings(pdu, false, false, target.getVersion());
     // test it
     pdu.setRequestID(new Integer32(snmpCommandGenerator.getNextRequestID()));
-    Map<Integer, RequestResponse> queue = new HashMap<Integer, RequestResponse>(2);
+    Map<Integer, RequestResponse> queue = new HashMap<>(2);
     queue.put(pdu.getRequestID().getValue(), new RequestResponse(pdu, makeResponse(pdu, target.getVersion())));
     TestCommandResponder responder = new TestCommandResponder(queue);
     snmpCommandResponder.addCommandResponder(responder);
@@ -297,7 +297,7 @@ public class SnmpTest extends TestCase {
     addTestVariableBindings(pdu, false, false, target.getVersion());
     // test it
     pdu.setRequestID(new Integer32(snmpCommandGenerator.getNextRequestID()));
-    Map<Integer, RequestResponse> queue = new HashMap<Integer, RequestResponse>(2);
+    Map<Integer, RequestResponse> queue = new HashMap<>(2);
     queue.put(pdu.getRequestID().getValue(), new RequestResponse(pdu, makeResponse(pdu, target.getVersion())));
     TestCommandResponder responder = new TestCommandResponder(queue);
     snmpCommandResponder.addCommandResponder(responder);
@@ -369,7 +369,7 @@ public class SnmpTest extends TestCase {
             PrivDES.ID, new OctetString("_09876543#1_")));
 
     pdu.setRequestID(new Integer32(snmpCommandGenerator.getNextRequestID()));
-    Map<Integer, RequestResponse> queue = new HashMap<Integer, RequestResponse>(2);
+    Map<Integer, RequestResponse> queue = new HashMap<>(2);
     queue.put(pdu.getRequestID().getValue(), new RequestResponse(pdu, makeResponse(pdu, target.getVersion())));
     TestCommandResponder responder = new TestCommandResponder(queue);
     snmpCommandResponder.addCommandResponder(responder);
@@ -402,7 +402,7 @@ public class SnmpTest extends TestCase {
 
   private void syncRequestTest(Target target, PDU pdu) throws IOException {
     pdu.setRequestID(new Integer32(snmpCommandGenerator.getNextRequestID()));
-    Map<Integer, RequestResponse> queue = new HashMap<Integer, RequestResponse>(2);
+    Map<Integer, RequestResponse> queue = new HashMap<>(2);
     queue.put(pdu.getRequestID().getValue(), new RequestResponse(pdu, makeResponse(pdu, target.getVersion())));
     TestCommandResponder responder = new TestCommandResponder(queue);
     snmpCommandResponder.addCommandResponder(responder);
@@ -416,7 +416,7 @@ public class SnmpTest extends TestCase {
 
   private void asyncRequestTest(Target target, PDU pdu) throws IOException {
     pdu.setRequestID(new Integer32(snmpCommandGenerator.getNextRequestID()));
-    Map<Integer, RequestResponse> queue = new HashMap<Integer, RequestResponse>(2);
+    Map<Integer, RequestResponse> queue = new HashMap<>(2);
     queue.put(pdu.getRequestID().getValue(), new RequestResponse(pdu, makeResponse(pdu, target.getVersion())));
     TestCommandResponder responder = new TestCommandResponder(queue);
     snmpCommandResponder.addCommandResponder(responder);
@@ -435,7 +435,7 @@ public class SnmpTest extends TestCase {
 
 
   private void unconfirmedTest(Target target, PDU pdu) throws IOException {
-    Map<Integer, RequestResponse> queue = new HashMap<Integer, RequestResponse>(2);
+    Map<Integer, RequestResponse> queue = new HashMap<>(2);
     queue.put(pdu.getRequestID().getValue(), new RequestResponse(pdu, null));
     TestCommandResponder responder = new TestCommandResponder(queue);
     snmpCommandResponder.addCommandResponder(responder);
@@ -513,7 +513,7 @@ public class SnmpTest extends TestCase {
     Target target = userTarget;
     target.setTimeout(50000L);
     target.setRetries(0);
-    Map<Integer, RequestResponse> queue = new HashMap<Integer, RequestResponse>(10000);
+    Map<Integer, RequestResponse> queue = new HashMap<>(10000);
     for (int i=0; i<99; i++) {
       ScopedPDU pdu = new ScopedPDU();
       pdu.add(new VariableBinding(new OID("1.3.6.1.4976.1."+i), new Integer32(i)));
@@ -530,7 +530,7 @@ public class SnmpTest extends TestCase {
     snmpCommandResponder.listen();
     int n = 0;
     final AsyncResponseListener asyncResponseListener = new AsyncResponseListener(queue.size());
-    List<RequestResponse> requests = new ArrayList<RequestResponse>(queue.values());
+    List<RequestResponse> requests = new ArrayList<>(queue.values());
     for (RequestResponse rr : requests) {
       snmpCommandGenerator.send(rr.request, target, transportMappingCG, n, asyncResponseListener);
       n++;
@@ -546,7 +546,7 @@ public class SnmpTest extends TestCase {
     Target target = userTarget;
     target.setTimeout(50000L);
     target.setRetries(0);
-    Map<Integer, RequestResponse> queue = new HashMap<Integer, RequestResponse>(10000);
+    Map<Integer, RequestResponse> queue = new HashMap<>(10000);
     for (int i=0; i<999; i++) {
       ScopedPDU pdu = new ScopedPDU();
       pdu.add(new VariableBinding(new OID("1.3.6.1.4976.1."+i), new Integer32(i)));
@@ -563,7 +563,7 @@ public class SnmpTest extends TestCase {
     snmpCommandResponder.listen();
     int n = 0;
     final AsyncResponseListener asyncResponseListener = new AsyncResponseListener(queue.size());
-    List<RequestResponse> requests = new ArrayList<RequestResponse>(queue.values());
+    List<RequestResponse> requests = new ArrayList<>(queue.values());
     for (RequestResponse rr : requests) {
       snmpCommandGenerator.send(rr.request, target, transportMappingCG, n, asyncResponseListener);
       n++;
@@ -729,7 +729,7 @@ public class SnmpTest extends TestCase {
     private boolean anyResponse;
 
     public TestCommandResponder(PDU request, PDU response) {
-      this.expectedPDUs = new HashMap<Integer, RequestResponse>(1);
+      this.expectedPDUs = new HashMap<>(1);
       expectedPDUs.put(request.getRequestID().getValue(), new RequestResponse(request, response));
     }
 
@@ -804,7 +804,7 @@ public class SnmpTest extends TestCase {
 
     private int maxCount = 0;
     private int received = 0;
-    private Set<Integer32> receivedIDs = new HashSet<Integer32>();
+    private Set<Integer32> receivedIDs = new HashSet<>();
 
     public AsyncResponseListener(int maxCount) {
       this.maxCount = maxCount;

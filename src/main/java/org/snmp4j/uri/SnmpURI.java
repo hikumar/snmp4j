@@ -259,7 +259,7 @@ public class SnmpURI {
     List<OID> oids;
     if (oidPart != null && oidPart.contains("(")) {
       String[] oidStrings = oidPart.split("[\\(,\\),\\,]");
-      oids = new ArrayList<OID>(oidStrings.length);
+      oids = new ArrayList<>(oidStrings.length);
       for (String oidString : oidStrings) {
         if (!oidString.isEmpty()) {
           OID o = new OID(oidString);

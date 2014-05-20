@@ -59,7 +59,7 @@ public class CipherPool {
       throw new IllegalArgumentException("Pool size must be >= 0");
     }
     this.maxPoolSize = maxPoolSize;
-    this.availableCiphers = new LinkedList<Cipher>();
+    this.availableCiphers = new LinkedList<>();
   }
 
   public int getMaxPoolSize() {

@@ -883,7 +883,7 @@ public class USM extends SNMPv3SecurityModel {
       userTable.clear();
     }
     else {
-      Vector<UsmUserEntry> v = new Vector<UsmUserEntry>(users.length);
+      Vector<UsmUserEntry> v = new Vector<>(users.length);
       for (UsmUser user : users) {
         UsmUserEntry entry =
             new UsmUserEntry(user.getSecurityName(),
@@ -939,7 +939,7 @@ public class USM extends SNMPv3SecurityModel {
   public List<UsmUser> removeAllUsers(OctetString userName, OctetString engineID) {
     List<UsmUserEntry> entries = userTable.removeAllUsers(userName, engineID);
     if (!entries.isEmpty()) {
-      List<UsmUser> users = new ArrayList<UsmUser>();
+      List<UsmUser> users = new ArrayList<>();
       for (UsmUserEntry entry : entries) {
         users.add(entry.getUsmUser());
         fireUsmUserChange(new UsmUserEvent(this, entry, UsmUserEvent.USER_REMOVED));
@@ -1071,7 +1071,7 @@ public class USM extends SNMPv3SecurityModel {
    */
   public synchronized void addUsmUserListener(UsmUserListener l) {
     if (usmUserListeners == null) {
-      usmUserListeners = new Vector<UsmUserListener>(2);
+      usmUserListeners = new Vector<>(2);
     }
     if (!usmUserListeners.contains(l)) {
       usmUserListeners.add(l);

@@ -42,7 +42,7 @@ public class TaskScheduler implements Runnable {
 
   private static final long DEFAULT_SCHEDULER_TIMEOUT = 5;
 
-  private LinkedList<SchedulerTask> tasks = new LinkedList<SchedulerTask>();
+  private LinkedList<SchedulerTask> tasks = new LinkedList<>();
   private ThreadPool threadPool;
   private boolean stop;
   protected long schedulerTimeout = DEFAULT_SCHEDULER_TIMEOUT;

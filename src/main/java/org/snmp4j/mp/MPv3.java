@@ -177,7 +177,7 @@ public class MPv3
     if (incomingPDUFactory != null) {
       this.incomingPDUFactory = incomingPDUFactory;
     }
-    engineIDs = new Hashtable<Address, OctetString>();
+    engineIDs = new Hashtable<>();
     cache = new Cache();
     if (secProtocols == null) {
       throw new NullPointerException();
@@ -433,7 +433,7 @@ public class MPv3
    */
   protected static class Cache {
 
-    private Map<PduHandle, StateReference> entries = new WeakHashMap<PduHandle, StateReference>(25);
+    private Map<PduHandle, StateReference> entries = new WeakHashMap<>(25);
 
     /**
      * Adds a <code>StateReference</code> to the cache.
@@ -1383,10 +1383,10 @@ public class MPv3
   public synchronized void addSnmpEngineListener(SnmpEngineListener l) {
     List<SnmpEngineListener> listeners = snmpEngineListeners;
     if (listeners == null) {
-      listeners = new ArrayList<SnmpEngineListener>();
+      listeners = new ArrayList<>();
     }
     else {
-      listeners = new ArrayList<SnmpEngineListener>(snmpEngineListeners);
+      listeners = new ArrayList<>(snmpEngineListeners);
     }
     listeners.add(l);
     this.snmpEngineListeners = listeners;
@@ -1401,7 +1401,7 @@ public class MPv3
   public synchronized void removeSnmpEngineListener(SnmpEngineListener l) {
     List<SnmpEngineListener> listeners = snmpEngineListeners;
     if (listeners != null) {
-      listeners = new ArrayList<SnmpEngineListener>(listeners);
+      listeners = new ArrayList<>(listeners);
       listeners.remove(l);
       this.snmpEngineListeners = listeners;
     }

@@ -20,6 +20,7 @@
 package org.snmp4j.smi;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 
 /**
  * The <code>UdpAddress</code> represents UDP/IP transport addresses.
@@ -31,6 +32,11 @@ public class UdpAddress extends TransportIpAddress {
   static final long serialVersionUID = -4390734262648716203L;
 
   public UdpAddress() {
+  }
+
+  public UdpAddress(InetSocketAddress aSocketAddress) {
+    setInetAddress(aSocketAddress.getAddress());
+    setPort(aSocketAddress.getPort());
   }
 
   public UdpAddress(InetAddress inetAddress, int port) {

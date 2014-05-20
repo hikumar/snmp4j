@@ -159,8 +159,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
   public Collection<TransportMapping> getTransportMappings() {
     ArrayList<TransportMapping> l = new ArrayList<TransportMapping>(transportMappings.size());
     synchronized (transportMappings) {
-      for (Iterator<List<TransportMapping>> it = transportMappings.values().iterator(); it.hasNext();) {
-        List<? extends TransportMapping> tm = it.next();
+      for (List<TransportMapping> tm : transportMappings.values()) {
         l.addAll(tm);
       }
     }

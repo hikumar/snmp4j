@@ -57,8 +57,7 @@ public class TestOctetString
     OctetString sp = new OctetString(s);
     Collection<OctetString> words = OctetString.split(sp, new OctetString("! "));
     StringTokenizer st = new StringTokenizer(s, "! ");
-    for (Iterator<OctetString> it = words.iterator(); it.hasNext();) {
-      OctetString os = it.next();
+    for (OctetString os : words) {
       assertEquals(os.toString(), st.nextToken());
     }
     assertFalse(st.hasMoreTokens());

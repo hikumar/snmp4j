@@ -230,12 +230,11 @@ public class PDUv1 extends PDU {
       errorIndex.encodeBER(outputStream);
     }
     int vbLength = 0;
-    for (int i=0; i<variableBindings.size(); i++) {
-      vbLength += (variableBindings.get(i)).getBERLength();
+    for (VariableBinding variableBinding : variableBindings) {
+      vbLength += variableBinding.getBERLength();
     }
     BER.encodeHeader(outputStream, BER.SEQUENCE, vbLength);
-    for (int i=0; i<variableBindings.size(); i++) {
-      VariableBinding vb = variableBindings.get(i);
+    for (VariableBinding vb : variableBindings) {
       if (!isVariableV1(vb.getVariable())) {
         throw new IOException("Cannot encode Counter64 into a SNMPv1 PDU");
       }
@@ -265,8 +264,8 @@ public class PDUv1 extends PDU {
     else {
       int length = 0;
       // length for all vbs
-      for (int i = 0; i < variableBindings.size(); i++) {
-        length += (variableBindings.get(i)).getBERLength();
+      for (VariableBinding variableBinding : variableBindings) {
+        length += variableBinding.getBERLength();
       }
       length += BER.getBERLengthOfLength(length) + 1;
       length += agentAddress.getBERLength();

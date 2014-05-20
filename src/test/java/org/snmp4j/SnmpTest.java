@@ -152,8 +152,8 @@ public class SnmpTest extends TestCase {
     for (int i=0; i<definedConstants.length; i++) {
       System.out.println(constantNames[i]);
     }
-    for (int i=0; i<definedConstants.length; i++) {
-      System.out.println(definedConstants[i]);
+    for (int definedConstant : definedConstants) {
+      System.out.println(definedConstant);
     }
   }
 

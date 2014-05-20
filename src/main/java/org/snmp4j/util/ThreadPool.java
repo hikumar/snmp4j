@@ -164,16 +164,14 @@ public class ThreadPool implements WorkerPool {
       stop = true;
       tms = (List<? extends TaskManager>) taskManagers.clone();
     }
-    for (int i=0; i<tms.size(); i++) {
-      TaskManager tm = tms.get(i);
+    for (TaskManager tm : tms) {
       tm.terminate();
       synchronized (tm) {
         tm.notify();
       }
       try {
         tm.join();
-      }
-      catch (InterruptedException ex) {
+      } catch (InterruptedException ex) {
         Thread.currentThread().interrupt();
       }
     }
@@ -184,8 +182,7 @@ public class ThreadPool implements WorkerPool {
    */
   public synchronized void cancel() {
     stop = true;
-    for (int i=0; i<taskManagers.size(); i++) {
-      TaskManager tm = taskManagers.get(i);
+    for (TaskManager tm : taskManagers) {
       tm.terminate();
       tm.interrupt();
     }
@@ -196,8 +193,7 @@ public class ThreadPool implements WorkerPool {
    * @since 1.6
    */
   public synchronized void interrupt() {
-    for (int i=0; i<taskManagers.size(); i++) {
-      TaskManager tm = taskManagers.get(i);
+    for (TaskManager tm : taskManagers) {
       tm.interrupt();
     }
   }
@@ -209,8 +205,7 @@ public class ThreadPool implements WorkerPool {
    * @since 1.6
    */
   public synchronized boolean isIdle() {
-    for (int i=0; i<taskManagers.size(); i++) {
-      TaskManager tm = taskManagers.get(i);
+    for (TaskManager tm : taskManagers) {
       if (!tm.isIdle()) {
         return false;
       }

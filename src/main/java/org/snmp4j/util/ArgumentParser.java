@@ -546,9 +546,9 @@ public class ArgumentParser {
         new ArgumentParser(optionFormat, "#command[s] +following[s] ..");
     Map params = ap.parse(args);
     String command = (String) ArgumentParser.getValue(params, "command", 0);
-    for (int j=0; j<commandSets.length; j++) {
-      if (commandSets[j][0].equals(command)) {
-        return commandSets[j];
+    for (String[] commandSet : commandSets) {
+      if (commandSet[0].equals(command)) {
+        return commandSet;
       }
     }
     throw new ParseException("Command '"+command+"' not found", 0);

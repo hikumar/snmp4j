@@ -464,9 +464,7 @@ public class Snmp implements Session, CommandResponder {
    *    {@link TransportMapping#listen()} method has been called.
    */
   public void listen() throws IOException {
-    for (Iterator<TransportMapping> it = messageDispatcher.getTransportMappings().iterator();
-         it.hasNext(); ) {
-      TransportMapping tm = it.next();
+    for (TransportMapping tm : messageDispatcher.getTransportMappings()) {
       if (!tm.isListening()) {
         tm.listen();
       }

@@ -1100,8 +1100,8 @@ public class USM extends SNMPv3SecurityModel {
     if (usmUserListeners != null) {
       Vector<UsmUserListener> listeners = usmUserListeners;
       int count = listeners.size();
-      for (int i = 0; i < count; i++) {
-        (listeners.get(i)).usmUserChange(e);
+      for (UsmUserListener listener : listeners) {
+        listener.usmUserChange(e);
       }
     }
   }

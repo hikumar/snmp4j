@@ -291,8 +291,8 @@ public class PDU implements BERSerializable, Serializable {
    */
   public void addAll(VariableBinding[] vbs) {
     variableBindings.ensureCapacity(variableBindings.size()+vbs.length);
-    for (int i=0; i<vbs.length; i++) {
-      add(vbs[i]);
+    for (VariableBinding vb : vbs) {
+      add(vb);
     }
   }
 

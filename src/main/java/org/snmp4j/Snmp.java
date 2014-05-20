@@ -660,7 +660,7 @@ public class Snmp implements Session, CommandResponder {
           "SNMPv1 trap PDU must be used with SNMPv1");
     }
     pdu.setType(PDU.V1TRAP);
-    send(pdu, target);
+    send(pdu, target, null, null);
   }
 
   /**
@@ -685,7 +685,7 @@ public class Snmp implements Session, CommandResponder {
           "Notifications PDUs cannot be used with SNMPv1");
     }
     pdu.setType(PDU.NOTIFICATION);
-    send(pdu, target);
+    send(pdu, target, null, null);
   }
 
   /**

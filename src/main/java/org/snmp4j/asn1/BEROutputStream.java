@@ -60,7 +60,7 @@ public class BEROutputStream extends OutputStream {
     this.offset = buffer.position();
   }
 
-  public void write(int b) throws java.io.IOException {
+  public void write(int b) throws IOException {
     buffer.put((byte)b);
   }
 

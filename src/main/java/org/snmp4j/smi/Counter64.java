@@ -52,11 +52,11 @@ public class Counter64 extends AbstractVariable
     setValue(value);
   }
 
-  public void encodeBER(OutputStream outputStream) throws java.io.IOException {
+  public void encodeBER(OutputStream outputStream) throws IOException {
     BER.encodeUnsignedInt64(outputStream, BER.COUNTER64, value);
   }
 
-  public void decodeBER(BERInputStream inputStream) throws java.io.IOException {
+  public void decodeBER(BERInputStream inputStream) throws IOException {
     BER.MutableByte type = new BER.MutableByte();
     long newValue = BER.decodeUnsignedInt64(inputStream, type);
     if (type.getValue() != BER.COUNTER64) {

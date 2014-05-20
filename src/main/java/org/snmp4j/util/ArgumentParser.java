@@ -307,7 +307,7 @@ public class ArgumentParser {
   protected Object parseParameterValue(ArgumentParameter type,
                                        String value,
                                        ArgumentFormat format, int pos) throws
-      org.snmp4j.util.ArgumentParser.ArgumentParseException
+      ArgumentParser.ArgumentParseException
   {
     if (value.startsWith("'") && value.endsWith("'")) {
       value = value.substring(1, value.length()-2);

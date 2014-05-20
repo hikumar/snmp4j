@@ -45,6 +45,7 @@ import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.security.*;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateParsingException;
@@ -1813,14 +1814,14 @@ public class TLSTM extends TcpTransportMapping {
       }
       if (localCertAlias != null) {
         try {
-          java.security.cert.Certificate[] chain = ks.getCertificateChain(localCertAlias);
+          Certificate[] chain = ks.getCertificateChain(localCertAlias);
           if (chain == null) {
             logger.warn("Local certificate with alias '"+localCertAlias+"' not found. Known aliases are: "+
                 Collections.list(ks.aliases()));
           }
           else {
             List<String> chainAliases = new ArrayList<String>(chain.length);
-            for (java.security.cert.Certificate certificate : chain) {
+            for (Certificate certificate : chain) {
               String alias = ks.getCertificateAlias(certificate);
               if (alias != null) {
                 chainAliases.add(alias);

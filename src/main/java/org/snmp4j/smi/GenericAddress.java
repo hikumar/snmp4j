@@ -106,10 +106,10 @@ public class GenericAddress extends SMIAddress {
     return address.equals(o);
   }
 
-  public void decodeBER(BERInputStream inputStream) throws java.io.IOException {
+  public void decodeBER(BERInputStream inputStream) throws IOException {
     throw new UnsupportedOperationException();
   }
-  public void encodeBER(OutputStream outputStream) throws java.io.IOException {
+  public void encodeBER(OutputStream outputStream) throws IOException {
     address.encodeBER(outputStream);
   }
 

@@ -146,7 +146,7 @@ public class StateReference implements Serializable {
   public Address getAddress() {
     return address;
   }
-  public void setAddress(org.snmp4j.smi.Address address) {
+  public void setAddress(Address address) {
     this.address = address;
   }
   public void setContextEngineID(byte[] contextEngineID) {

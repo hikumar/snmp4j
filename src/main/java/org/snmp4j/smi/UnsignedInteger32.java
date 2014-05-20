@@ -76,11 +76,11 @@ public class UnsignedInteger32 extends AbstractVariable
     setValue(signedByteValue & 0xFF);
   }
 
-  public void encodeBER(OutputStream outputStream) throws java.io.IOException {
+  public void encodeBER(OutputStream outputStream) throws IOException {
     BER.encodeUnsignedInteger(outputStream, BER.GAUGE, value);
   }
 
-  public void decodeBER(BERInputStream inputStream) throws java.io.IOException {
+  public void decodeBER(BERInputStream inputStream) throws IOException {
     BER.MutableByte type = new BER.MutableByte();
     long newValue = BER.decodeUnsignedInteger(inputStream, type);
     if (type.getValue() != BER.GAUGE) {

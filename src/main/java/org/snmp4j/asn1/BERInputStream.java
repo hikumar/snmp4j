@@ -51,7 +51,7 @@ public class BERInputStream extends InputStream {
     this.buffer = buf;
   }
 
-  public int read() throws java.io.IOException {
+  public int read() throws IOException {
     try {
       return (buffer.get() & 0xFF);
     }

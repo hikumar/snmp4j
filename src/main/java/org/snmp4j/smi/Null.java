@@ -23,6 +23,7 @@ import org.snmp4j.asn1.BER;
 import org.snmp4j.asn1.BER.MutableByte;
 import org.snmp4j.asn1.BERInputStream;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -54,7 +55,7 @@ public class Null extends AbstractVariable {
    setSyntax(exceptionSyntax);
   }
 
-  public void decodeBER(BERInputStream inputStream) throws java.io.IOException {
+  public void decodeBER(BERInputStream inputStream) throws IOException {
     MutableByte type = new BER.MutableByte();
     BER.decodeNull(inputStream, type);
     this.syntax = type.getValue() & 0xFF;
@@ -92,7 +93,7 @@ public class Null extends AbstractVariable {
     return "Null";
   }
 
-  public void encodeBER(OutputStream outputStream) throws java.io.IOException {
+  public void encodeBER(OutputStream outputStream) throws IOException {
     BER.encodeHeader(outputStream, (byte)getSyntax(), 0);
   }
 

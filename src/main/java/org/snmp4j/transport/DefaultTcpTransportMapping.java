@@ -103,7 +103,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
    *    when the transport is already listening for incoming/outgoing messages.
    * @throws IOException
    */
-  public synchronized void listen() throws java.io.IOException {
+  public synchronized void listen() throws IOException {
     if (server != null) {
       throw new SocketException("Port already listening");
     }
@@ -284,7 +284,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
    */
   public void sendMessage(TcpAddress address, byte[] message,
                           TransportStateReference tmStateReference)
-      throws java.io.IOException
+      throws IOException
   {
     if (server == null) {
       listen();
@@ -672,7 +672,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
 
     public void sendMessage(Address address, byte[] message,
                             TransportStateReference tmStateReference)
-        throws java.io.IOException
+        throws IOException
     {
       Socket s = null;
       SocketEntry entry = sockets.get(address);

@@ -157,16 +157,16 @@ public class CommandResponderEvent extends EventObject {
   public int getMaxSizeResponsePDU() {
     return maxSizeResponsePDU;
   }
-  public void setPduHandle(org.snmp4j.mp.PduHandle pduHandle) {
+  public void setPduHandle(PduHandle pduHandle) {
     this.pduHandle = pduHandle;
   }
   public PduHandle getPduHandle() {
     return pduHandle;
   }
-  public void setStateReference(org.snmp4j.mp.StateReference stateReference) {
+  public void setStateReference(StateReference stateReference) {
     this.stateReference = stateReference;
   }
-  public org.snmp4j.mp.StateReference getStateReference() {
+  public StateReference getStateReference() {
     return stateReference;
   }
   public void setPDU(PDU pdu) {

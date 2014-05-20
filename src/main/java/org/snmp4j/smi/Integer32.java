@@ -53,11 +53,11 @@ public class Integer32 extends AbstractVariable
     setValue(value);
   }
 
-  public void encodeBER(OutputStream outputStream) throws java.io.IOException {
+  public void encodeBER(OutputStream outputStream) throws IOException {
     BER.encodeInteger(outputStream, BER.INTEGER, value);
   }
 
-  public void decodeBER(BERInputStream inputStream) throws java.io.IOException {
+  public void decodeBER(BERInputStream inputStream) throws IOException {
     BER.MutableByte type = new BER.MutableByte();
     int newValue = BER.decodeInteger(inputStream, type);
     if (type.getValue() != BER.INTEGER) {

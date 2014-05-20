@@ -64,7 +64,7 @@ public class DefaultTlsTmSecurityCallback implements TlsTmSecurityCallback<X509C
         certFingerprint = TLSTM.getFingerprint(cert);
         if ((certFingerprint != null) && (certFingerprint.equals(fingerprint))) {
           // possible match found -> now try to map to tmSecurityName
-          org.snmp4j.transport.tls.SecurityNameMapping.CertMappingType mappingType = entry.getKey().getType();
+          SecurityNameMapping.CertMappingType mappingType = entry.getKey().getType();
           OctetString data = entry.getKey().getData();
           OctetString tmSecurityName = null;
           try {
@@ -82,7 +82,7 @@ public class DefaultTlsTmSecurityCallback implements TlsTmSecurityCallback<X509C
   }
 
   private OctetString mapCertToTSN(X509Certificate cert,
-                                   org.snmp4j.transport.tls.SecurityNameMapping.CertMappingType mappingType, OctetString data)
+                                   SecurityNameMapping.CertMappingType mappingType, OctetString data)
       throws CertificateParsingException
   {
     switch (mappingType) {
@@ -186,13 +186,13 @@ public class DefaultTlsTmSecurityCallback implements TlsTmSecurityCallback<X509C
    *    certificates meta data (like subjectAltName).
    */
   public void addSecurityNameMapping(OctetString fingerprint,
-                                     org.snmp4j.transport.tls.SecurityNameMapping.CertMappingType type,
+                                     SecurityNameMapping.CertMappingType type,
                                      OctetString data,
                                      OctetString securityName) {
     securityNameMapping.put(new SecurityNameMapping(fingerprint, data, type, securityName), securityName);
   }
 
-  public OctetString removeSecurityNameMapping(OctetString fingerprint, org.snmp4j.transport.tls.SecurityNameMapping.CertMappingType type, OctetString data) {
+  public OctetString removeSecurityNameMapping(OctetString fingerprint, SecurityNameMapping.CertMappingType type, OctetString data) {
     return securityNameMapping.remove(new SecurityNameMapping(fingerprint, data, type, null));
   }
 

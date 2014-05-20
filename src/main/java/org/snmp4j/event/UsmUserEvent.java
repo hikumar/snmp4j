@@ -54,7 +54,7 @@ public class UsmUserEvent extends EventObject {
    */
   public static final int USER_CHANGED = 3;
 
-  private org.snmp4j.security.UsmUserEntry user;
+  private UsmUserEntry user;
   private int type;
 
   /**
@@ -80,7 +80,7 @@ public class UsmUserEvent extends EventObject {
    *     <li> after the modification if the user was added or modified
    *     <li> before the modification if the user was deleted </ul>
    */
-  public org.snmp4j.security.UsmUserEntry getUser() {
+  public UsmUserEntry getUser() {
     return user;
   }
 

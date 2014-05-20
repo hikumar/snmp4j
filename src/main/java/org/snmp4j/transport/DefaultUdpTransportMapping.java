@@ -105,7 +105,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
 
   public void sendMessage(UdpAddress targetAddress, byte[] message,
                           TransportStateReference tmStateReference)
-      throws java.io.IOException
+      throws IOException
   {
     InetSocketAddress targetSocketAddress =
         new InetSocketAddress(targetAddress.getInetAddress(),

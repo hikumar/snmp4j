@@ -69,7 +69,7 @@ public class SecurityNameMapping {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    org.snmp4j.transport.tls.SecurityNameMapping that = (org.snmp4j.transport.tls.SecurityNameMapping) o;
+    SecurityNameMapping that = (SecurityNameMapping) o;
 
     if (data != null ? !data.equals(that.data) : that.data != null) return false;
     if (fingerprint != null ? !fingerprint.equals(that.fingerprint) : that.fingerprint != null) return false;

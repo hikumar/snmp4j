@@ -70,10 +70,10 @@ public class StatusInformation implements Serializable {
   public byte[] getContextEngineID() {
     return contextEngineID;
   }
-  public void setSecurityLevel(org.snmp4j.smi.Integer32 securityLevel) {
+  public void setSecurityLevel(Integer32 securityLevel) {
     this.securityLevel = securityLevel;
   }
-  public org.snmp4j.smi.Integer32 getSecurityLevel() {
+  public Integer32 getSecurityLevel() {
     return securityLevel;
   }
 

@@ -289,7 +289,7 @@ public class OID extends AbstractVariable
     return b;
   }
 
-  public void encodeBER(OutputStream outputStream) throws java.io.IOException {
+  public void encodeBER(OutputStream outputStream) throws IOException {
     BER.encodeOID(outputStream, BER.OID, value);
   }
 
@@ -298,7 +298,7 @@ public class OID extends AbstractVariable
     return length + BER.getBERLengthOfLength(length) + 1;
   }
 
-  public void decodeBER(BERInputStream inputStream) throws java.io.IOException {
+  public void decodeBER(BERInputStream inputStream) throws IOException {
     BER.MutableByte type = new BER.MutableByte();
     int[] v = BER.decodeOID(inputStream, type);
     if (type.getValue() != BER.OID) {

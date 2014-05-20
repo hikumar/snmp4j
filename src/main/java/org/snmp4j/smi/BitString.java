@@ -54,11 +54,11 @@ public class BitString extends OctetString {
     return BER.ASN_BIT_STR;
   }
 
-  public void encodeBER(OutputStream outputStream) throws java.io.IOException {
+  public void encodeBER(OutputStream outputStream) throws IOException {
     BER.encodeString(outputStream, BER.BITSTRING, getValue());
   }
 
-  public void decodeBER(BERInputStream inputStream) throws java.io.IOException {
+  public void decodeBER(BERInputStream inputStream) throws IOException {
     BER.MutableByte type = new BER.MutableByte();
     byte[] v = BER.decodeString(inputStream, type);
     if (type.getValue() != BER.BITSTRING) {

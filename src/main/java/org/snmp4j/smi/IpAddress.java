@@ -50,7 +50,7 @@ public class IpAddress extends SMIAddress implements AssignableFromByteArray {
 
   public static final InetAddress ANY_IPADDRESS = createAnyAddress();
 
-  private java.net.InetAddress inetAddress;
+  private InetAddress inetAddress;
 
   /**
    * Creates a <code>0.0.0.0</code> IP address.
@@ -164,7 +164,7 @@ public class IpAddress extends SMIAddress implements AssignableFromByteArray {
     return (o instanceof IpAddress) && (compareTo((IpAddress)o) == 0);
   }
 
-  public void decodeBER(BERInputStream inputStream) throws java.io.IOException {
+  public void decodeBER(BERInputStream inputStream) throws IOException {
     BER.MutableByte type = new BER.MutableByte();
     byte[] value = BER.decodeString(inputStream, type);
     if (type.getValue() != BER.IPADDRESS) {
@@ -178,7 +178,7 @@ public class IpAddress extends SMIAddress implements AssignableFromByteArray {
     inetAddress = InetAddress.getByAddress(value);
   }
 
-  public void encodeBER(OutputStream outputStream) throws java.io.IOException {
+  public void encodeBER(OutputStream outputStream) throws IOException {
     byte[] address = new byte[4];
     if (inetAddress instanceof Inet6Address) {
       Inet6Address v6Addr = (Inet6Address)inetAddress;
@@ -201,7 +201,7 @@ public class IpAddress extends SMIAddress implements AssignableFromByteArray {
     this.inetAddress = InetAddress.getByAddress(rawValue);
   }
 
-  public void setInetAddress(java.net.InetAddress inetAddress) {
+  public void setInetAddress(InetAddress inetAddress) {
     this.inetAddress = inetAddress;
   }
 

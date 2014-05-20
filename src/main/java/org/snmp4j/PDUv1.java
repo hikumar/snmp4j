@@ -357,7 +357,7 @@ public class PDUv1 extends PDU {
    * @throws UnsupportedOperationException if the type of this PDU is not
    *    {@link PDU#V1TRAP}.
    */
-  public void setEnterprise(org.snmp4j.smi.OID enterprise) {
+  public void setEnterprise(OID enterprise) {
     checkV1TRAP();
     checkNull(enterprise);
     this.enterprise = (OID) enterprise.clone();
@@ -374,7 +374,7 @@ public class PDUv1 extends PDU {
    * @throws UnsupportedOperationException if the type of this PDU is not
    *    {@link PDU#V1TRAP}.
    */
-  public org.snmp4j.smi.IpAddress getAgentAddress() {
+  public IpAddress getAgentAddress() {
     checkV1TRAP();
     return agentAddress;
   }
@@ -388,7 +388,7 @@ public class PDUv1 extends PDU {
    * @throws UnsupportedOperationException if the type of this PDU is not
    *    {@link PDU#V1TRAP}.
    */
-  public void setAgentAddress(org.snmp4j.smi.IpAddress agentAddress) {
+  public void setAgentAddress(IpAddress agentAddress) {
     checkV1TRAP();
     checkNull(agentAddress);
     this.agentAddress = agentAddress;

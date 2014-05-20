@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.OctetString;
 
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * The abstract class AuthGeneric implements common operations for
@@ -59,7 +60,7 @@ public abstract class AuthGeneric implements AuthenticationProtocol {
     try {
       md = MessageDigest.getInstance(protoName);
     }
-    catch (java.security.NoSuchAlgorithmException e) {
+    catch (NoSuchAlgorithmException e) {
       throw new InternalError(protoName + " not supported in this VM.");
     }
     // not needed the first time: md.reset();

@@ -93,10 +93,10 @@ public class UsmSecurityParameters implements SecurityParameters {
   public int getAuthoritativeEngineTime() {
     return authoritativeEngineTime.getValue();
   }
-  public void setUserName(org.snmp4j.smi.OctetString userName) {
+  public void setUserName(OctetString userName) {
     this.userName = userName;
   }
-  public org.snmp4j.smi.OctetString getUserName() {
+  public OctetString getUserName() {
     return userName;
   }
   public void setAuthenticationProtocol(AuthenticationProtocol authenticationProtocol) {
@@ -239,16 +239,16 @@ public class UsmSecurityParameters implements SecurityParameters {
   public void setPrivacyKey(byte[] privacyKey) {
     this.privacyKey = privacyKey;
   }
-  public org.snmp4j.smi.OctetString getPrivacyParameters() {
+  public OctetString getPrivacyParameters() {
     return privacyParameters;
   }
-  public void setPrivacyParameters(org.snmp4j.smi.OctetString privacyParameters) {
+  public void setPrivacyParameters(OctetString privacyParameters) {
     this.privacyParameters = privacyParameters;
   }
-  public org.snmp4j.smi.OctetString getAuthenticationParameters() {
+  public OctetString getAuthenticationParameters() {
     return authenticationParameters;
   }
-  public void setAuthenticationParameters(org.snmp4j.smi.OctetString authenticationParameters) {
+  public void setAuthenticationParameters(OctetString authenticationParameters) {
     this.authenticationParameters = authenticationParameters;
   }
   public int getSecurityParametersPosition() {

@@ -210,7 +210,7 @@ public class SnmpURI {
     }
     String path = url.getPath();
     String[] segments = path.split("/");
-    String contextInfo = "";
+    String contextInfo;
     String contextName = "";
     OctetString contextEngineID = null;
     String oidPart = null;

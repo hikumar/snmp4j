@@ -1919,7 +1919,7 @@ public class TLSTM extends TcpTransportMapping {
     private boolean isMatchingFingerprint(X509Certificate[] x509Certificates, OctetString fingerprint) {
       if ((fingerprint != null) && (fingerprint.length() > 0)) {
         for (X509Certificate cert : x509Certificates) {
-          OctetString certFingerprint = null;
+          OctetString certFingerprint;
           certFingerprint = getFingerprint(cert);
           if (logger.isDebugEnabled()) {
             logger.debug("Comparing certificate fingerprint {} with {}", certFingerprint, fingerprint);

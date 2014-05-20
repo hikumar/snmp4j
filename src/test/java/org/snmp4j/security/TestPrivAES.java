@@ -67,8 +67,8 @@ public class TestPrivAES
     };
     byte[] plaintext = "This is a secret message, nobody is allowed to read it!".
         getBytes();
-    byte[] ciphertext = null;
-    byte[] decrypted = null;
+    byte[] ciphertext;
+    byte[] decrypted;
     int engine_boots = 0xdeadc0de;
     int engine_time = 0xbeefdede;
 

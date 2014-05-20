@@ -690,7 +690,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
         synchronized (pending) {
           pending.remove(entry);
         }
-        SocketChannel sc = null;
+        SocketChannel sc;
         try {
           InetSocketAddress targetAddress =
               new InetSocketAddress(((TcpAddress)address).getInetAddress(),
@@ -975,7 +975,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
         }
         return;
       }
-      long bytesRead = 0;
+      long bytesRead;
       try {
         bytesRead = readChannel.read(byteBuffer);
         if (logger.isDebugEnabled()) {

@@ -71,7 +71,7 @@ public class DefaultSshTransportMapping extends AbstractTransportMapping<SshAddr
   public void sendMessage(SshAddress address, byte[] message,
                           TransportStateReference tmStateReference) throws IOException {
     SessionID sessionKey = new SessionID(tmStateReference.getSecurityName(), address);
-    SshSession session = null;
+    SshSession session;
     synchronized (sessions) {
       session = sessions.get(sessionKey);
     }

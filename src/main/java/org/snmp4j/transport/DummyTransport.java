@@ -140,7 +140,7 @@ public class DummyTransport<A extends IpAddress> extends AbstractTransportMappin
     @Override
     public void run() {
       while (!stop) {
-        OctetString nextMessage = null;
+        OctetString nextMessage;
         nextMessage = queue.poll();
         if (nextMessage != null) {
           TransportStateReference stateReference =

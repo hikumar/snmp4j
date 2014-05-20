@@ -60,7 +60,7 @@ public class DefaultTlsTmSecurityCallback implements TlsTmSecurityCallback<X509C
     for (Map.Entry<SecurityNameMapping,OctetString> entry : securityNameMapping.entrySet()) {
       OctetString fingerprint = entry.getKey().getFingerprint();
       for (X509Certificate cert : peerCertificateChain) {
-        OctetString certFingerprint = null;
+        OctetString certFingerprint;
         certFingerprint = TLSTM.getFingerprint(cert);
         if ((certFingerprint != null) && (certFingerprint.equals(fingerprint))) {
           // possible match found -> now try to map to tmSecurityName

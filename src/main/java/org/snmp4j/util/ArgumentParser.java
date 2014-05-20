@@ -508,7 +508,7 @@ public class ArgumentParser {
                                               "+optParam1[l{=-100}] .."));
     System.out.println("Option format is: "+argumentparser.getOptionFormat());
     System.out.println("Parameter format is: "+argumentparser.getParameterFormat());
-    Map options = null;
+    Map options;
     try {
       options = argumentparser.parse(args);
       System.out.println(options);

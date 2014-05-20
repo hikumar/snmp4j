@@ -69,8 +69,8 @@ public class TestPriv3DES
       byte[] plaintext =
           "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".
           getBytes();
-      byte[] ciphertext = null;
-      byte[] decrypted = null;
+      byte[] ciphertext;
+      byte[] decrypted;
       int engine_boots = 1;
       int engine_time = 2;
 

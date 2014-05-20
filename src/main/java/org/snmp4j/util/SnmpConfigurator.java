@@ -268,34 +268,43 @@ public class SnmpConfigurator {
             (String) ArgumentParser.getValue(settings, oAuthProtocol, 0);
         String privP =
             (String) ArgumentParser.getValue(settings, oPrivProtocol, 0);
+
         OID privProtocol = null;
-        if ("MD5".equals(authP)) {
-          authProtocol = AuthMD5.ID;
+
+        switch (authP) {
+          case "MD5":
+            authProtocol = AuthMD5.ID;
+            break;
+          case "SHA":
+            authProtocol = AuthSHA.ID;
+            break;
         }
-        else if ("SHA".equals(authP)) {
-          authProtocol = AuthSHA.ID;
+
+        switch (privP) {
+          case "DES":
+            privProtocol = PrivDES.ID;
+            break;
+          case "3DES":
+            privProtocol = Priv3DES.ID;
+            break;
+          case "AES":
+          case "AES128":
+            privProtocol = PrivAES128.ID;
+            break;
+          case "AES192":
+            privProtocol = PrivAES192.ID;
+            break;
+          case "AES256":
+            privProtocol = PrivAES256.ID;
+            break;
+          case "AES192p":
+            privProtocol = PrivAES192With3DESKeyExtension.ID;
+            break;
+          case "AES256p":
+            privProtocol = PrivAES256With3DESKeyExtension.ID;
+            break;
         }
-        if ("DES".equals(privP)) {
-          privProtocol = PrivDES.ID;
-        }
-        else if ("3DES".equals(privP)) {
-          privProtocol = Priv3DES.ID;
-        }
-        else if ("AES".equals(privP) || "AES128".equals(privP)) {
-          privProtocol = PrivAES128.ID;
-        }
-        else if ("AES192".equals(privP)) {
-          privProtocol = PrivAES192.ID;
-        }
-        else if ("AES256".equals(privP)) {
-          privProtocol = PrivAES256.ID;
-        }
-        else if ("AES192p".equals(privP)) {
-          privProtocol = PrivAES192With3DESKeyExtension.ID;
-        }
-        else if ("AES256p".equals(privP)) {
-          privProtocol = PrivAES256With3DESKeyExtension.ID;
-        }
+
         OctetString un = createOctetString(sn, null);
         snmp.getUSM().addUser(un, new UsmUser(un,
                                               authProtocol,

@@ -725,32 +725,25 @@ public class PDU implements BERSerializable, Serializable {
    *    of the supplied type is unknown.
    */
   public static int getTypeFromString(String type) {
-    if (type.equals("GET")) {
-      return PDU.GET;
-    }
-    else if (type.equals("SET")) {
-      return PDU.SET;
-    }
-    else if (type.equals("GETNEXT")) {
-      return PDU.GETNEXT;
-    }
-    else if (type.equals("GETBULK")) {
-      return PDU.GETBULK;
-    }
-    else if (type.equals("INFORM")) {
-      return PDU.INFORM;
-    }
-    else if (type.equals("RESPONSE")) {
-      return PDU.RESPONSE;
-    }
-    else if (type.equals("TRAP")) {
-      return PDU.TRAP;
-    }
-    else if (type.equals("V1TRAP")) {
-      return PDU.V1TRAP;
-    }
-    else if (type.equals("REPORT")) {
-      return PDU.REPORT;
+    switch (type) {
+      case "GET":
+        return PDU.GET;
+      case "SET":
+        return PDU.SET;
+      case "GETNEXT":
+        return PDU.GETNEXT;
+      case "GETBULK":
+        return PDU.GETBULK;
+      case "INFORM":
+        return PDU.INFORM;
+      case "RESPONSE":
+        return PDU.RESPONSE;
+      case "TRAP":
+        return PDU.TRAP;
+      case "V1TRAP":
+        return PDU.V1TRAP;
+      case "REPORT":
+        return PDU.REPORT;
     }
     return Integer.MIN_VALUE;
   }

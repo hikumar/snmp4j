@@ -1476,13 +1476,9 @@ public class Snmp implements Session, CommandResponder {
           pendingRequests.remove(m_key);
         }
       }
-      catch (RuntimeException ex) {
+      catch (RuntimeException | Error ex) {
         logger.error("Failed to process pending request {} because {}", m_key, ex.getMessage(), ex);
         throw ex;
-      }
-      catch (Error er) {
-        logger.error("Failed to process pending request {} because {}", m_key, er.getMessage(), er);
-        throw er;
       }
     }
 

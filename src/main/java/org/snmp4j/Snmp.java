@@ -976,7 +976,7 @@ public class Snmp implements Session, CommandResponder {
     }
     else {
       if (logger.isDebugEnabled()) {
-        logger.debug("Fire process PDU event: {}", event.toString());
+        logger.debug("Fire process PDU event: {}", event);
       }
       fireProcessPdu(event);
     }

@@ -616,16 +616,12 @@ public class TLSTM extends TcpTransportMapping {
     {
       if ((this.registrations & opKey) == 0) {
         this.registrations |= opKey;
-        if (logger.isDebugEnabled()) {
-          logger.debug("Adding operation {} for: {}", opKey, toString());
-        }
+        logger.debug("Adding operation {} for: {}", opKey, this);
         socket.getChannel().register(selector, registrations, this);
       }
       else if (!socket.getChannel().isRegistered()) {
         this.registrations = opKey;
-        if (logger.isDebugEnabled()) {
-          logger.debug("Registering new operation {} for: {}", opKey, toString());
-        }
+        logger.debug("Registering new operation {} for: {}", opKey, this);
         socket.getChannel().register(selector, opKey, this);
       }
     }

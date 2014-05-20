@@ -420,7 +420,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
         }
         catch (SocketException soex) {
           if (!stop) {
-            logger.warn("Socket for transport mapping {} error: {}", toString(), soex.getMessage());
+            logger.warn("Socket for transport mapping {} error: {}", this, soex.getMessage());
           }
 
           stop = true;

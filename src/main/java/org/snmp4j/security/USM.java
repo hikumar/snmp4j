@@ -230,9 +230,8 @@ public class USM extends SNMPv3SecurityModel {
   }
 
   public UsmUserEntry getUser(OctetString engineID, OctetString securityName) {
-    if (logger.isDebugEnabled()) {
-      logger.debug("getUser(engineID={}, securityName={})", engineID.toHexString(), securityName.toString());
-    }
+    logger.debug("getUser(engineID={}, securityName={})", engineID.toHexString(), securityName);
+
     UsmUserEntry entry = userTable.getUser(engineID, securityName);
     if (entry == null) {
       entry = userTable.getUser(securityName);

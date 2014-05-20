@@ -270,10 +270,10 @@ public class SnmpURI {
       }
     }
     else if (oidPart != null) {
-      oids = Collections.<OID>singletonList(new OID(oidPart));
+      oids = Collections.singletonList(new OID(oidPart));
     }
     else {
-      oids = Collections.<OID>emptyList();
+      oids = Collections.emptyList();
     }
     return new Request(t, pdu, oids.toArray(new OID[oids.size()]), type);
   }
@@ -346,7 +346,7 @@ public class SnmpURI {
         }
         else {
           response = new SnmpUriResponse(
-              Collections.<VariableBinding[]>singletonList(
+              Collections.singletonList(
                   responsePDU.getVariableBindings().toArray(new VariableBinding[responsePDU.size()])));
         }
       }

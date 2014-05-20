@@ -253,7 +253,7 @@ public class TestAuthMD5
     int messageLength = msg.length - messageOffset - messageOffset;
     int digestOffset = (16 * 4) + 1;
 
-    byte[] expectedMsg = (byte[])msg.clone();
+    byte[] expectedMsg = msg.clone();
 
     System.arraycopy(authCode, 0, expectedMsg, digestOffset + messageOffset, authCode.length);
 
@@ -273,48 +273,48 @@ public class TestAuthMD5
       assertEquals(msg[i], expectedMsg[i]);
     }
 
-    byte [] tmsg = (byte[])msg.clone();
+    byte [] tmsg = msg.clone();
     res = auth.isAuthentic(key, tmsg, messageOffset, messageLength,
                           new ByteArrayWindow(tmsg, messageOffset + digestOffset, 12));
     assertEquals(true, res);
 
-    tmsg = (byte[])msg.clone();
+    tmsg = msg.clone();
     tmsg[33] = (byte)(tmsg[33] + 5);
     res = auth.isAuthentic(key, tmsg, messageOffset, messageLength,
                           new ByteArrayWindow(tmsg, messageOffset + digestOffset, 12));
     assertEquals(false, res);
 
-    tmsg = (byte[])msg.clone();
+    tmsg = msg.clone();
     res = auth.isAuthentic(key, tmsg, messageOffset, messageLength + 1,
                           new ByteArrayWindow(tmsg, messageOffset + digestOffset, 12));
     assertEquals(false, res);
 
-    tmsg = (byte[])msg.clone();
+    tmsg = msg.clone();
     res = auth.isAuthentic(key, tmsg, messageOffset, messageLength - 1,
                           new ByteArrayWindow(tmsg, messageOffset + digestOffset, 12));
     assertEquals(false, res);
 
-    tmsg = (byte[])msg.clone();
+    tmsg = msg.clone();
     res = auth.isAuthentic(key, tmsg, messageOffset + 1, messageLength,
                           new ByteArrayWindow(tmsg, messageOffset + 1 + digestOffset, 12));
     assertEquals(false, res);
 
-    tmsg = (byte[])msg.clone();
+    tmsg = msg.clone();
     res = auth.isAuthentic(key, tmsg, messageOffset - 1, messageLength,
                           new ByteArrayWindow(tmsg, messageOffset - 1 + digestOffset, 12));
     assertEquals(false, res);
 
-    tmsg = (byte[])msg.clone();
+    tmsg = msg.clone();
     res = auth.isAuthentic(key, tmsg, messageOffset, messageLength,
                           new ByteArrayWindow(tmsg, messageOffset + digestOffset + 1, 12));
     assertEquals(false, res);
 
-    tmsg = (byte[])msg.clone();
+    tmsg = msg.clone();
     res = auth.isAuthentic(key, tmsg, messageOffset, messageLength,
                           new ByteArrayWindow(tmsg, messageOffset + digestOffset - 1, 12));
     assertEquals(false, res);
 
-    tmsg = (byte[])msg.clone();
+    tmsg = msg.clone();
     byte[] shortKey = new byte[2];
     System.arraycopy(key, 0, shortKey, 0, 2);
     res = auth.isAuthentic(shortKey, tmsg, messageOffset, messageLength,

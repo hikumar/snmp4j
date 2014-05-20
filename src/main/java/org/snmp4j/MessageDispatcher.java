@@ -23,7 +23,6 @@ import org.snmp4j.mp.*;
 import org.snmp4j.smi.Address;
 import org.snmp4j.transport.TransportListener;
 
-import java.nio.ByteBuffer;
 import java.util.Collection;
 
 /**

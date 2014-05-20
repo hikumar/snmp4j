@@ -27,7 +27,6 @@ import org.snmp4j.util.SimpleOIDTextFormat;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 

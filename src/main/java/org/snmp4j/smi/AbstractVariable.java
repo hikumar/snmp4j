@@ -28,11 +28,9 @@ import org.snmp4j.asn1.BERInputStream;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Objects;
 import java.util.Properties;
 
 // For JavaDoc:

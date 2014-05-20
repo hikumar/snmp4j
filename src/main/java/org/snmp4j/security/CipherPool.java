@@ -21,8 +21,6 @@
 package org.snmp4j.security;
 
 import javax.crypto.Cipher;
-import javax.crypto.NoSuchPaddingException;
-import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
 
 /**

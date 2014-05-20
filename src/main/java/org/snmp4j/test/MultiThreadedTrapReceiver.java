@@ -34,7 +34,6 @@ import org.snmp4j.util.MultiThreadedMessageDispatcher;
 import org.snmp4j.util.ThreadPool;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 
 public class MultiThreadedTrapReceiver implements CommandResponder {
 

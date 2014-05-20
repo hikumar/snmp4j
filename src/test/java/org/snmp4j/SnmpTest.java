@@ -20,7 +20,6 @@
 
 package org.snmp4j;
 
-import junit.framework.TestCase;
 import org.junit.*;
 import org.snmp4j.event.ResponseEvent;
 import org.snmp4j.event.ResponseListener;

@@ -20,11 +20,8 @@
 
 package org.snmp4j.transport;
 
-import org.snmp4j.TransportStateReference;
 import org.snmp4j.smi.Address;
 import org.snmp4j.smi.UdpAddress;
-
-import java.io.IOException;
 
 /**
  * The <code>UdpTransportMapping</code> is the abstract base class for

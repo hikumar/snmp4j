@@ -24,7 +24,6 @@ import org.snmp4j.TransportMapping;
 import org.snmp4j.TransportStateReference;
 import org.snmp4j.smi.Address;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;

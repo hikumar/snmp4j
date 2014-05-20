@@ -867,6 +867,7 @@ public class Snmp implements Session, CommandResponder {
    *    if it could not be discovered.
    * @see USM#setEngineDiscoveryEnabled(boolean enableEngineDiscovery)
    */
+  /*
   public byte[] discoverAuthoritativeEngineID(Address address, long timeout) {
     MPv3 mpv3 = getMPv3();
     // We need to remove the engine ID explicitly to be sure that it is updated
@@ -901,6 +902,7 @@ public class Snmp implements Session, CommandResponder {
       return null;
     }
   }
+  */
 
   /**
    * Gets the User Based Security Model (USM). This is a convenience method

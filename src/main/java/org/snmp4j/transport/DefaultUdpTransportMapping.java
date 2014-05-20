@@ -60,7 +60,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
    * @throws IOException
    *    if socket binding fails.
    */
-  public DefaultUdpTransportMapping() throws IOException {
+  public DefaultUdpTransportMapping() throws UnknownHostException, SocketException {
     super(new UdpAddress(InetAddress.getLocalHost(), 0));
     socket = new DatagramSocket(udpAddress.getPort());
   }
@@ -79,7 +79,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
    * @since 1.7.3
    */
   public DefaultUdpTransportMapping(UdpAddress udpAddress,
-                                    boolean reuseAddress) throws IOException {
+                                    boolean reuseAddress) throws SocketException {
     super(udpAddress);
     socket = new DatagramSocket(null);
     socket.setReuseAddress(reuseAddress);
@@ -97,7 +97,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
    * @throws IOException
    *    if socket binding fails.
    */
-  public DefaultUdpTransportMapping(UdpAddress udpAddress) throws IOException {
+  public DefaultUdpTransportMapping(UdpAddress udpAddress) throws SocketException {
     super(udpAddress);
     socket = new DatagramSocket(udpAddress.getPort(),
                                 udpAddress.getInetAddress());
@@ -105,8 +105,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
 
   public void sendMessage(UdpAddress targetAddress, byte[] message,
                           TransportStateReference tmStateReference)
-      throws IOException
-  {
+      throws IOException {
     InetSocketAddress targetSocketAddress =
         new InetSocketAddress(targetAddress.getInetAddress(),
                               targetAddress.getPort());
@@ -122,7 +121,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
    *
    * @throws IOException
    */
-  public void close() throws IOException {
+  public void close() {
     boolean interrupted = false;
     WorkerTask l = listener;
     if (l != null) {
@@ -157,7 +156,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
    *
    * @throws IOException
    */
-  public synchronized void listen() throws IOException {
+  public synchronized void listen() throws SocketException {
     if (listener != null) {
       throw new SocketException("Port already listening");
     }
@@ -348,7 +347,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
     private volatile boolean stop = false;
 
 
-    public ListenThread() throws SocketException {
+    public ListenThread() {
       buf = new byte[getMaxInboundMessageSize()];
     }
 

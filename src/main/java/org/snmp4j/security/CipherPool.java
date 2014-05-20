@@ -74,7 +74,7 @@ public class CipherPool {
    *    a Cipher from the pool, or <code>null</code> if the pool currently does not contain any
    *    cipher.
    */
-  public synchronized Cipher reuseCipher() throws NoSuchPaddingException, NoSuchAlgorithmException {
+  public synchronized Cipher reuseCipher() {
     Cipher cipher = availableCiphers.poll();
     if (cipher == null) {
       currentPoolSize = 0;

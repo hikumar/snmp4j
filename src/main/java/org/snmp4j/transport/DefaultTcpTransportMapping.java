@@ -75,7 +75,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
    * @throws IOException
    *    on failure of binding a local port.
    */
-  public DefaultTcpTransportMapping() throws IOException {
+  public DefaultTcpTransportMapping() throws UnknownHostException {
     super(new TcpAddress(InetAddress.getLocalHost(), 0));
   }
 
@@ -89,8 +89,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
    * @throws IOException
    *    if the given address cannot be bound.
    */
-  public DefaultTcpTransportMapping(TcpAddress serverAddress) throws IOException
-  {
+  public DefaultTcpTransportMapping(TcpAddress serverAddress) {
     super(serverAddress);
     this.serverEnabled = true;
   }
@@ -636,8 +635,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
             catch (IOException ex) {
               logger.error(ex.getMessage(), ex);
             }
-          }
-          catch (IOException iox) {
+          } catch (ClosedChannelException iox) {
             logger.error(iox.getMessage(), iox);
             pending.remove(entry);
             // Something went wrong, so close the channel and
@@ -646,9 +644,9 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
               entry.getSocket().getChannel().close();
               TransportStateEvent e =
                   new TransportStateEvent(DefaultTcpTransportMapping.this,
-                                          entry.getPeerAddress(),
-                                          TransportStateEvent.STATE_CLOSED,
-                                          iox);
+                      entry.getPeerAddress(),
+                      TransportStateEvent.STATE_CLOSED,
+                      iox);
               fireConnectionStateChanged(e);
             }
             catch (IOException ex) {

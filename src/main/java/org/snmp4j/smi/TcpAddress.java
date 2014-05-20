@@ -65,7 +65,7 @@ public class TcpAddress extends TransportIpAddress {
         return a;
       }
     }
-    catch (Exception ex) {
+    catch (RuntimeException ex) {
       logger.error(ex.getMessage(), ex);
     }
     return null;

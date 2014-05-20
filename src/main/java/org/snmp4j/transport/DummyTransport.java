@@ -95,7 +95,7 @@ public class DummyTransport<A extends IpAddress> extends AbstractTransportMappin
   }
 
   @Override
-  public void close() throws IOException {
+  public void close() {
     listening = false;
     listenThread.terminate();
     try {
@@ -202,7 +202,7 @@ public class DummyTransport<A extends IpAddress> extends AbstractTransportMappin
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
       this.listening = false;
       this.listenThread.terminate();
       try {

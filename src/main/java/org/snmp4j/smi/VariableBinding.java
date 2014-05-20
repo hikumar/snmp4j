@@ -95,7 +95,7 @@ public class VariableBinding
    *    if the <code>variableText</code> cannot be parsed or <code>oid</code>'s syntax is unknown.
    * @since 2.2
    */
-  public VariableBinding(OID oid, String variableText) throws ParseException {
+  public VariableBinding(OID oid, String variableText) {
     this(oid, SNMP4JSettings.getVariableTextFormat().parse(oid, variableText));
   }
 

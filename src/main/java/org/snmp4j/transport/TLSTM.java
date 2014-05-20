@@ -164,8 +164,7 @@ public class TLSTM extends TcpTransportMapping {
    *    if the given address cannot be bound.
    */
   public TLSTM(TlsTmSecurityCallback<X509Certificate> securityCallback,
-               TlsAddress serverAddress) throws IOException
-  {
+               TlsAddress serverAddress) {
      this(securityCallback, serverAddress, CounterSupport.getInstance());
   }
 
@@ -186,8 +185,7 @@ public class TLSTM extends TcpTransportMapping {
    *    if the given address cannot be bound.
    */
   public TLSTM(TlsTmSecurityCallback<X509Certificate> securityCallback,
-               TlsAddress serverAddress, CounterSupport counterSupport) throws IOException
-  {
+               TlsAddress serverAddress, CounterSupport counterSupport) {
     super(serverAddress);
     super.maxInboundMessageSize = MAX_TLS_PAYLOAD_SIZE;
     this.serverEnabled = true;
@@ -311,11 +309,7 @@ public class TLSTM extends TcpTransportMapping {
     if (server != null) {
       throw new SocketException("Port already listening");
     }
-    try {
-      serverThread = new ServerThread();
-    } catch (NoSuchAlgorithmException e) {
-      throw new IOException("SSL not available: "+e.getMessage(), e);
-    }
+    serverThread = new ServerThread();
     server = SNMP4JSettings.getThreadFactory().createWorkerThread(
       "TLSTM_"+getAddress(), serverThread, true);
     if (connectionTimeout > 0) {
@@ -616,7 +610,7 @@ public class TLSTM extends TcpTransportMapping {
 
     public SocketEntry(TcpAddress address, Socket socket,
                        boolean useClientMode,
-                       TransportStateReference tmStateReference) throws NoSuchAlgorithmException {
+                       TransportStateReference tmStateReference) {
       this.inAppBuffer = ByteBuffer.allocate(getMaxInboundMessageSize());
       this.inNetBuffer = ByteBuffer.allocate(getMaxInboundMessageSize());
       this.outNetBuffer = ByteBuffer.allocate(getMaxInboundMessageSize());
@@ -888,7 +882,7 @@ public class TLSTM extends TcpTransportMapping {
     private BlockingQueue<SocketEntry> outQueue = new LinkedBlockingQueue<>();
     private BlockingQueue<SocketEntry> inQueue = new LinkedBlockingQueue<>();
 
-    public ServerThread() throws IOException, NoSuchAlgorithmException {
+    public ServerThread() throws IOException {
       // Selector for incoming requests
       selector = Selector.open();
       if (serverEnabled) {
@@ -1198,8 +1192,6 @@ public class TLSTM extends TcpTransportMapping {
         catch (IOException iox) {
           logger.error(iox.getMessage(), iox);
           throw iox;
-        } catch (NoSuchAlgorithmException e) {
-          logger.error("NoSuchAlgorithmException while sending message to {}: {}", address, e.getMessage(), e);
         }
       }
       else if (matchingStateReferences(tmStateReference, entry.tmStateReference)) {
@@ -1313,8 +1305,6 @@ public class TLSTM extends TcpTransportMapping {
                   if (logger.isDebugEnabled()) {
                     logger.debug("Selection key cancelled, skipping it");
                   }
-                } catch (NoSuchAlgorithmException e) {
-                  logger.error("NoSuchAlgorithm while reading from server socket: {}", e.getMessage(), e);
                 }
               }
             }

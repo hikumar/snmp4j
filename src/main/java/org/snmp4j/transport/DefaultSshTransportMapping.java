@@ -96,7 +96,7 @@ public class DefaultSshTransportMapping extends AbstractTransportMapping<SshAddr
   }
 
   @Override
-  public void close() throws IOException {
+  public void close() {
     //To change body of implemented methods use File | Settings | File Templates.
   }
 

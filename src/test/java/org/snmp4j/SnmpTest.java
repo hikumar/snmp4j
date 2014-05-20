@@ -111,7 +111,7 @@ public class SnmpTest extends TestCase {
   }
 
   @After
-  public void tearDown() throws Exception {
+  public void tearDown() throws IOException {
     snmpCommandGenerator.close();
     snmpCommandResponder.close();
   }
@@ -158,7 +158,7 @@ public class SnmpTest extends TestCase {
   }
 
   @Test
-  public void testListen() throws Exception {
+  public void testListen() throws IOException {
     assertEquals(transportMappingCG.isListening(), false);
     snmpCommandGenerator.listen();
     assertEquals(transportMappingCG.isListening(), true);
@@ -175,7 +175,7 @@ public class SnmpTest extends TestCase {
   }
 
   @Test
-  public void testGetV1() throws Exception {
+  public void testGetV1() throws IOException {
     CommunityTarget target = (CommunityTarget) communityTarget.clone();
     target.setVersion(SnmpConstants.version1);
     PDU pdu = new PDU();
@@ -185,7 +185,7 @@ public class SnmpTest extends TestCase {
   }
 
   @Test
-  public void testGetV2c() throws Exception {
+  public void testGetV2c() throws IOException {
     CommunityTarget target = (CommunityTarget) communityTarget.clone();
     target.setVersion(SnmpConstants.version2c);
     PDU pdu = new PDU();
@@ -195,7 +195,7 @@ public class SnmpTest extends TestCase {
   }
 
   @Test
-  public void testGetV3() throws Exception {
+  public void testGetV3() throws IOException {
     UserTarget target = (UserTarget) userTarget.clone();
     target.setTimeout(10000);
     target.setVersion(SnmpConstants.version3);
@@ -207,7 +207,7 @@ public class SnmpTest extends TestCase {
   }
 
   @Test
-  public void testGetV3_RFC3414_3_2_3() throws Exception {
+  public void testGetV3_RFC3414_3_2_3() throws IOException {
     UserTarget target = (UserTarget) userTarget.clone();
     target.setTimeout(1000);
     target.setVersion(SnmpConstants.version3);
@@ -240,7 +240,7 @@ public class SnmpTest extends TestCase {
   }
 
   @Test
-  public void testGetV3_RFC3414_3_2_4() throws Exception {
+  public void testGetV3_RFC3414_3_2_4() throws IOException {
     UserTarget target = (UserTarget) userTarget.clone();
     target.setTimeout(1000);
     target.setVersion(SnmpConstants.version3);
@@ -284,7 +284,7 @@ public class SnmpTest extends TestCase {
   }
 
   @Test
-  public void testGetV3_RFC3414_3_2_5() throws Exception {
+  public void testGetV3_RFC3414_3_2_5() throws IOException {
     UserTarget target = (UserTarget) userTarget.clone();
     target.setTimeout(1000);
     target.setVersion(SnmpConstants.version3);
@@ -351,7 +351,7 @@ public class SnmpTest extends TestCase {
   }
 
   @Test
-  public void testGetV3_RFC3414_3_2_6() throws Exception {
+  public void testGetV3_RFC3414_3_2_6() throws IOException {
     UserTarget target = (UserTarget) userTarget.clone();
     target.setTimeout(1000);
     target.setVersion(SnmpConstants.version3);
@@ -506,7 +506,7 @@ public class SnmpTest extends TestCase {
   }
 
   @Test(timeout = 30000)
-  public void testGetNextV3Async() throws Exception {
+  public void testGetNextV3Async() throws InterruptedException, IOException {
     Target target = userTarget;
     target.setTimeout(50000L);
     target.setRetries(0);
@@ -539,7 +539,7 @@ public class SnmpTest extends TestCase {
   }
 
   @Test(timeout = 30000)
-  public void testGetNextV3AsyncUserChange() throws Exception {
+  public void testGetNextV3AsyncUserChange() throws InterruptedException, IOException {
     Target target = userTarget;
     target.setTimeout(50000L);
     target.setRetries(0);
@@ -576,7 +576,7 @@ public class SnmpTest extends TestCase {
   }
 
   @Test
-  public void testTrapV1() throws Exception {
+  public void testTrapV1() throws IOException {
     CommunityTarget target = (CommunityTarget) communityTarget.clone();
     target.setVersion(SnmpConstants.version1);
     PDUv1 pdu = new PDUv1();
@@ -589,7 +589,7 @@ public class SnmpTest extends TestCase {
   }
 
   @Test
-  public void testTrapV2WithV1() throws Exception {
+  public void testTrapV2WithV1() throws IOException {
     CommunityTarget target = (CommunityTarget) communityTarget.clone();
     target.setVersion(SnmpConstants.version1);
     PDU pdu = new PDU();
@@ -600,7 +600,7 @@ public class SnmpTest extends TestCase {
   }
 
   @Test
-  public void testTrapV2WithV1Allowed() throws Exception {
+  public void testTrapV2WithV1Allowed() throws IOException {
     CommunityTarget target = (CommunityTarget) communityTarget.clone();
     target.setVersion(SnmpConstants.version1);
     PDU pdu = new PDU();
@@ -612,7 +612,7 @@ public class SnmpTest extends TestCase {
   }
 
   @Test
-  public void testNotifyV2c() throws Exception {
+  public void testNotifyV2c() throws IOException {
     CommunityTarget target = (CommunityTarget) communityTarget.clone();
     target.setVersion(SnmpConstants.version2c);
     PDU pdu = new PDU();
@@ -623,7 +623,7 @@ public class SnmpTest extends TestCase {
   }
 
   @Test
-  public void testNotifyV3() throws Exception {
+  public void testNotifyV3() throws IOException {
     UserTarget target = (UserTarget) userTarget.clone();
     target.setTimeout(10000);
     target.setVersion(SnmpConstants.version3);
@@ -636,7 +636,7 @@ public class SnmpTest extends TestCase {
   }
 
   @Test
-  public void testInformV2c() throws Exception {
+  public void testInformV2c() throws IOException {
     CommunityTarget target = (CommunityTarget) communityTarget.clone();
     target.setVersion(SnmpConstants.version2c);
     PDU pdu = new PDU();
@@ -647,7 +647,7 @@ public class SnmpTest extends TestCase {
   }
 
   @Test
-  public void testInformV3() throws Exception {
+  public void testInformV3() throws IOException {
     UserTarget target = (UserTarget) userTarget.clone();
     target.setTimeout(10000);
     target.setVersion(SnmpConstants.version3);
@@ -660,7 +660,7 @@ public class SnmpTest extends TestCase {
   }
 
   @Test
-  public void testInformV2cAsync() throws Exception {
+  public void testInformV2cAsync() throws IOException {
     CommunityTarget target = (CommunityTarget) communityTarget.clone();
     target.setVersion(SnmpConstants.version2c);
     PDU pdu = new PDU();
@@ -671,7 +671,7 @@ public class SnmpTest extends TestCase {
   }
 
   @Test
-  public void testInformV3Async() throws Exception {
+  public void testInformV3Async() throws IOException {
     UserTarget target = (UserTarget) userTarget.clone();
     target.setTimeout(10000);
     target.setVersion(SnmpConstants.version3);
@@ -684,7 +684,7 @@ public class SnmpTest extends TestCase {
   }
 
   @Test
-  public void testSetV1() throws Exception {
+  public void testSetV1() throws IOException {
     CommunityTarget target = (CommunityTarget) communityTarget.clone();
     target.setVersion(SnmpConstants.version1);
     PDU pdu = new PDU();
@@ -694,7 +694,7 @@ public class SnmpTest extends TestCase {
   }
 
   @Test
-  public void testSetV2c() throws Exception {
+  public void testSetV2c() throws IOException {
     CommunityTarget target = (CommunityTarget) communityTarget.clone();
     target.setVersion(SnmpConstants.version2c);
     PDU pdu = new PDU();
@@ -704,7 +704,7 @@ public class SnmpTest extends TestCase {
   }
 
   @Test
-  public void testSetV3() throws Exception {
+  public void testSetV3() throws IOException {
     UserTarget target = (UserTarget) userTarget.clone();
     target.setTimeout(10000);
     target.setVersion(SnmpConstants.version3);

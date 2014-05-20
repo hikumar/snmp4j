@@ -65,6 +65,6 @@ public interface OIDTextFormat {
    * @throws ParseException
    *    if the OID cannot be parsed successfully.
    */
-  int[] parse(String text) throws ParseException;
+  int[] parse(String text);
 
 }

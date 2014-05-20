@@ -387,7 +387,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
           new CounterEvent(this, SnmpConstants.snmpInvalidMsgs);
       fireIncrementCounter(event);
     }
-    catch (Exception ex) {
+    catch (RuntimeException ex) {
       logger.error(ex.getMessage(), ex);
       if (SNMP4JSettings.isForwardRuntimeExceptions()) {
         throw new RuntimeException(ex);
@@ -516,8 +516,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
     catch (IndexOutOfBoundsException iobex) {
       throw new MessageException("Unsupported message processing model: "
                                  + messageProcessingModel, SnmpConstants.SNMP_MD_UNSUPPORTED_MP_MODEL, iobex);
-    }
-    catch (MessageException mex) {
+    } catch (MessageException mex) {
       logger.debug(mex.getMessage(), mex);
       throw mex;
     }
@@ -555,9 +554,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
    *    if unrecoverable inconsistencies have been detected.
    */
   protected void checkOutgoingMsg(Address transportAddress,
-                                  int messageProcessingModel, PDU pdu)
-      throws MessageException
-  {
+                                  int messageProcessingModel, PDU pdu) {
     if (checkOutgoingMsg) {
       if (messageProcessingModel == MessageProcessingModel.MPv1 || SNMP4JSettings.isNoGetBulk()) {
         if (pdu.getType() == PDU.GETBULK) {
@@ -628,8 +625,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
     catch (ArrayIndexOutOfBoundsException aex) {
       throw new MessageException("Unsupported message processing model: "
                                  + messageProcessingModel, SnmpConstants.SNMP_MD_UNSUPPORTED_MP_MODEL, aex);
-    }
-    catch (IOException iox) {
+    } catch (IOException iox) {
       throw new MessageException(iox.getMessage(), SnmpConstants.SNMP_MD_ERROR, iox);
     }
   }

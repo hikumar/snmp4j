@@ -73,7 +73,7 @@ public class SimpleVariableTextFormat implements VariableTextFormat {
    * @return the new <code>Variable</code> instance.
    * @throws ParseException if the variable cannot be parsed successfully.
    */
-  public Variable parse(int smiSyntax, String text) throws ParseException {
+  public Variable parse(int smiSyntax, String text) {
     Variable v = AbstractVariable.createFromSyntax(smiSyntax);
     if (v instanceof AssignableFromString) {
       ((AssignableFromString)v).setValue(text);
@@ -94,8 +94,7 @@ public class SimpleVariableTextFormat implements VariableTextFormat {
    * @throws ParseException
    *    if the variable cannot be parsed successfully.
    */
-  public Variable parse(OID classOrInstanceOID, String text) throws
-      ParseException {
+  public Variable parse(OID classOrInstanceOID, String text) {
     throw new UnsupportedOperationException();
   }
 

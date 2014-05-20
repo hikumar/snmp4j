@@ -138,8 +138,7 @@ public class IpAddress extends SMIAddress implements AssignableFromByteArray {
     try {
       InetAddress addr = InetAddress.getByName(address);
       return new IpAddress(addr);
-    }
-    catch (Exception ex) {
+    } catch (RuntimeException | UnknownHostException ex) {
       logger.error("Unable to parse IpAddress from: {}", address, ex);
       return null;
     }
@@ -212,8 +211,7 @@ public class IpAddress extends SMIAddress implements AssignableFromByteArray {
   private static InetAddress createAnyAddress() {
     try {
       return InetAddress.getByAddress(IPANYADDRESS);
-    }
-    catch (Exception ex) {
+    } catch (UnknownHostException | RuntimeException ex) {
       logger.error("Unable to create any IpAddress: {}", ex.getMessage(), ex);
     }
     return null;

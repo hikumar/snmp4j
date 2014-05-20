@@ -81,7 +81,7 @@ public interface VariableTextFormat {
    * @throws ParseException
    *    if the variable cannot be parsed successfully.
    */
-  Variable parse(OID classOrInstanceOID, String text) throws ParseException;
+  Variable parse(OID classOrInstanceOID, String text);
 
   /**
    * Parses a textual representation of a variable against a SMI type.
@@ -94,5 +94,5 @@ public interface VariableTextFormat {
    * @throws ParseException
    *    if the variable cannot be parsed successfully.
    */
-  Variable parse(int smiSyntax, String text) throws ParseException;
+  Variable parse(int smiSyntax, String text);
 }

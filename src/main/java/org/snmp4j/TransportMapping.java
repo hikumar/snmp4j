@@ -92,7 +92,7 @@ public interface TransportMapping<A extends Address> {
    * @throws IOException
    *    if any IO operation for the close fails.
    */
-  void close() throws IOException;
+  void close();
 
   /**
    * Listen for incoming messages. For connection oriented transports, this

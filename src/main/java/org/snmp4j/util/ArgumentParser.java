@@ -280,7 +280,7 @@ public class ArgumentParser {
     }
   }
 
-  protected List parseValues(String[] args, int offset, ArgumentFormat format) throws ParseException {
+  protected List parseValues(String[] args, int offset, ArgumentFormat format) throws ArgumentParseException {
     int numParams = format.getParameters().length;
     List<Object> values = new ArrayList<>(numParams);
     for (int i=0; (i+offset < args.length) && (i < numParams); i++) {
@@ -288,11 +288,7 @@ public class ArgumentParser {
         values.add(parseParameterValue(format.getParameters()[i],
                                        args[i + offset], format,
                                        i+offset));
-      }
-      catch (ArgumentParseException apex) {
-        throw apex;
-      }
-      catch (Exception ex) {
+      } catch (RuntimeException ex) {
         ex.printStackTrace();
         int pos = i + offset;
         throw new ArgumentParseException(pos,

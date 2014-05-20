@@ -65,14 +65,14 @@ public class SnmpURI {
   private PDUFactory pduFactory = new DefaultPDUFactory();
 
 
-  public SnmpURI(Session snmp) throws IOException {
+  public SnmpURI(Session snmp) {
     this.snmp = snmp;
     if (snmp instanceof Snmp) {
       usm = ((Snmp) snmp).getUSM();
     }
   }
 
-  public SnmpURI(Session snmp, Target defaultTarget) throws IOException {
+  public SnmpURI(Session snmp, Target defaultTarget) {
     this.snmp = snmp;
     this.defaultTarget = defaultTarget;
     if (snmp instanceof Snmp) {

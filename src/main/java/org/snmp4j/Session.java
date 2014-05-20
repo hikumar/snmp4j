@@ -38,7 +38,7 @@ public interface Session {
    * @throws IOException
    *    if the session could not free all resources.
    */
-  public void close() throws IOException;
+  public void close();
 
   /**
    * Asynchronously sends a <code>PDU</code> to the given target. The response

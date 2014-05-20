@@ -497,7 +497,7 @@ public class Snmp implements Session, CommandResponder {
    * @throws IOException
    *    if a transport mapping cannot be closed successfully.
    */
-  public void close() throws IOException {
+  public void close() {
     for (TransportMapping tm : messageDispatcher.getTransportMappings()) {
       if (tm.isListening()) {
         tm.close();
@@ -764,8 +764,7 @@ public class Snmp implements Session, CommandResponder {
   protected PduHandle sendMessage(PDU pdu, Target target,
                                   TransportMapping transport,
                                   PduHandleCallback<PDU> pduHandleCallback)
-      throws IOException
-  {
+      throws MessageException {
     TransportMapping tm = transport;
     if (tm == null) {
       tm = lookupTransportMapping(target);
@@ -1603,23 +1602,15 @@ public class Snmp implements Session, CommandResponder {
       tm.removeTransportListener(messageDispatcher);
       notificationTransports.remove(tm);
 
-      try {
-        tm.close();
-      }
-      catch (IOException ex) {
-        logger.error(ex.getMessage(), ex);
-      }
+      tm.close();
+
       return true;
     }
 
     public synchronized void closeAll() {
       notificationTransports.clear();
       for (TransportMapping tm : notificationListeners.values()) {
-        try {
-          tm.close();
-        } catch (IOException ex) {
-          logger.error(ex.getMessage(), ex);
-        }
+        tm.close();
       }
       notificationListeners.clear();
     }

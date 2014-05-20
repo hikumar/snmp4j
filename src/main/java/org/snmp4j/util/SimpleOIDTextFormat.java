@@ -99,7 +99,7 @@ public class SimpleOIDTextFormat implements OIDTextFormat {
     * @throws ParseException
     *    if the OID cannot be parsed successfully.
     */
-  public static int[] parseOID(String text) throws ParseException {
+  public static int[] parseOID(String text) {
     StringTokenizer st = new StringTokenizer(text, ".", true);
     int size = st.countTokens();
     int[] value = new int[size];
@@ -147,7 +147,7 @@ public class SimpleOIDTextFormat implements OIDTextFormat {
    * @throws ParseException
    *    if the OID cannot be parsed successfully.
    */
-  public int[] parse(String text) throws ParseException {
+  public int[] parse(String text) {
     return SimpleOIDTextFormat.parseOID(text);
   }
 }

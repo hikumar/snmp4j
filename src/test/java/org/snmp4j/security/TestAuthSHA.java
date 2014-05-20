@@ -58,7 +58,7 @@ public class TestAuthSHA
         assertEquals(key[i], expectedKey[i]);
       }
     }
-    catch (Exception e) {
+    catch (RuntimeException e) {
       System.err.println("Exception thrown:  " + e);
     }
   }
@@ -84,7 +84,7 @@ public class TestAuthSHA
         assertEquals(expectedKey[i], key[i]);
       }
     }
-    catch (Exception e) {
+    catch (RuntimeException e) {
       System.err.println("Exception thrown:  " + e);
     }
   }
@@ -126,7 +126,7 @@ public class TestAuthSHA
         assertEquals(delta[i], expectedDelta[i]);
       }
     }
-    catch (Exception e) {
+    catch (RuntimeException e) {
       System.err.println("Exception thrown:  " + e);
     }
 

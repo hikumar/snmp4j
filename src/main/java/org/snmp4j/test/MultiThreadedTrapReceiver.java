@@ -58,7 +58,7 @@ public class MultiThreadedTrapReceiver implements CommandResponder {
 //    BasicConfigurator.configure();
   }
 
-  private void init() throws UnknownHostException, IOException {
+  private void init() throws IOException {
     threadPool = ThreadPool.create("Trap", 2);
     dispatcher =
         new MultiThreadedMessageDispatcher(threadPool,

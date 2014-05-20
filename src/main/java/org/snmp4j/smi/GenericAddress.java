@@ -225,8 +225,7 @@ public class GenericAddress extends SMIAddress {
         return addr;
       }
       return null;
-    }
-    catch (Exception ex) {
+    } catch (IllegalAccessException | InstantiationException | RuntimeException ex) {
       logger.warn(ex.getMessage(), ex);
     }
     return null;

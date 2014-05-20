@@ -42,7 +42,7 @@ import java.util.*;
  * @author Frank Fock
  * @version 2.0
  */
-public class SnmpTest extends TestCase {
+public class SnmpTest {
 
   static {
 //    LogFactory.setLogFactory(new ConsoleLogFactory());
@@ -72,7 +72,7 @@ public class SnmpTest extends TestCase {
     SNMP4JSettings.setExtensibilityEnabled(true);
     SecurityProtocols.getInstance().addDefaultProtocols();
     System.setProperty(TransportMappings.TRANSPORT_MAPPINGS, "dummy-transports.properties");
-    assertEquals(DummyTransport.class,
+    Assert.assertEquals(DummyTransport.class,
         TransportMappings.getInstance().createTransportMapping(GenericAddress.parse("udp:127.0.0.1/161")).getClass());
   }
 
@@ -159,19 +159,19 @@ public class SnmpTest extends TestCase {
 
   @Test
   public void testListen() throws IOException {
-    assertEquals(transportMappingCG.isListening(), false);
+    Assert.assertEquals(transportMappingCG.isListening(), false);
     snmpCommandGenerator.listen();
-    assertEquals(transportMappingCG.isListening(), true);
+    Assert.assertEquals(transportMappingCG.isListening(), true);
   }
 
   @Test
   public void testClose() throws Exception {
-    assertEquals(transportMappingCG.isListening(), false);
+    Assert.assertEquals(transportMappingCG.isListening(), false);
     snmpCommandGenerator.close();
-    assertEquals(transportMappingCG.isListening(), false);
+    Assert.assertEquals(transportMappingCG.isListening(), false);
     testListen();
     snmpCommandGenerator.close();
-    assertEquals(transportMappingCG.isListening(), false);
+    Assert.assertEquals(transportMappingCG.isListening(), false);
   }
 
   @Test
@@ -228,14 +228,14 @@ public class SnmpTest extends TestCase {
       // request ID will be 0 because ScopedPDU could not be parsed:
       expectedResponse.setRequestID(new Integer32(0));
       ((ScopedPDU)expectedResponse).setContextEngineID(new OctetString(snmpCommandResponder.getUSM().getLocalEngineID()));
-      assertEquals(expectedResponse, event.getPDU());
+      Assert.assertEquals(expectedResponse, event.getPDU());
     });
     // first try should return local error
     try {
       ResponseEvent resp = snmpCommandGenerator.send(pdu, target);
-      assertNull(resp.getResponse());
+      Assert.assertNull(resp.getResponse());
     } catch (MessageException mex) {
-      assertEquals(SnmpConstants.SNMPv3_USM_UNKNOWN_SECURITY_NAME, mex.getSnmp4jErrorStatus());
+      Assert.assertEquals(SnmpConstants.SNMPv3_USM_UNKNOWN_SECURITY_NAME, mex.getSnmp4jErrorStatus());
     }
   }
 
@@ -259,9 +259,9 @@ public class SnmpTest extends TestCase {
     // first try should return local error
     try {
       ResponseEvent resp = snmpCommandGenerator.send(pdu, target);
-      assertNull(resp);
+      Assert.assertNull(resp);
     } catch (MessageException mex) {
-      assertEquals(SnmpConstants.SNMPv3_USM_UNKNOWN_SECURITY_NAME, mex.getSnmp4jErrorStatus());
+      Assert.assertEquals(SnmpConstants.SNMPv3_USM_UNKNOWN_SECURITY_NAME, mex.getSnmp4jErrorStatus());
     }
     // second try: remote error
     target.setSecurityName(new OctetString("SHAAES"));
@@ -274,13 +274,13 @@ public class SnmpTest extends TestCase {
     // request ID will be 0 because ScopedPDU could not be parsed:
     expectedResponse.setRequestID(new Integer32(0));
     ((ScopedPDU)expectedResponse).setContextEngineID(new OctetString(snmpCommandResponder.getUSM().getLocalEngineID()));
-    assertEquals(expectedResponse, resp.getResponse());
+    Assert.assertEquals(expectedResponse, resp.getResponse());
 
   }
 
   @Test
   public void testUsmSeparation() {
-    assertNotSame(snmpCommandGenerator.getUSM(), snmpCommandResponder.getUSM());
+    Assert.assertNotSame(snmpCommandGenerator.getUSM(), snmpCommandResponder.getUSM());
   }
 
   @Test
@@ -307,19 +307,19 @@ public class SnmpTest extends TestCase {
     try {
       ResponseEvent resp = snmpCommandGenerator.send(pdu, target);
       // This will be hit if engine ID discovery is enabled
-      assertNull(resp.getResponse());
+      Assert.assertNull(resp.getResponse());
     } catch (MessageException mex) {
       // This will only happen if no engine ID discovery is needed
-      assertEquals(SnmpConstants.SNMPv3_USM_UNSUPPORTED_SECURITY_LEVEL, mex.getSnmp4jErrorStatus());
+      Assert.assertEquals(SnmpConstants.SNMPv3_USM_UNSUPPORTED_SECURITY_LEVEL, mex.getSnmp4jErrorStatus());
     }
     // second try without engine ID discovery
     try {
       ResponseEvent resp = snmpCommandGenerator.send(pdu, target);
       // This will be hit if engine ID discovery is enabled
-      assertNull(resp);
+      Assert.assertNull(resp);
     } catch (MessageException mex) {
       // This will only happen if no engine ID discovery is needed
-      assertEquals(SnmpConstants.SNMPv3_USM_UNSUPPORTED_SECURITY_LEVEL, mex.getSnmp4jErrorStatus());
+      Assert.assertEquals(SnmpConstants.SNMPv3_USM_UNSUPPORTED_SECURITY_LEVEL, mex.getSnmp4jErrorStatus());
     }
     SNMP4JSettings.setReportSecurityLevelStrategy(SNMP4JSettings.ReportSecurityLevelStrategy.noAuthNoPrivIfNeeded);
     // third try: remote error
@@ -338,7 +338,7 @@ public class SnmpTest extends TestCase {
     // request ID will be 0 because ScopedPDU could not be parsed:
     expectedResponse.setRequestID(new Integer32(0));
     ((ScopedPDU)expectedResponse).setContextEngineID(new OctetString(snmpCommandResponder.getLocalEngineID()));
-    assertEquals(expectedResponse, resp.getResponse());
+    Assert.assertEquals(expectedResponse, resp.getResponse());
 
     // Test standard behavior
     SNMP4JSettings.setReportSecurityLevelStrategy(SNMP4JSettings.ReportSecurityLevelStrategy.standard);
@@ -346,7 +346,7 @@ public class SnmpTest extends TestCase {
     pdu.setContextEngineID(new OctetString(snmpCommandResponder.getLocalEngineID()));
     resp = snmpCommandGenerator.send(pdu, target);
     // We expect null (timeout) as response, because sender has no matching privacy protocol to return message.
-    assertNull(resp.getResponse());
+    Assert.assertNull(resp.getResponse());
 
   }
 
@@ -375,7 +375,7 @@ public class SnmpTest extends TestCase {
 
     ResponseEvent resp = snmpCommandGenerator.send(pdu, target);
     // no response because receiver cannot decode the message.
-    assertNull(resp.getResponse());
+    Assert.assertNull(resp.getResponse());
 
     // next try no authentication, so with standard report strategy we will not receive a report
     snmpCommandGenerator.getUSM().removeAllUsers(new OctetString("SHADES"));
@@ -385,7 +385,7 @@ public class SnmpTest extends TestCase {
     target.setSecurityLevel(SecurityLevel.AUTH_NOPRIV);
 
     resp = snmpCommandGenerator.send(pdu, target);
-    assertNull(resp.getResponse());
+    Assert.assertNull(resp.getResponse());
 
     // same but with relaxed report strategy
     SNMP4JSettings.setReportSecurityLevelStrategy(SNMP4JSettings.ReportSecurityLevelStrategy.noAuthNoPrivIfNeeded);
@@ -394,7 +394,7 @@ public class SnmpTest extends TestCase {
     PDU expectedResponse = makeReport(pdu, new VariableBinding(SnmpConstants.usmStatsWrongDigests, new Counter32(3)));
     expectedResponse.setRequestID(new Integer32(0));
     ((ScopedPDU)expectedResponse).setContextEngineID(new OctetString(snmpCommandResponder.getUSM().getLocalEngineID()));
-    assertEquals(expectedResponse, resp.getResponse());
+    Assert.assertEquals(expectedResponse, resp.getResponse());
   }
 
   private void syncRequestTest(Target target, PDU pdu) throws IOException {
@@ -408,7 +408,7 @@ public class SnmpTest extends TestCase {
     ResponseEvent resp =
         snmpCommandGenerator.send(pdu, target);
     PDU expectedResponse = makeResponse(pdu, target.getVersion());
-    assertEquals(expectedResponse, resp.getResponse());
+    Assert.assertEquals(expectedResponse, resp.getResponse());
   }
 
   private void asyncRequestTest(Target target, PDU pdu) throws IOException {
@@ -439,14 +439,14 @@ public class SnmpTest extends TestCase {
     snmpCommandResponder.listen();
     ResponseEvent resp =
         snmpCommandGenerator.send(pdu, target, transportMappingCG);
-    assertNull(resp);
+    Assert.assertNull(resp);
     try {
       Thread.sleep(500);
     }
     catch (InterruptedException iex) {
       // ignore
     }
-    assertTrue(queue.isEmpty());
+    Assert.assertTrue(queue.isEmpty());
   }
 
   private void unconfirmedTestNullResult(Target target, PDU pdu) throws IOException {
@@ -456,14 +456,14 @@ public class SnmpTest extends TestCase {
     snmpCommandResponder.listen();
     ResponseEvent resp =
         snmpCommandGenerator.send(pdu, target, transportMappingCG);
-    assertNull(resp);
+    Assert.assertNull(resp);
     try {
       Thread.sleep(500);
     }
     catch (InterruptedException iex) {
       // ignore
     }
-    assertFalse(responder.isAnyResponse());
+    Assert.assertFalse(responder.isAnyResponse());
   }
 
   private PDU makeResponse(PDU pdu, int version) {
@@ -738,15 +738,15 @@ public class SnmpTest extends TestCase {
       anyResponse = true;
       PDU pdu = event.getPDU();
       if (!expectedPDUs.isEmpty()) {
-        assertNotNull(pdu);
+        Assert.assertNotNull(pdu);
         RequestResponse expected = expectedPDUs.remove(pdu.getRequestID().getValue());
 /*
         if (!expected.request.equals(pdu)) {
           System.err.println("DummyTransport: "+transportMappingCG);
           System.err.println(expectedPDUs);
         }  */
-        assertNotNull(expected);
-        assertEquals(expected.request, pdu);
+        Assert.assertNotNull(expected);
+        Assert.assertEquals(expected.request, pdu);
         try {
           // adjust context engine ID after engine ID discovery
           if ((expected != null) && (expected.response != null)) {
@@ -764,11 +764,11 @@ public class SnmpTest extends TestCase {
                 event.getStateReference(), new StatusInformation());
           }
         } catch (MessageException e) {
-          assertNull(e);
+          Assert.assertNull(e);
         }
       }
       else {
-        assertNull(pdu);
+        Assert.assertNull(pdu);
       }
 
     }
@@ -805,15 +805,15 @@ public class SnmpTest extends TestCase {
     @Override
     public synchronized void onResponse(ResponseEvent event) {
       ((Session)event.getSource()).cancel(event.getRequest(), this);
-      assertTrue(receivedIDs.add(event.getRequest().getRequestID()));
+      Assert.assertTrue(receivedIDs.add(event.getRequest().getRequestID()));
       ++received;
-      assertNotNull(event.getResponse());
-      assertNotNull(event.getResponse().get(0));
-      assertNotNull(event.getResponse().get(0).getVariable());
+      Assert.assertNotNull(event.getResponse());
+      Assert.assertNotNull(event.getResponse().get(0));
+      Assert.assertNotNull(event.getResponse().get(0).getVariable());
       if (received >= maxCount) {
         notify();
       }
-      assertFalse((received > maxCount));
+      Assert.assertFalse((received > maxCount));
     }
   }
 }

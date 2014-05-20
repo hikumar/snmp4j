@@ -199,7 +199,4 @@ public class UsmTimeTable implements Serializable {
       }
     }
   }
-
-  public void reset() {
-  }
 }

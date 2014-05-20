@@ -715,11 +715,6 @@ public class SnmpTest extends TestCase {
     syncRequestTest(target, pdu);
   }
 
-  @Test
-  public void testSend() throws Exception {
-
-  }
-
   class TestCommandResponder implements CommandResponder {
 
     private Map<Integer, RequestResponse> expectedPDUs;

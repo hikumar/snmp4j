@@ -824,13 +824,6 @@ public class PDU implements BERSerializable, Serializable {
   }
 
   @Override
-  public int hashCode() {
-    // Returning the hasCode() of the request ID is not a good idea, as
-    // this might change during sending a request.
-    return super.hashCode();
-  }
-
-  @Override
   public boolean equals(Object obj) {
     if (obj instanceof PDU) {
       PDU o = (PDU) obj;

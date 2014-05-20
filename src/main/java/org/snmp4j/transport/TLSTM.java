@@ -519,17 +519,6 @@ public class TLSTM extends TcpTransportMapping {
   }
 
   /**
-   * Gets the inbound buffer size for incoming requests. When SNMP packets are
-   * received that are longer than this maximum size, the messages will be
-   * silently dropped and the connection will be closed.
-   * @return
-   *    the maximum inbound buffer size in bytes.
-   */
-  public int getMaxInboundMessageSize() {
-    return super.getMaxInboundMessageSize();
-  }
-
-  /**
    * Sets the maximum buffer size for incoming requests. When SNMP packets are
    * received that are longer than this maximum size, the messages will be
    * silently dropped and the connection will be closed.
@@ -579,15 +568,6 @@ public class TLSTM extends TcpTransportMapping {
       }
     }
     return null;
-  }
-
-  /**
-   * Sets optional server socket options. The default implementation does
-   * nothing.
-   * @param serverSocket
-   *    the <code>ServerSocket</code> to apply additional non-default options.
-   */
-  protected void setSocketOptions(ServerSocket serverSocket) {
   }
 
   class SocketEntry {
@@ -893,7 +873,6 @@ public class TLSTM extends TcpTransportMapping {
         // Bind the server socket
         InetSocketAddress isa = new InetSocketAddress(tcpAddress.getInetAddress(),
             tcpAddress.getPort());
-        setSocketOptions(ssc.socket());
         ssc.socket().bind(isa);
         // Register accepts on the server socket with the selector. This
         // step tells the selector that the socket wants to be put on the

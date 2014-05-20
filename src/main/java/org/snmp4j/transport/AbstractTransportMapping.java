@@ -71,6 +71,13 @@ public abstract class AbstractTransportMapping<A extends Address>
     }
   }
 
+  /**
+   * Gets the inbound buffer size for incoming requests. When SNMP packets are
+   * received that are longer than this maximum size, the messages will be
+   * silently dropped and the connection will be closed.
+   * @return
+   *    the maximum inbound buffer size in bytes.
+   */
   public int getMaxInboundMessageSize() {
     return maxInboundMessageSize;
   }

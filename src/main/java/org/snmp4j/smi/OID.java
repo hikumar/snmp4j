@@ -163,12 +163,7 @@ public class OID extends AbstractVariable
   }
 
   private static int[] parseDottedString(String oid) {
-    try {
-      return SNMP4JSettings.getOIDTextFormat().parse(oid);
-    }
-    catch (ParseException ex) {
-      throw new RuntimeException("OID '"+oid+"' cannot be parsed", ex);
-    }
+    return SNMP4JSettings.getOIDTextFormat().parse(oid);
   }
 
 

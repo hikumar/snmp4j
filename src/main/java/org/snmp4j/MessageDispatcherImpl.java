@@ -387,18 +387,6 @@ public class MessageDispatcherImpl implements MessageDispatcher {
           new CounterEvent(this, SnmpConstants.snmpInvalidMsgs);
       fireIncrementCounter(event);
     }
-    catch (RuntimeException ex) {
-      logger.error(ex.getMessage(), ex);
-      if (SNMP4JSettings.isForwardRuntimeExceptions()) {
-        throw new RuntimeException(ex);
-      }
-    }
-    catch (OutOfMemoryError oex) {
-      logger.error(oex.getMessage(), oex);
-      if (SNMP4JSettings.isForwardRuntimeExceptions()) {
-        throw oex;
-      }
-    }
   }
 
   public PduHandle sendPdu(Target target,

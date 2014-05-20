@@ -43,12 +43,6 @@ import java.util.*;
  * @version 2.0
  */
 public class SnmpTest {
-
-  static {
-//    LogFactory.setLogFactory(new ConsoleLogFactory());
-//    ConsoleLogAdapter.setDebugEnabled(true);
-  }
-
   private DummyTransport<UdpAddress> transportMappingCG;
   private AbstractTransportMapping<UdpAddress> transportMappingCR;
   private Snmp snmpCommandGenerator;
@@ -57,15 +51,6 @@ public class SnmpTest {
       new CommunityTarget(GenericAddress.parse("udp:127.0.0.1/161"), new OctetString("public"));
   private UserTarget userTarget =
       new UserTarget(GenericAddress.parse("udp:127.0.0.1/161"), new OctetString("SHADES"), new byte[0]);
-
-  static {
-    SNMP4JSettings.setForwardRuntimeExceptions(true);
-    try {
-      setupBeforeClass();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
 
   @BeforeClass
   public static void setupBeforeClass() throws Exception {

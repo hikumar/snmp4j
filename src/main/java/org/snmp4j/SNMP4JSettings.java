@@ -70,18 +70,6 @@ public final class SNMP4JSettings {
   private static boolean extensibilityEnabled = false;
 
   /**
-   * By default SNMP4J (and SNMP4J-Agent*) catch runtime exceptions at thread
-   * boundaries of API controlled threads. In SNMP4J such a thread runs in each
-   * {@link TransportMapping} and in each {@link Snmp} session object. To ensure
-   * robust runtime behavior, unexpected runtime exceptions are caught and
-   * logged. If you need to localize and debug such exceptions then set this
-   * value to <code>true</code>.
-   *
-   * @since 1.8.1
-   */
-  private static volatile boolean forwardRuntimeExceptions = false;
-
-  /**
    * By default SNMP4J uses {@link Thread} instances to run
    * concurrent tasks. For environments with restricted thread management
    * like Java EE application servers, a custom thread factory can be used.
@@ -193,30 +181,6 @@ public final class SNMP4JSettings {
    */
   public static boolean isExtensibilityEnabled() {
     return extensibilityEnabled;
-  }
-
-  /**
-   * Enables or disables runtime exception forwarding.
-   * @see #forwardRuntimeExceptions
-   * @param forwardExceptions
-   *    <code>true</code> runtime exceptions are thrown on thread boundaries
-   *    controlled by SNMP4J and related APIs. Default is <code>false</code>.
-   * @since 1.8.1
-   */
-  public static void setForwardRuntimeExceptions(boolean forwardExceptions) {
-    forwardRuntimeExceptions = forwardExceptions;
-  }
-
-  /**
-   * Indicates whether runtime exceptions should be thrown on thread boundaries
-   * controlled by SNMP4J and related APIs.
-   * @return
-   *    <code>true</code> runtime exceptions are thrown on thread boundaries
-   *    controlled by SNMP4J and related APIs. Default is <code>false</code>.
-   * @since 1.8.1
-   */
-  public static boolean isForwardRuntimeExceptions() {
-    return forwardRuntimeExceptions;
   }
 
   /**

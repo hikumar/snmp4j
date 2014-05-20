@@ -416,39 +416,19 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
             listener = null;
           }
           logger.error(purex.getMessage(), purex);
-          if (SNMP4JSettings.isForwardRuntimeExceptions()) {
-            throw new RuntimeException(purex);
-          }
-          break;
+          throw new RuntimeException(purex);
         }
         catch (SocketException soex) {
           if (!stop) {
             logger.warn("Socket for transport mapping {} error: {}", toString(), soex.getMessage());
           }
-          if (SNMP4JSettings.isForwardRuntimeExceptions()) {
-            stop = true;
-            throw new RuntimeException(soex);
-          }
-          else {
-            try {
-              DatagramSocket newSocket = renewSocketAfterException(soex, socketCopy);
-              if (newSocket == null) {
-                throw soex;
-              }
-              socket = newSocket;
-            } catch (SocketException e) {
-              stop = true;
-              socket = null;
-              logger.error("Socket renewal for transport mapping {} failed with: {}", toString(), e.getMessage(), e);
 
-            }
-          }
+          stop = true;
+          throw new RuntimeException(soex);
         }
         catch (IOException iox) {
           logger.warn(iox.getMessage(), iox);
-          if (SNMP4JSettings.isForwardRuntimeExceptions()) {
-            throw new RuntimeException(iox);
-          }
+          throw new RuntimeException(iox);
         }
       }
       synchronized (DefaultUdpTransportMapping.this) {

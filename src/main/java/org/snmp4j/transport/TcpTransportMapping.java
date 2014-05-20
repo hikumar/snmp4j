@@ -96,7 +96,6 @@ public abstract class TcpTransportMapping
     }
     final List<TransportStateListener> listenersFinalRef = transportStateListeners;
     if (listenersFinalRef != null) {
-      try {
         List<TransportStateListener> listeners;
         synchronized (listenersFinalRef) {
           listeners = new ArrayList<>(listenersFinalRef);
@@ -104,13 +103,6 @@ public abstract class TcpTransportMapping
         for (TransportStateListener listener : listeners) {
           listener.connectionStateChanged(change);
         }
-      }
-      catch (RuntimeException ex) {
-        logger.error("Exception in fireConnectionStateChanged: {}", ex.getMessage(), ex);
-        if (SNMP4JSettings.isForwardRuntimeExceptions()) {
-          throw ex;
-        }
-      }
     }
   }
 }

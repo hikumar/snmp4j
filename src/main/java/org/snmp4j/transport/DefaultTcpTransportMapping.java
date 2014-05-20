@@ -632,9 +632,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
               logger.error(ex.getMessage(), ex);
             }
             lastError = iox;
-            if (SNMP4JSettings.isForwardRuntimeExceptions()) {
-              throw new RuntimeException(iox);
-            }
+            throw new RuntimeException(iox);
           }
         }
       }

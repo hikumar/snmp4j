@@ -101,7 +101,6 @@ public class TaskScheduler implements Runnable {
               logger.debug("Task '" + task + "' is done");
             }
             tasks.removeFirst();
-            continue;
           }
           else if (task.isReadyToRun()) {
             readyToRun = true;

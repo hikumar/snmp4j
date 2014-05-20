@@ -1519,7 +1519,6 @@ public class TLSTM extends TcpTransportMapping {
           logger.debug("Read channel not open, no bytes read from " +
                        incomingAddress);
         }
-        return;
       }
     }
 

@@ -1092,7 +1092,6 @@ public class Snmp implements Session, CommandResponder {
         catch (IOException iox) {
           logger.error("Failed to send message to " + request.target + ": " +
                        iox.getMessage());
-          return;
         }
       }
       else {

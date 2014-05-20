@@ -1404,9 +1404,7 @@ public class Snmp implements Session, CommandResponder {
           pendingRequests.put(handle, this);
           registerRequest(handle);
           if (logger.isDebugEnabled()) {
-            logger.debug("Running pending " +
-                         ((listener instanceof SyncResponseListener) ?
-                          "sync" : "async") +
+            logger.debug("Running pending async" +
                          " request with handle " + handle +
                          " and retry count left " + retryCount);
           }
@@ -1595,21 +1593,6 @@ public class Snmp implements Session, CommandResponder {
     public int hashCode() {
       return request.hashCode();
     }
-  }
-
-  static class SyncResponseListener implements ResponseListener {
-
-    private ResponseEvent response = null;
-
-    public synchronized void onResponse(ResponseEvent event) {
-      this.response = event;
-      this.notify();
-    }
-
-    public ResponseEvent getResponse() {
-      return response;
-    }
-
   }
 
   /**

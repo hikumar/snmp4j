@@ -462,7 +462,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
     }
 
     public synchronized byte[] nextMessage() {
-      if (this.message.size() > 0) {
+      if (!this.message.isEmpty()) {
         return this.message.removeFirst();
       }
       return null;

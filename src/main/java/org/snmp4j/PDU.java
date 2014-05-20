@@ -441,7 +441,7 @@ public class PDU implements BERSerializable, Serializable {
    * Remove the last variable binding from the PDU, if such an element exists.
    */
   public void trim() {
-    if (variableBindings.size() > 0) {
+    if (!variableBindings.isEmpty()) {
       variableBindings.remove(variableBindings.size() - 1);
     }
   }

@@ -112,7 +112,7 @@ public class TimeTicks extends UnsignedInteger32 {
       String[] num = value.split("[days :,\\.]");
       int i = 0;
       for (String n : num) {
-        if (n.length()>0) {
+        if (!n.isEmpty()) {
           long f = FORMAT_FACTORS[i++];
           v += Long.parseLong(n)*f;
         }

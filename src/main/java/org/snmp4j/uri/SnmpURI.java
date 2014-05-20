@@ -261,7 +261,7 @@ public class SnmpURI {
       String[] oidStrings = oidPart.split("[\\(,\\),\\,]");
       oids = new ArrayList<OID>(oidStrings.length);
       for (String oidString : oidStrings) {
-        if (oidString.length() > 0) {
+        if (!oidString.isEmpty()) {
           OID o = new OID(oidString);
           if (o.isValid()) {
             oids.add(o);

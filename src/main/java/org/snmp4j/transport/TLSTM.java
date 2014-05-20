@@ -692,7 +692,7 @@ public class TLSTM extends TcpTransportMapping {
     }
 
     public synchronized byte[] nextMessage() {
-      if (this.message.size() > 0) {
+      if (!this.message.isEmpty()) {
         return this.message.removeFirst();
       }
       return null;
@@ -1907,7 +1907,7 @@ public class TLSTM extends TcpTransportMapping {
         String dNSName = ((String)entry).toLowerCase();
         String hostName = ((IpAddress)tmStateReference.getAddress())
             .getInetAddress().getCanonicalHostName();
-        if (dNSName.length() > 0) {
+        if (!dNSName.isEmpty()) {
           if (dNSName.charAt(0) == '*') {
             int pos = hostName.indexOf('.');
             hostName = hostName.substring(pos);

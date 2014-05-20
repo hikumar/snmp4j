@@ -206,7 +206,7 @@ public class ArgumentParser {
     Iterator<? extends ArgumentFormat> params = parameterFormat.values().iterator();
     ArgumentFormat lastFormat = null;
     for (int i=0; i<args.length; i++) {
-      if (args[i].length() == 0) {
+      if (args[i].isEmpty()) {
         continue;
       }
       ArgumentFormat format;
@@ -259,7 +259,7 @@ public class ArgumentParser {
                 of, i));
           }
         }
-        if (defaults.size() == 0) {
+        if (defaults.isEmpty()) {
           throw new ArgumentParseException(-1, null, of, of.getParameters()[0]);
         } else {
           addValues2Option(of.getOption(), defaults, options);
@@ -454,7 +454,7 @@ public class ArgumentParser {
    * @since 1.9.2
    */
   public static Object getFirstValue(List<?> optionValues) {
-    if ((optionValues != null) && (optionValues.size()>0)) {
+    if ((optionValues != null) && (!optionValues.isEmpty())) {
       return optionValues.get(0);
     }
     return null;

@@ -473,7 +473,7 @@ public class TableUtils extends AbstractSnmpUtility {
                 }
                 if (row == null) {
                   row = new Row(index);
-                  if (rowCache.size() == 0) {
+                  if (rowCache.isEmpty()) {
                     rowCache.add(row);
                   }
                   else if ((rowCache.getFirst()).getRowIndex().compareTo(
@@ -511,7 +511,7 @@ public class TableUtils extends AbstractSnmpUtility {
             }
           }
           anyMatch |= anyMatchInChunk;
-          while ((rowCache.size() > 0) &&
+          while ((!rowCache.isEmpty()) &&
                  ((rowCache.getFirst()).getNumComplete() ==
                   columnOIDs.length) &&
                  ((lastMinIndex == null) ||
@@ -571,7 +571,7 @@ public class TableUtils extends AbstractSnmpUtility {
     }
 
     private void emptyCache() {
-      while (rowCache.size() > 0) {
+      while (!rowCache.isEmpty()) {
         if (!listener.next(getTableEvent())) {
           break;
         }

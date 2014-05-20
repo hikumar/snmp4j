@@ -745,7 +745,7 @@ public class SnmpTest extends TestCase {
     public synchronized void processPdu(CommandResponderEvent event) {
       anyResponse = true;
       PDU pdu = event.getPDU();
-      if (expectedPDUs.size() > 0) {
+      if (!expectedPDUs.isEmpty()) {
         assertNotNull(pdu);
         RequestResponse expected = expectedPDUs.remove(pdu.getRequestID().getValue());
 /*

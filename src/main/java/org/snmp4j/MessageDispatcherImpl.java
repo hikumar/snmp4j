@@ -233,7 +233,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
     Class addressClass = destAddress.getClass();
     do {
       List<TransportMapping> l = transportMappings.get(addressClass);
-      if ((l != null) && (l.size() > 0)) {
+      if ((l != null) && (!l.isEmpty())) {
         return l.get(0);
       }
     }

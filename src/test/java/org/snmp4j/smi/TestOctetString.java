@@ -20,7 +20,8 @@
 
 package org.snmp4j.smi;
 
-import junit.framework.*;
+import junit.framework.TestCase;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.StringTokenizer;

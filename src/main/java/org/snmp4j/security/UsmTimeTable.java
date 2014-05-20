@@ -19,14 +19,14 @@
   _##########################################################################*/
 package org.snmp4j.security;
 
-import java.io.*;
-import java.util.*;
-
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.snmp4j.mp.*;
-import org.snmp4j.smi.*;
+import org.snmp4j.mp.SnmpConstants;
+import org.snmp4j.smi.OctetString;
+import org.snmp4j.smi.Variable;
+
+import java.io.Serializable;
+import java.util.Hashtable;
 
 /**
  * The <code>UsmTimeTable</code> class is a singleton that stores USM user

@@ -24,8 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snmp4j.SNMP4JSettings;
 import org.snmp4j.TransportStateReference;
-
-
 import org.snmp4j.security.SecurityLevel;
 import org.snmp4j.smi.Address;
 import org.snmp4j.smi.IpAddress;
@@ -34,13 +32,8 @@ import org.snmp4j.util.WorkerTask;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.TimeUnit;
 
 /**
  * The <code>DummyTransport</code> is a test TransportMapping for Command Generators

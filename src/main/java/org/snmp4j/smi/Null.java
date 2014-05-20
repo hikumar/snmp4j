@@ -19,10 +19,11 @@
   _##########################################################################*/
 package org.snmp4j.smi;
 
-import java.io.*;
 import org.snmp4j.asn1.BER;
-import org.snmp4j.asn1.BERInputStream;
 import org.snmp4j.asn1.BER.MutableByte;
+import org.snmp4j.asn1.BERInputStream;
+
+import java.io.OutputStream;
 
 /**
  * The <code>Null</code> class represents SMI Null and the derived

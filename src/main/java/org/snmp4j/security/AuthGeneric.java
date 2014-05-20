@@ -19,11 +19,11 @@
   _##########################################################################*/
 package org.snmp4j.security;
 
-import java.security.MessageDigest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.OctetString;
+
+import java.security.MessageDigest;
 
 /**
  * The abstract class AuthGeneric implements common operations for

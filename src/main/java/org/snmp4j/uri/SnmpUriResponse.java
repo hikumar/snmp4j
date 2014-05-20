@@ -21,7 +21,6 @@
 package org.snmp4j.uri;
 
 import org.snmp4j.PDU;
-import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.smi.VariableBinding;
 
 import java.util.List;

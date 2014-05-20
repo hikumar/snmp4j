@@ -23,10 +23,12 @@
 
 package org.snmp4j.event;
 
-import java.util.EventListener;
-// for JavaDoc
-import org.snmp4j.security.SecurityModel;
 import org.snmp4j.mp.MessageProcessingModel;
+import org.snmp4j.security.SecurityModel;
+
+import java.util.EventListener;
+
+// for JavaDoc
 
 /**
  * The <code>CounterListener</code> interface has to be implemented by listener

@@ -19,8 +19,8 @@
   _##########################################################################*/
 package org.snmp4j.util;
 
-import java.util.TimerTask;
 import java.util.Date;
+import java.util.TimerTask;
 
 /**
  * This <code>CommonTimer</code> defines the subset interface used from

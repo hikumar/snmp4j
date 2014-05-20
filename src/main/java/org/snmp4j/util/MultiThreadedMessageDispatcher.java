@@ -20,16 +20,11 @@
 package org.snmp4j.util;
 
 import org.snmp4j.*;
-import org.snmp4j.mp.MessageProcessingModel;
-
-import java.util.Collection;
+import org.snmp4j.mp.*;
 import org.snmp4j.smi.Address;
-import org.snmp4j.mp.PduHandle;
-import org.snmp4j.mp.StateReference;
-import org.snmp4j.mp.StatusInformation;
 
 import java.nio.ByteBuffer;
-import org.snmp4j.mp.PduHandleCallback;
+import java.util.Collection;
 
 /**
  * The <code>MultiThreadedMessageDispatcher</code> class is a decorator

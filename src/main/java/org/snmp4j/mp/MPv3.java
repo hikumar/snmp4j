@@ -29,7 +29,6 @@ import org.snmp4j.asn1.BERSerializable;
 import org.snmp4j.event.CounterEvent;
 import org.snmp4j.event.SnmpEngineEvent;
 import org.snmp4j.event.SnmpEngineListener;
-
 import org.snmp4j.security.*;
 import org.snmp4j.smi.*;
 import org.snmp4j.util.PDUFactory;

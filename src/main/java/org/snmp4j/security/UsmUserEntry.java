@@ -19,9 +19,10 @@
   _##########################################################################*/
 package org.snmp4j.security;
 
-import java.io.Serializable;
-import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.OID;
+import org.snmp4j.smi.OctetString;
+
+import java.io.Serializable;
 
 /**
  * The <code>UsmUserEntry</code> class represents a user in the

@@ -21,10 +21,10 @@
 
 package org.snmp4j.security;
 
+import junit.framework.TestCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.OctetString;
-import junit.framework.*;
 
 public class TestAuthMD5
     extends TestCase {

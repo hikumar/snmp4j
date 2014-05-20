@@ -19,7 +19,6 @@
   _##########################################################################*/
 package org.snmp4j;
 
-import org.snmp4j.PDU;
 import java.io.Serializable;
 
 /**

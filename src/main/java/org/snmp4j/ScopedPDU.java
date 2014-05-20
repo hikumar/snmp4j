@@ -19,13 +19,14 @@
   _##########################################################################*/
 package org.snmp4j;
 
+import org.snmp4j.asn1.BER;
+import org.snmp4j.asn1.BER.MutableByte;
+import org.snmp4j.asn1.BERInputStream;
 import org.snmp4j.smi.AbstractVariable;
 import org.snmp4j.smi.OctetString;
-import org.snmp4j.asn1.BER;
-import java.io.OutputStream;
+
 import java.io.IOException;
-import org.snmp4j.asn1.BERInputStream;
-import org.snmp4j.asn1.BER.MutableByte;
+import java.io.OutputStream;
 
 /**
  * The <code>ScopedPDU</code> class represents a SNMPv3 scoped PDU.

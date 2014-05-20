@@ -21,21 +21,20 @@ package org.snmp4j.transport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.snmp4j.smi.Address;
-import org.snmp4j.TransportMapping;
-import java.io.InputStream;
-import java.util.Properties;
-import java.io.IOException;
-import java.util.Hashtable;
-import java.util.Enumeration;
-
-import java.lang.reflect.Constructor;
 import org.snmp4j.SNMP4JSettings;
+import org.snmp4j.TransportMapping;
+import org.snmp4j.smi.Address;
 import org.snmp4j.smi.TcpAddress;
 import org.snmp4j.smi.TlsAddress;
 import org.snmp4j.smi.UdpAddress;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Properties;
 
 /**
  * The <code>TransportMappings</code> factory can be used to create a transport

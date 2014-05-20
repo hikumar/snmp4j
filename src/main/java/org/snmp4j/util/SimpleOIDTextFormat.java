@@ -19,9 +19,10 @@
   _##########################################################################*/
 package org.snmp4j.util;
 
-import java.text.*;
-import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.OID;
+import org.snmp4j.smi.OctetString;
+
+import java.text.ParseException;
 import java.util.StringTokenizer;
 
 /**

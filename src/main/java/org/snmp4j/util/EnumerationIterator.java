@@ -19,7 +19,8 @@
   _##########################################################################*/
 package org.snmp4j.util;
 
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Iterator;
 
 /**
  * The <code>EnumerationIterator</code> provides an iterator from an

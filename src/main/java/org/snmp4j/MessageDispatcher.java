@@ -19,12 +19,12 @@
   _##########################################################################*/
 package org.snmp4j;
 
-import org.snmp4j.smi.Address;
 import org.snmp4j.mp.*;
-import java.util.Collection;
-import org.snmp4j.asn1.BERInputStream;
+import org.snmp4j.smi.Address;
 import org.snmp4j.transport.TransportListener;
+
 import java.nio.ByteBuffer;
+import java.util.Collection;
 
 /**
  * The <code>MessageDispatcher</code> interface defines common services of

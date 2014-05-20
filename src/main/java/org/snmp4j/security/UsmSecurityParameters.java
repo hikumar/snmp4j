@@ -19,14 +19,16 @@
   _##########################################################################*/
 package org.snmp4j.security;
 
-import java.io.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.snmp4j.asn1.*;
-import org.snmp4j.asn1.BER.*;
-import org.snmp4j.smi.*;
-import org.snmp4j.security.SecurityLevel;
+import org.snmp4j.asn1.BER;
+import org.snmp4j.asn1.BER.MutableByte;
+import org.snmp4j.asn1.BERInputStream;
+import org.snmp4j.smi.Integer32;
+import org.snmp4j.smi.OctetString;
+
+import java.io.IOException;
+import java.io.OutputStream;
 
 
 public class UsmSecurityParameters implements SecurityParameters {

@@ -19,7 +19,9 @@
   _##########################################################################*/
 package org.snmp4j.util;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * This <code>DefaultTimerFactory</code> creates a new <code>Timer</code>

@@ -20,13 +20,14 @@
 
 package org.snmp4j.util;
 
-import java.util.EventListener;
-import java.util.EventObject;
 import org.snmp4j.PDU;
 import org.snmp4j.event.ResponseListener;
-import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.mp.SnmpConstants;
+import org.snmp4j.smi.VariableBinding;
+
 import java.util.Arrays;
+import java.util.EventListener;
+import java.util.EventObject;
 
 /**
  * The <code>RetrievalEvent</code> is an abstract class representing the result

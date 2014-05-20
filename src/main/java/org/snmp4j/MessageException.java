@@ -19,8 +19,9 @@
   _##########################################################################*/
 package org.snmp4j;
 
-import java.io.IOException;
 import org.snmp4j.mp.StatusInformation;
+
+import java.io.IOException;
 
 /**
  * The <code>MessageException</code> represents information about an exception

@@ -19,18 +19,18 @@
   _##########################################################################*/
 package org.snmp4j.security;
 
-import java.io.Serializable;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.snmp4j.smi.OID;
-import java.io.InputStream;
-import java.util.Properties;
-import java.util.Enumeration;
-import java.io.IOException;
-import java.util.Hashtable;
-import org.snmp4j.smi.OctetString;
 import org.snmp4j.SNMP4JSettings;
+import org.snmp4j.smi.OID;
+import org.snmp4j.smi.OctetString;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Properties;
 
 /**
  * The <code>SecurityProtocols</code> class holds all authentication and

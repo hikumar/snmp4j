@@ -19,7 +19,8 @@
   _##########################################################################*/
 package org.snmp4j.util;
 
-import java.util.*;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * The <code>ThreadPool</code> provides a pool of a fixed number of threads

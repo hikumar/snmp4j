@@ -21,7 +21,7 @@
 
 package org.snmp4j.smi;
 
-import junit.framework.*;
+import junit.framework.TestCase;
 
 
 public class TestTimeTicks extends TestCase {

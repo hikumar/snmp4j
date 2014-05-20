@@ -19,13 +19,16 @@
   _##########################################################################*/
 package org.snmp4j.smi;
 
-import java.io.*;
-import java.net.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snmp4j.asn1.BER;
 import org.snmp4j.asn1.BERInputStream;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 
 

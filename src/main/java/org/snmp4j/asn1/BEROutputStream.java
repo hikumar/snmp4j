@@ -19,7 +19,8 @@
   _##########################################################################*/
 package org.snmp4j.asn1;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
 

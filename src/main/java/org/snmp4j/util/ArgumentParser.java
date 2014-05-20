@@ -19,11 +19,12 @@
   _##########################################################################*/
 package org.snmp4j.util;
 
-import java.text.*;
-import java.util.*;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 import org.snmp4j.smi.OctetString;
+
+import java.text.ParseException;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The <code>ArgumentParser</code> parsers a command line array into Java

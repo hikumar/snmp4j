@@ -19,10 +19,10 @@
   _##########################################################################*/
 package org.snmp4j;
 
+import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.security.SecurityLevel;
 import org.snmp4j.security.SecurityModel;
 import org.snmp4j.smi.Address;
-import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.smi.OctetString;
 
 import java.util.List;

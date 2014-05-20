@@ -19,13 +19,13 @@
   _##########################################################################*/
 package org.snmp4j;
 
+import org.snmp4j.smi.Address;
+import org.snmp4j.smi.OctetString;
+
 import java.io.Serializable;
 import java.util.List;
 
-import org.snmp4j.smi.Address;
 // for JavaDoc
-import org.snmp4j.mp.SnmpConstants;
-import org.snmp4j.smi.OctetString;
 
 /**
  * A <code>Target</code> interface defines an abstract representation of a

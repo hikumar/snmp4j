@@ -19,24 +19,26 @@
   _##########################################################################*/
 package org.snmp4j.transport;
 
-import java.io.*;
-import java.net.*;
-import java.nio.*;
-import java.nio.channels.*;
-import java.util.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.snmp4j.SNMP4JSettings;
 import org.snmp4j.TransportStateReference;
-import org.snmp4j.asn1.*;
-import org.snmp4j.asn1.BER.*;
-
+import org.snmp4j.asn1.BER;
+import org.snmp4j.asn1.BER.MutableByte;
+import org.snmp4j.asn1.BERInputStream;
 import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.security.SecurityLevel;
-import org.snmp4j.smi.*;
-import org.snmp4j.SNMP4JSettings;
-import org.snmp4j.util.WorkerTask;
+import org.snmp4j.smi.Address;
+import org.snmp4j.smi.OctetString;
+import org.snmp4j.smi.TcpAddress;
 import org.snmp4j.util.CommonTimer;
+import org.snmp4j.util.WorkerTask;
+
+import java.io.IOException;
+import java.net.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.*;
+import java.util.*;
 
 /**
  * The <code>DefaultTcpTransportMapping</code> implements a TCP transport

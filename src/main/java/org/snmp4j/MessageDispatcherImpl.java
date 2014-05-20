@@ -19,20 +19,27 @@
   _##########################################################################*/
 package org.snmp4j;
 
-import java.io.IOException;
-import java.util.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.snmp4j.asn1.*;
-import org.snmp4j.event.*;
-
+import org.snmp4j.asn1.BER;
+import org.snmp4j.asn1.BERInputStream;
+import org.snmp4j.asn1.BEROutputStream;
+import org.snmp4j.event.AuthenticationFailureEvent;
+import org.snmp4j.event.AuthenticationFailureListener;
+import org.snmp4j.event.CounterEvent;
+import org.snmp4j.event.CounterListener;
 import org.snmp4j.mp.*;
 import org.snmp4j.security.SecurityLevel;
 import org.snmp4j.security.TsmSecurityStateReference;
-import org.snmp4j.smi.*;
-import java.nio.ByteBuffer;
+import org.snmp4j.smi.Address;
+import org.snmp4j.smi.GenericAddress;
+import org.snmp4j.smi.Integer32;
+import org.snmp4j.smi.OctetString;
 import org.snmp4j.transport.UnsupportedAddressClassException;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.*;
 
 /**
  * The <code>MessageDispatcherImpl</code> decodes and dispatches incoming

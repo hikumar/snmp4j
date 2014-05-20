@@ -19,15 +19,22 @@
   _##########################################################################*/
 package org.snmp4j.smi;
 
-import java.io.*;
-import java.util.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.snmp4j.asn1.*;
-import org.snmp4j.SNMP4JSettings;
-// For JavaDoc:
 import org.snmp4j.PDU;
+import org.snmp4j.SNMP4JSettings;
+import org.snmp4j.asn1.BER;
+import org.snmp4j.asn1.BERInputStream;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Properties;
+
+// For JavaDoc:
 
 /**
  * The <code>Variable</code> abstract class is the base class for all SNMP

@@ -23,6 +23,7 @@ package org.snmp4j.smi;
 
 import junit.framework.TestCase;
 import org.snmp4j.asn1.BER;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 

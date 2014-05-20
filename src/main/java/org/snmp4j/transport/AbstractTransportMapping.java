@@ -19,16 +19,15 @@
   _##########################################################################*/
 package org.snmp4j.transport;
 
-import org.snmp4j.TransportMapping;
 import org.snmp4j.MessageDispatcher;
-import java.io.IOException;
-
+import org.snmp4j.TransportMapping;
 import org.snmp4j.TransportStateReference;
 import org.snmp4j.smi.Address;
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.nio.ByteBuffer;
 
 /**
  * The <code>AbstractTransportMapping</code> provides an abstract

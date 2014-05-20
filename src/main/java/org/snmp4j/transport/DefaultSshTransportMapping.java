@@ -23,8 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snmp4j.TransportStateReference;
 import org.snmp4j.event.CounterEvent;
-
-
 import org.snmp4j.mp.CounterSupport;
 import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.smi.Address;

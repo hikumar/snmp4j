@@ -19,13 +19,15 @@
   _##########################################################################*/
 package org.snmp4j.event;
 
-import java.util.EventObject;
-import org.snmp4j.smi.Address;
 import org.snmp4j.TransportMapping;
 import org.snmp4j.asn1.BERInputStream;
-// For JavaDoc
 import org.snmp4j.mp.SnmpConstants;
+import org.snmp4j.smi.Address;
 import org.snmp4j.transport.TransportListener;
+
+import java.util.EventObject;
+
+// For JavaDoc
 
 /**
  * The <code>AuthenticationFailureEvent</code> class describes the source

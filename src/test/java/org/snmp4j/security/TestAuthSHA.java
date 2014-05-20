@@ -20,8 +20,8 @@
 
 package org.snmp4j.security;
 
+import junit.framework.TestCase;
 import org.snmp4j.smi.OctetString;
-import junit.framework.*;
 
 
 public class TestAuthSHA

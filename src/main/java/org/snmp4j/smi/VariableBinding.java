@@ -19,14 +19,16 @@
   _##########################################################################*/
 package org.snmp4j.smi;
 
-import java.io.Serializable;
-import org.snmp4j.asn1.*;
+import org.snmp4j.SNMP4JSettings;
+import org.snmp4j.asn1.BER;
+import org.snmp4j.asn1.BERInputStream;
+import org.snmp4j.asn1.BERSerializable;
+import org.snmp4j.util.VariableTextFormat;
+
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.text.ParseException;
-
-import org.snmp4j.SNMP4JSettings;
-import org.snmp4j.util.VariableTextFormat;
 
 /**
  * A <code>VariableBinding</code> is an association of a object instance

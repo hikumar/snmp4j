@@ -19,11 +19,11 @@
   _##########################################################################*/
 package org.snmp4j.event;
 
-import java.util.EventObject;
-
 import org.snmp4j.mp.MPv3;
-import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.Address;
+import org.snmp4j.smi.OctetString;
+
+import java.util.EventObject;
 
 /**
  * The <code>SnmpEngineEvent</code> describes events generated on behalf of

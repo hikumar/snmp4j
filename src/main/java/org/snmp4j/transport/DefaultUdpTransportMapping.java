@@ -19,19 +19,19 @@
   _##########################################################################*/
 package org.snmp4j.transport;
 
-import java.io.IOException;
-import java.net.*;
-import java.nio.ByteBuffer;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.snmp4j.TransportStateReference;
-
-import org.snmp4j.security.SecurityLevel;
-import org.snmp4j.smi.*;
 import org.snmp4j.SNMP4JSettings;
-import java.io.InterruptedIOException;
+import org.snmp4j.TransportStateReference;
+import org.snmp4j.security.SecurityLevel;
+import org.snmp4j.smi.OctetString;
+import org.snmp4j.smi.UdpAddress;
 import org.snmp4j.util.WorkerTask;
+
+import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.net.*;
+import java.nio.ByteBuffer;
 
 /**
  * The <code>DefaultUdpTransportMapping</code> implements a UDP transport

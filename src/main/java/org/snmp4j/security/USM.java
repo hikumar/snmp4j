@@ -19,20 +19,29 @@
   _##########################################################################*/
 package org.snmp4j.security;
 
-import java.io.*;
-import java.nio.ByteBuffer;
-import java.util.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snmp4j.SNMP4JSettings;
 import org.snmp4j.TransportStateReference;
+import org.snmp4j.asn1.BER;
+import org.snmp4j.asn1.BER.MutableByte;
+import org.snmp4j.asn1.BERInputStream;
+import org.snmp4j.asn1.BEROutputStream;
+import org.snmp4j.event.CounterEvent;
+import org.snmp4j.event.UsmUserEvent;
+import org.snmp4j.event.UsmUserListener;
+import org.snmp4j.mp.CounterSupport;
+import org.snmp4j.mp.MPv3;
+import org.snmp4j.mp.SnmpConstants;
+import org.snmp4j.mp.StatusInformation;
+import org.snmp4j.smi.Integer32;
+import org.snmp4j.smi.OID;
+import org.snmp4j.smi.OctetString;
+import org.snmp4j.smi.VariableBinding;
 
-import org.snmp4j.asn1.*;
-import org.snmp4j.asn1.BER.*;
-import org.snmp4j.event.*;
-import org.snmp4j.mp.*;
-import org.snmp4j.smi.*;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.*;
 
 /**
  * The <code>USM</code> class implements the User Based Security Model (USM)

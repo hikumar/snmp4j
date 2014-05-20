@@ -19,19 +19,17 @@
   _##########################################################################*/
 package org.snmp4j.smi;
 
-import java.util.StringTokenizer;
-import java.io.IOException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snmp4j.asn1.BERInputStream;
+
+import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
+import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
-
-import java.net.Inet6Address;
-import java.lang.reflect.Method;
+import java.util.StringTokenizer;
 
 /**
  * The <code>TransportIpAddress</code> is the abstract base class for all

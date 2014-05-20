@@ -19,13 +19,14 @@
   _##########################################################################*/
 package org.snmp4j.event;
 
+import org.snmp4j.security.SecurityModel;
+import org.snmp4j.security.USM;
+import org.snmp4j.security.UsmUserEntry;
+import org.snmp4j.security.UsmUserTable;
+
 import java.util.EventObject;
 
-import org.snmp4j.security.SecurityModel;
-import org.snmp4j.security.UsmUserEntry;
 // needed for JavaDoc
-import org.snmp4j.security.USM;
-import org.snmp4j.security.UsmUserTable;
 
 /**
  * This Event is issued whenever a user of the {@link USM} is created

@@ -30,7 +30,10 @@ import javax.security.auth.x500.X500Principal;
 import java.security.Principal;
 import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * The <code>DefaultTlsTmSecurityCallback</code> resolves the

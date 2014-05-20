@@ -20,11 +20,9 @@
 
 package org.snmp4j.security;
 
-import junit.framework.*;
-import org.snmp4j.smi.OctetString;
-
-
+import junit.framework.TestCase;
 import org.snmp4j.asn1.BER;
+import org.snmp4j.smi.OctetString;
 
 public class TestPriv3DES
     extends TestCase {

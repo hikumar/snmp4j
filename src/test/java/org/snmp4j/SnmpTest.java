@@ -22,22 +22,16 @@ package org.snmp4j;
 
 import junit.framework.TestCase;
 import org.junit.*;
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import org.snmp4j.event.CounterListener;
 import org.snmp4j.event.ResponseEvent;
 import org.snmp4j.event.ResponseListener;
-
 import org.snmp4j.mp.*;
 import org.snmp4j.security.*;
 import org.snmp4j.smi.*;
 import org.snmp4j.transport.AbstractTransportMapping;
 import org.snmp4j.transport.DummyTransport;
 import org.snmp4j.transport.TransportMappings;
-import java.io.IOException;
 
+import java.io.IOException;
 import java.util.*;
 
 /**

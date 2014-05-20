@@ -26,7 +26,6 @@ import org.snmp4j.TransportStateReference;
 import org.snmp4j.asn1.BERInputStream;
 import org.snmp4j.asn1.BEROutputStream;
 import org.snmp4j.event.CounterEvent;
-
 import org.snmp4j.mp.CounterSupport;
 import org.snmp4j.mp.MPv3;
 import org.snmp4j.mp.SnmpConstants;

@@ -26,7 +26,6 @@ import org.snmp4j.asn1.BER;
 import org.snmp4j.asn1.BER.MutableByte;
 import org.snmp4j.asn1.BERInputStream;
 import org.snmp4j.asn1.BEROutputStream;
-
 import org.snmp4j.security.SecurityLevel;
 import org.snmp4j.security.SecurityModel;
 import org.snmp4j.security.SecurityModels;

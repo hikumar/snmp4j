@@ -24,11 +24,12 @@ package org.snmp4j.uri;
 import org.snmp4j.*;
 import org.snmp4j.event.ResponseEvent;
 import org.snmp4j.event.ResponseListener;
-
 import org.snmp4j.mp.SnmpConstants;
-import org.snmp4j.security.*;
+import org.snmp4j.security.SecurityLevel;
+import org.snmp4j.security.SecurityModel;
+import org.snmp4j.security.USM;
+import org.snmp4j.security.UsmUserEntry;
 import org.snmp4j.smi.*;
-import org.snmp4j.transport.DefaultUdpTransportMapping;
 import org.snmp4j.util.*;
 
 import java.io.IOException;
@@ -38,7 +39,6 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.StringTokenizer;
 
 /**
  * The <code>SnmpURI</code> class provides a SNMP service based on the SNMP URI

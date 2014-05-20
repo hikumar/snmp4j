@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snmp4j.security.AuthenticationProtocol;
 import org.snmp4j.security.PrivAES;
-import org.snmp4j.smi.OID;
 import org.snmp4j.smi.OctetString;
 
 /**

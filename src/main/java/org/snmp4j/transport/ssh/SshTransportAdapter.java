@@ -21,7 +21,6 @@
 package org.snmp4j.transport.ssh;
 
 import org.snmp4j.TransportStateReference;
-import org.snmp4j.transport.ssh.SshSession;
 
 /**
  * The <code>SshTransportAdapter</code> adapts 3rd party SSH transport protocol

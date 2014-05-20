@@ -19,13 +19,11 @@
   _##########################################################################*/
 package org.snmp4j;
 
-import org.snmp4j.mp.MPv1;
-import org.snmp4j.mp.MPv2c;
+import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.security.SecurityLevel;
 import org.snmp4j.security.SecurityModel;
-import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.Address;
-import org.snmp4j.mp.SnmpConstants;
+import org.snmp4j.smi.OctetString;
 
 /**
  * A <code>CommunityTarget</code> represents SNMP target properties for

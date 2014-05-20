@@ -20,11 +20,9 @@
 
 package org.snmp4j.smi;
 
-import junit.framework.*;
+import junit.framework.TestCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-
 import org.snmp4j.mp.SnmpConstants;
 
 /**

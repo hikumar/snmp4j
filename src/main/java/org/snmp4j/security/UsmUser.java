@@ -240,11 +240,10 @@ public class UsmUser implements User, Comparable, Cloneable {
   }
 
   public Object clone() {
-    UsmUser copy = new UsmUser(this.securityName, this.authenticationProtocol,
+    return new UsmUser(this.securityName, this.authenticationProtocol,
                                this.authenticationPassphrase,
                                this.privacyProtocol, this.privacyPassphrase,
                                this.localizationEngineID);
-    return copy;
   }
 
   public String toString() {

@@ -884,19 +884,17 @@ public class MPv3
     SecurityParameters securityParameters =
         secModel.newSecurityParametersInstance();
 
-    int status =
-        secModel.generateResponseMessage(getID(),
-                                         globalDataBuffer.array(),
-                                         maxMessageSize,
-                                         securityModel,
-                                         securityEngineID.getValue(),
-                                         securityName,
-                                         securityLevel,
-                                         scopedPDUInput,
-                                         cacheEntry.getSecurityStateReference(),
-                                         securityParameters,
-                                         outgoingMessage);
-    return status;
+    return secModel.generateResponseMessage(getID(),
+                                     globalDataBuffer.array(),
+                                     maxMessageSize,
+                                     securityModel,
+                                     securityEngineID.getValue(),
+                                     securityName,
+                                     securityLevel,
+                                     scopedPDUInput,
+                                     cacheEntry.getSecurityStateReference(),
+                                     securityParameters,
+                                     outgoingMessage);
   }
 
   /**

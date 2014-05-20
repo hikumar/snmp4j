@@ -770,9 +770,8 @@ public class Snmp implements Session, CommandResponder {
     if (tm == null) {
       tm = lookupTransportMapping(target);
     }
-    PduHandle handle = messageDispatcher.sendPdu(tm, target,
+    return messageDispatcher.sendPdu(tm, target,
                                        pdu, true, pduHandleCallback);
-    return handle;
   }
 
   protected TransportMapping lookupTransportMapping(Target target) {
@@ -1075,12 +1074,10 @@ public class Snmp implements Session, CommandResponder {
         try {
           // We need no callback here because we already have an equivalent
           // handle registered.
-          PduHandle resentHandle =
-              sendMessage(request.pdu, request.target, e.getTransportMapping(),
-                          null);
           // make sure reference to handle is hold until request is finished,
           // because otherwise cache information may get lost (WeakHashMap)
-          request.key = resentHandle;
+          request.key = sendMessage(request.pdu, request.target, e.getTransportMapping(),
+                      null);
         }
         catch (IOException iox) {
           logger.error("Failed to send message to {}: {}", request.target, iox.getMessage());

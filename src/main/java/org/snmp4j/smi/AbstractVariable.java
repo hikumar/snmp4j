@@ -224,8 +224,7 @@ public abstract class AbstractVariable implements Variable, Serializable, Clonea
                                          smiSyntax);
     }
     try {
-      Variable variable = c.newInstance();
-      return variable;
+      return c.newInstance();
     }
     catch (IllegalAccessException aex) {
       throw new RuntimeException("Could not access variable syntax class for: " +

@@ -509,8 +509,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
       BERInputStream is = new BERInputStream(buf);
       int ml = BER.decodeHeader(is, type);
       int hl = (int)is.getPosition();
-      MessageLength messageLength = new MessageLength(hl, ml);
-      return messageLength;
+      return new MessageLength(hl, ml);
     }
   }
 

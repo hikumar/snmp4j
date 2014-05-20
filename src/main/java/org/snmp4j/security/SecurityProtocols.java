@@ -319,9 +319,8 @@ public class SecurityProtocols implements Serializable {
       return key;
     }
     // extend key if necessary
-    byte[] extKey = privProtocol.extendShortKey(key, passwordString, engineID,
+    return privProtocol.extendShortKey(key, passwordString, engineID,
                                                 authProtocol);
-    return extKey;
   }
 
   /**

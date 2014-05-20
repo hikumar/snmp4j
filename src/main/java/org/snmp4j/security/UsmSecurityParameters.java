@@ -173,10 +173,9 @@ public class UsmSecurityParameters implements SecurityParameters {
   }
 
   private int getBEREncodedAuthParamsPosition() {
-    int length = getBERLength()-
+    return getBERLength()-
         (authenticationParameters.getBERPayloadLength() +
          privacyParameters.getBERLength());
-    return length;
   }
 
   public int getSequencePosition() {

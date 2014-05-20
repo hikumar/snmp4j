@@ -532,30 +532,6 @@ public class Snmp implements Session, CommandResponder {
   }
 
   /**
-   * Sends a GET request to a target. This method sets the PDU's type to
-   * {@link PDU#GET} and then sends a synchronous request to the supplied
-   * target.
-   * @param pdu
-   *    a <code>PDU</code> instance. For SNMPv3 messages, the supplied PDU
-   *    instance has to be a <code>ScopedPDU</code> instance.
-   * @param target
-   *    the Target instance representing the target SNMP engine where to send
-   *    the <code>pdu</code>.
-   * @return
-   *    the received response encapsulated in a <code>ResponseEvent</code>
-   *    instance. To obtain the received response <code>PDU</code> call
-   *    {@link ResponseEvent#getResponse()}. If the request timed out,
-   *    that method will return <code>null</code>.
-   * @throws IOException
-   *    if the PDU cannot be sent to the target.
-   * @since 1.1
-   */
-  public ResponseEvent get(PDU pdu, Target target) throws IOException {
-    pdu.setType(PDU.GET);
-    return send(pdu, target);
-  }
-
-  /**
    * Asynchronously sends a GET request <code>PDU</code> to the given target.
    * The response is then returned by calling the supplied
    * <code>ResponseListener</code> instance.
@@ -580,31 +556,6 @@ public class Snmp implements Session, CommandResponder {
                   ResponseListener listener) throws IOException {
     pdu.setType(PDU.GET);
     send(pdu, target, userHandle, listener);
-  }
-
-  /**
-   * Sends a GETNEXT request to a target. This method sets the PDU's type to
-   * {@link PDU#GETNEXT} and then sends a synchronous request to the supplied
-   * target. This method is a convenience wrapper for the
-   * {@link #send(PDU pdu, Target target)} method.
-   * @param pdu
-   *    a <code>PDU</code> instance. For SNMPv3 messages, the supplied PDU
-   *    instance has to be a <code>ScopedPDU</code> instance.
-   * @param target
-   *    the Target instance representing the target SNMP engine where to send
-   *    the <code>pdu</code>.
-   * @return
-   *    the received response encapsulated in a <code>ResponseEvent</code>
-   *    instance. To obtain the received response <code>PDU</code> call
-   *    {@link ResponseEvent#getResponse()}. If the request timed out,
-   *    that method will return <code>null</code>.
-   * @throws IOException
-   *    if the PDU cannot be sent to the target.
-   * @since 1.1
-   */
-  public ResponseEvent getNext(PDU pdu, Target target) throws IOException {
-    pdu.setType(PDU.GETNEXT);
-    return send(pdu, target);
   }
 
   /**
@@ -635,31 +586,6 @@ public class Snmp implements Session, CommandResponder {
   }
 
   /**
-   * Sends a GETBULK request to a target. This method sets the PDU's type to
-   * {@link PDU#GETBULK} and then sends a synchronous request to the supplied
-   * target. This method is a convenience wrapper for the
-   * {@link #send(PDU pdu, Target target)} method.
-   * @param pdu
-   *    a <code>PDU</code> instance. For SNMPv3 messages, the supplied PDU
-   *    instance has to be a <code>ScopedPDU</code> instance.
-   * @param target
-   *    the Target instance representing the target SNMP engine where to send
-   *    the <code>pdu</code>.
-   * @return
-   *    the received response encapsulated in a <code>ResponseEvent</code>
-   *    instance. To obtain the received response <code>PDU</code> call
-   *    {@link ResponseEvent#getResponse()}. If the request timed out,
-   *    that method will return <code>null</code>.
-   * @throws IOException
-   *    if the PDU cannot be sent to the target.
-   * @since 1.1
-   */
-  public ResponseEvent getBulk(PDU pdu, Target target) throws IOException {
-    pdu.setType(PDU.GETBULK);
-    return send(pdu, target);
-  }
-
-  /**
    * Asynchronously sends a GETBULK request <code>PDU</code> to the given
    * target. The response is then returned by calling the supplied
    * <code>ResponseListener</code> instance.
@@ -684,31 +610,6 @@ public class Snmp implements Session, CommandResponder {
                       ResponseListener listener) throws IOException {
     pdu.setType(PDU.GETBULK);
     send(pdu, target, userHandle, listener);
-  }
-
-  /**
-   * Sends an INFORM request to a target. This method sets the PDU's type to
-   * {@link PDU#INFORM} and then sends a synchronous request to the supplied
-   * target. This method is a convenience wrapper for the
-   * {@link #send(PDU pdu, Target target)} method.
-   * @param pdu
-   *    a <code>PDU</code> instance. For SNMPv3 messages, the supplied PDU
-   *    instance has to be a <code>ScopedPDU</code> instance.
-   * @param target
-   *    the Target instance representing the target SNMP engine where to send
-   *    the <code>pdu</code>.
-   * @return
-   *    the received response encapsulated in a <code>ResponseEvent</code>
-   *    instance. To obtain the received response <code>PDU</code> call
-   *    {@link ResponseEvent#getResponse()}. If the request timed out,
-   *    that method will return <code>null</code>.
-   * @throws IOException
-   *    if the inform request could not be send to the specified target.
-   * @since 1.1
-   */
-  public ResponseEvent inform(PDU pdu, Target target) throws IOException {
-    pdu.setType(PDU.INFORM);
-    return send(pdu, target);
   }
 
   /**
@@ -787,31 +688,6 @@ public class Snmp implements Session, CommandResponder {
     send(pdu, target);
   }
 
-
-  /**
-   * Sends a SET request to a target. This method sets the PDU's type to
-   * {@link PDU#SET} and then sends a synchronous request to the supplied
-   * target.
-   * @param pdu
-   *    a <code>PDU</code> instance. For SNMPv3 messages, the supplied PDU
-   *    instance has to be a <code>ScopedPDU</code> instance.
-   * @param target
-   *    the Target instance representing the target SNMP engine where to send
-   *    the <code>pdu</code>.
-   * @return
-   *    the received response encapsulated in a <code>ResponseEvent</code>
-   *    instance. To obtain the received response <code>PDU</code> call
-   *    {@link ResponseEvent#getResponse()}. If the request timed out,
-   *    that method will return <code>null</code>.
-   * @throws IOException
-   *    if the PDU cannot be sent to the target.
-   * @since 1.1
-   */
-  public ResponseEvent set(PDU pdu, Target target) throws IOException {
-    pdu.setType(PDU.SET);
-    return send(pdu, target);
-  }
-
   /**
    * Asynchronously sends a SET request <code>PDU</code> to the given target.
    * The response is then returned by calling the supplied
@@ -837,113 +713,6 @@ public class Snmp implements Session, CommandResponder {
                   ResponseListener listener) throws IOException {
     pdu.setType(PDU.SET);
     send(pdu, target, userHandle, listener);
-  }
-
-  public ResponseEvent send(PDU pdu, Target target) throws IOException {
-    return send(pdu, target, null);
-  }
-
-  /**
-   * Sends a <code>PDU</code> to the given target and if the <code>PDU</code>
-   * is a confirmed request, then the received response is returned
-   * synchronously.
-   * @param pdu
-   *    a <code>PDU</code> instance. When sending a SNMPv1 trap PDU, the
-   *    supplied PDU instance must be a <code>PDUv1</code>. For all types of
-   *    SNMPv3 messages, the supplied PDU instance has to be a
-   *    <code>ScopedPDU</code> instance.
-   * @param target
-   *    the Target instance representing the target SNMP engine where to send
-   *    the <code>pdu</code>.
-   * @param transport
-   *    specifies the <code>TransportMapping</code> to be used when sending
-   *    the PDU. If <code>transport</code> is <code>null</code>, the associated
-   *    message dispatcher will try to determine the transport mapping by the
-   *    <code>target</code>'s address.
-   * @return
-   *    the received response encapsulated in a <code>ResponseEvent</code>
-   *    instance. To obtain the received response <code>PDU</code> call
-   *    {@link ResponseEvent#getResponse()}. If the request timed out,
-   *    that method will return <code>null</code>. If the sent <code>pdu</code>
-   *    is an unconfirmed PDU (notification, response, or report), then
-   *    <code>null</code> will be returned.
-   * @throws IOException
-   *    if the message could not be sent.
-   * @see PDU
-   * @see ScopedPDU
-   * @see PDUv1
-   */
-  public ResponseEvent send(PDU pdu, Target target,
-                            TransportMapping transport) throws IOException {
-    return send(pdu, target, transport, DEFAULT_MAX_REQUEST_STATUS);
-  }
-
-  private ResponseEvent send(PDU pdu, Target target,
-                             TransportMapping transport,
-                             int maxRequestStatus) throws IOException {
-    if (!pdu.isConfirmedPdu()) {
-      sendMessage(pdu, target, transport, null);
-      return null;
-    }
-    if (timer == null) {
-      createPendingTimer();
-    }
-    final SyncResponseListener syncResponse = new SyncResponseListener();
-    PendingRequest retryRequest = null;
-    synchronized (syncResponse) {
-      PduHandle handle = null;
-      PendingRequest request =
-          new PendingRequest(syncResponse, target, pdu, target, transport);
-      request.maxRequestStatus = maxRequestStatus;
-      handle = sendMessage(request.pdu, target, transport, request);
-      long totalTimeout =
-          timeoutModel.getRequestTimeout(target.getRetries(),
-                                         target.getTimeout());
-      long stopTime = System.nanoTime()+totalTimeout*SnmpConstants.MILLISECOND_TO_NANOSECOND;
-      try {
-        while ((syncResponse.getResponse() == null) &&
-               (System.nanoTime() < stopTime)) {
-          syncResponse.wait(totalTimeout);
-        }
-        retryRequest = pendingRequests.remove(handle);
-        if (logger.isDebugEnabled()) {
-          logger.debug("Removed pending request with handle: " + handle);
-        }
-        request.setFinished();
-        request.cancel();
-      }
-      catch (InterruptedException iex) {
-        logger.warn(iex);
-        // cleanup request
-        request.setFinished();
-        request.cancel();
-        retryRequest = pendingRequests.remove(handle);
-        if (retryRequest != null) {
-          retryRequest.setFinished();
-          retryRequest.cancel();
-        }
-        Thread.currentThread().interrupt();
-      }
-      finally {
-        if (!request.finished) {
-          // free resources
-          retryRequest = pendingRequests.remove(handle);
-          if (retryRequest != null) {
-            retryRequest.setFinished();
-            retryRequest.cancel();
-          }
-        }
-      }
-    }
-    if (retryRequest != null) {
-      retryRequest.setFinished();
-      retryRequest.cancel();
-    }
-    if (syncResponse.getResponse() == null) {
-      syncResponse.response =
-          new ResponseEvent(Snmp.this, null, pdu, null, null);
-    }
-    return syncResponse.response;
   }
 
   private synchronized void createPendingTimer() {

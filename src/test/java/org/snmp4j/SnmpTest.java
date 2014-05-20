@@ -223,15 +223,12 @@ public class SnmpTest extends TestCase {
     snmpCommandResponder.addCommandResponder(responder);
     snmpCommandGenerator.listen();
     snmpCommandResponder.listen();
-    snmpCommandGenerator.setReportHandler(new Snmp.ReportHandler() {
-      @Override
-      public void processReport(PduHandle pduHandle, CommandResponderEvent event) {
-        PDU expectedResponse = makeReport(pdu, new VariableBinding(SnmpConstants.usmStatsUnknownEngineIDs, new Counter32(1)));
-        // request ID will be 0 because ScopedPDU could not be parsed:
-        expectedResponse.setRequestID(new Integer32(0));
-        ((ScopedPDU)expectedResponse).setContextEngineID(new OctetString(snmpCommandResponder.getUSM().getLocalEngineID()));
-        assertEquals(expectedResponse, event.getPDU());
-      }
+    snmpCommandGenerator.setReportHandler((pduHandle, event) -> {
+      PDU expectedResponse = makeReport(pdu, new VariableBinding(SnmpConstants.usmStatsUnknownEngineIDs, new Counter32(1)));
+      // request ID will be 0 because ScopedPDU could not be parsed:
+      expectedResponse.setRequestID(new Integer32(0));
+      ((ScopedPDU)expectedResponse).setContextEngineID(new OctetString(snmpCommandResponder.getUSM().getLocalEngineID()));
+      assertEquals(expectedResponse, event.getPDU());
     });
     // first try should return local error
     try {

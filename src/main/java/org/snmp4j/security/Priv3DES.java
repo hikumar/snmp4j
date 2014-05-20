@@ -135,14 +135,10 @@ public class Priv3DES implements PrivacyProtocol {
     }
     catch (Exception e) {
       logger.error(e.getMessage(), e);
-      if (logger.isDebugEnabled()) {
-        e.printStackTrace();
-      }
     }
 
-    if (logger.isDebugEnabled()) {
-      logger.debug("Encryption finished.");
-    }
+    logger.debug("Encryption finished.");
+
     return encryptedData;
   }
 
@@ -193,9 +189,6 @@ public class Priv3DES implements PrivacyProtocol {
     }
     catch (Exception e) {
       logger.error(e.getMessage(), e);
-      if (logger.isDebugEnabled()) {
-        e.printStackTrace();
-      }
     }
 
     return decryptedData;

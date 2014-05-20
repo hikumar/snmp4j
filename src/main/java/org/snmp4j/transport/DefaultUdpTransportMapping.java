@@ -424,9 +424,6 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
             listener = null;
           }
           logger.error(purex.getMessage(), purex);
-          if (logger.isDebugEnabled()) {
-            purex.printStackTrace();
-          }
           if (SNMP4JSettings.isForwardRuntimeExceptions()) {
             throw new RuntimeException(purex);
           }

@@ -1118,10 +1118,7 @@ public class MPv3
           }
         }
         catch (IOException iox) {
-          logger.warn("ASN.1 parse error: "+iox.getMessage());
-          if (logger.isDebugEnabled()) {
-            iox.printStackTrace();
-          }
+          logger.warn("ASN.1 parse error: "+iox.getMessage(), iox);
           CounterEvent event = new CounterEvent(this,
                                                 SnmpConstants.
                                                 snmpInASNParseErrs);
@@ -1323,10 +1320,7 @@ public class MPv3
       return SnmpConstants.SNMP_MP_ERROR;
     }
     catch (IOException iox) {
-      logger.warn("MPv3 parse error: " + iox.getMessage());
-      if (logger.isDebugEnabled()) {
-        iox.printStackTrace();
-      }
+      logger.warn("MPv3 parse error: " + iox.getMessage(), iox);
       return SnmpConstants.SNMP_MP_PARSE_ERROR;
     }
   }

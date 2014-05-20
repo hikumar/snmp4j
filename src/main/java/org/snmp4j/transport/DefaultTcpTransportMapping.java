@@ -837,8 +837,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
           }
           catch (NullPointerException npex) {
             // There seems to happen a NullPointerException within the select()
-            npex.printStackTrace();
-            logger.warn("NullPointerException within select()?");
+            logger.warn("NullPointerException within select()?", npex);
             stop = true;
           }
           processPending();

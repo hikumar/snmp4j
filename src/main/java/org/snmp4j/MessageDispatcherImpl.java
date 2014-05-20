@@ -376,7 +376,6 @@ public class MessageDispatcherImpl implements MessageDispatcher {
       }
     }
     catch (IOException iox) {
-      iox.printStackTrace();
       logger.warn(iox.getMessage(), iox);
       CounterEvent event =
           new CounterEvent(this, SnmpConstants.snmpInvalidMsgs);
@@ -513,15 +512,11 @@ public class MessageDispatcherImpl implements MessageDispatcher {
                                  + messageProcessingModel, SnmpConstants.SNMP_MD_UNSUPPORTED_MP_MODEL, iobex);
     }
     catch (MessageException mex) {
-      if (logger.isDebugEnabled()) {
-        mex.printStackTrace();
-      }
+      logger.debug(mex.getMessage(), mex);
       throw mex;
     }
     catch (IOException iox) {
-      if (logger.isDebugEnabled()) {
-        iox.printStackTrace();
-      }
+      logger.debug(iox.getMessage(), iox);
       throw new MessageException(iox.getMessage(), SnmpConstants.SNMP_MD_ERROR, iox);
     }
   }

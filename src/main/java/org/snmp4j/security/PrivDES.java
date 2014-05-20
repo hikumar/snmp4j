@@ -41,18 +41,15 @@ import org.snmp4j.smi.OctetString;
 public class PrivDES
     implements PrivacyProtocol {
 
-  private static final long serialVersionUID = 2526070176429255416L;
-
   /**
    * Unique ID of this privacy protocol.
    */
   public static final OID ID = new OID("1.3.6.1.6.3.10.1.2.2");
-
+  private static final long serialVersionUID = 2526070176429255416L;
   private static final int DECRYPT_PARAMS_LENGTH = 8;
+  private static final Logger logger = LoggerFactory.getLogger(PrivDES.class);
   protected Salt salt;
   protected CipherPool cipherPool;
-
-  private static final Logger logger = LoggerFactory.getLogger(PrivDES.class);
 
   public PrivDES()
   {
@@ -136,14 +133,10 @@ public class PrivDES
     }
     catch (Exception e) {
       logger.error(e.getMessage(), e);
-      if (logger.isDebugEnabled()) {
-        e.printStackTrace();
-      }
     }
 
-    if (logger.isDebugEnabled()) {
-      logger.debug("Encryption finished.");
-    }
+    logger.debug("Encryption finished.");
+
     return encryptedData;
   }
 

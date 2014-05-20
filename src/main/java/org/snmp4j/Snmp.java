@@ -1636,9 +1636,6 @@ public class Snmp implements Session, CommandResponder {
       }
       catch (IOException ex) {
         logger.error(ex.getMessage(), ex);
-        if (logger.isDebugEnabled()) {
-          ex.printStackTrace();
-        }
       }
       return true;
     }

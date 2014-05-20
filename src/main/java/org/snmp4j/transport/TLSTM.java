@@ -1306,7 +1306,6 @@ public class TLSTM extends TcpTransportMapping {
                     catch (IOException iox) {
                       // IO exception -> channel closed remotely
                       logger.warn(iox.getMessage(), iox);
-                      iox.printStackTrace();
                       sk.cancel();
                       readChannel.close();
                       TransportStateEvent e =
@@ -1331,8 +1330,7 @@ public class TLSTM extends TcpTransportMapping {
           }
           catch (NullPointerException npex) {
             // There seems to happen a NullPointerException within the select()
-            npex.printStackTrace();
-            logger.warn("NullPointerException within select()?");
+            logger.warn("NullPointerException within select()?", npex);
             stop = true;
           }
           processPending();

@@ -488,7 +488,7 @@ public class PDUv1 extends PDU {
 
   public String toString() {
     if (type == PDU.V1TRAP) {
-      StringBuffer buf = new StringBuffer();
+      StringBuilder buf = new StringBuilder();
       buf.append(getTypeString(type));
       buf.append("[reqestID=");
       buf.append(requestID);

@@ -380,7 +380,7 @@ public class OctetString extends AbstractVariable
 
   public String toString(char separator, int radix) {
     int digits = (int)(Math.round((float)Math.log(256)/Math.log(radix)));
-    StringBuffer buf = new StringBuffer(value.length*(digits+1));
+    StringBuilder buf = new StringBuilder(value.length*(digits+1));
     for (int i=0; i<value.length; i++) {
       if (i > 0) {
         buf.append(separator);
@@ -408,7 +408,7 @@ public class OctetString extends AbstractVariable
    */
   public String toString(int radix) {
     int digits = (int)(Math.round((float)Math.log(256)/Math.log(radix)));
-    StringBuffer buf = new StringBuffer(value.length*(digits+1));
+    StringBuilder buf = new StringBuilder(value.length*(digits+1));
     for (byte aValue : value) {
       int v = (aValue & 0xFF);
       String val = Integer.toString(v, radix);
@@ -431,7 +431,7 @@ public class OctetString extends AbstractVariable
    * @since 1.6
    */
   public String toASCII(char placeholder) {
-    StringBuffer buf = new StringBuffer(value.length);
+    StringBuilder buf = new StringBuilder(value.length);
     for (byte aValue : value) {
       if ((Character.isISOControl((char) aValue)) ||
           ((aValue & 0xFF) >= 0x80)) {

@@ -761,7 +761,7 @@ public class PDU implements BERSerializable, Serializable {
    * @return a string representation of the object.
    */
   public String toString() {
-    StringBuffer buf = new StringBuffer();
+    StringBuilder buf = new StringBuilder();
     buf.append(getTypeString(type));
     buf.append("[requestID=");
     buf.append(requestID);

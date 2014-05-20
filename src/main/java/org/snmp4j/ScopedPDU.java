@@ -157,7 +157,7 @@ public class ScopedPDU extends PDU {
    * @return a string representation of the object.
    */
   public String toString() {
-    StringBuffer buf = new StringBuffer();
+    StringBuilder buf = new StringBuilder();
     buf.append(getTypeString(type));
     buf.append("[{contextEngineID=").append(contextEngineID).append(", contextName=").append(contextName).append("}, requestID=");
     buf.append(requestID);

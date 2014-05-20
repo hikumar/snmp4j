@@ -1505,8 +1505,7 @@ public class Snmp implements Session, CommandResponder {
         throw ex;
       }
       catch (Error er) {
-        logger.fatal("Failed to process pending request " + m_key +
-                     " because " + er.getMessage(), er);
+        logger.error("Failed to process pending request {} because {}", m_key, er.getMessage(), er);
         throw er;
       }
     }
@@ -1636,7 +1635,7 @@ public class Snmp implements Session, CommandResponder {
         tm.close();
       }
       catch (IOException ex) {
-        logger.error(ex);
+        logger.error(ex.getMessage(), ex);
         if (logger.isDebugEnabled()) {
           ex.printStackTrace();
         }
@@ -1650,10 +1649,7 @@ public class Snmp implements Session, CommandResponder {
         try {
           tm.close();
         } catch (IOException ex) {
-          logger.error(ex);
-          if (logger.isDebugEnabled()) {
-            ex.printStackTrace();
-          }
+          logger.error(ex.getMessage(), ex);
         }
       }
       notificationListeners.clear();

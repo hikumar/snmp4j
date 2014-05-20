@@ -136,7 +136,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
         }
         catch (InterruptedException ex) {
           interrupted = true;
-          logger.warn(ex);
+          logger.warn(ex.getMessage(), ex);
         }
       }
       listener = null;
@@ -369,7 +369,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
                              socketCopy.getReceiveBufferSize());
           }
         } catch (SocketException ex) {
-          logger.error(ex);
+          logger.error(ex.getMessage(), ex);
           setSocketTimeout(0);
         }
       }
@@ -423,7 +423,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
           synchronized (DefaultUdpTransportMapping.this) {
             listener = null;
           }
-          logger.error(purex);
+          logger.error(purex.getMessage(), purex);
           if (logger.isDebugEnabled()) {
             purex.printStackTrace();
           }
@@ -457,10 +457,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
           }
         }
         catch (IOException iox) {
-          logger.warn(iox);
-          if (logger.isDebugEnabled()) {
-            iox.printStackTrace();
-          }
+          logger.warn(iox.getMessage(), iox);
           if (SNMP4JSettings.isForwardRuntimeExceptions()) {
             throw new RuntimeException(iox);
           }

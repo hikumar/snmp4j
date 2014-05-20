@@ -377,22 +377,19 @@ public class MessageDispatcherImpl implements MessageDispatcher {
     }
     catch (IOException iox) {
       iox.printStackTrace();
-      logger.warn(iox);
+      logger.warn(iox.getMessage(), iox);
       CounterEvent event =
           new CounterEvent(this, SnmpConstants.snmpInvalidMsgs);
       fireIncrementCounter(event);
     }
     catch (Exception ex) {
-      logger.error(ex);
-      if (logger.isDebugEnabled()) {
-        ex.printStackTrace();
-      }
+      logger.error(ex.getMessage(), ex);
       if (SNMP4JSettings.isForwardRuntimeExceptions()) {
         throw new RuntimeException(ex);
       }
     }
     catch (OutOfMemoryError oex) {
-      logger.error(oex);
+      logger.error(oex.getMessage(), oex);
       if (SNMP4JSettings.isForwardRuntimeExceptions()) {
         throw oex;
       }

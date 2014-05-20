@@ -400,10 +400,7 @@ public class TableUtils extends AbstractSnmpUtility {
         sendRequest(pdu, target, startCol);
       }
       catch (Exception ex) {
-        logger.error(ex);
-        if (logger.isDebugEnabled()) {
-          ex.printStackTrace();
-        }
+        logger.error(ex.getMessage(), ex);
         listener.finished(new TableEvent(this, userObject, ex));
         return false;
       }
@@ -736,7 +733,7 @@ public class TableUtils extends AbstractSnmpUtility {
       session.send(pdu, target, userHandle, listener);
     }
     catch (IOException ex) {
-      logger.error(ex);
+      logger.error(ex.getMessage(), ex);
     }
   }
 
@@ -773,7 +770,7 @@ public class TableUtils extends AbstractSnmpUtility {
       session.send(pdu, target, userHandle, listener);
     }
     catch (IOException ex) {
-      logger.error(ex);
+      logger.error(ex.getMessage(), ex);
     }
   }
 

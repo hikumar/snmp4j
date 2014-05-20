@@ -1165,7 +1165,7 @@ public class MPv3
             }
           }
           catch (IOException iox) {
-            logger.warn(iox);
+            logger.warn(iox.getMessage(), iox);
             scopedPdu = null;
           }
 

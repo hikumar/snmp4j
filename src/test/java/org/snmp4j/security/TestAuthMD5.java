@@ -21,13 +21,14 @@
 
 package org.snmp4j.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.OctetString;
 import junit.framework.*;
-import org.apache.log4j.*;
 
 public class TestAuthMD5
     extends TestCase {
-  static Logger cat = Logger.getLogger(TestAuthMD5.class);
+  static Logger cat = LoggerFactory.getLogger(TestAuthMD5.class);
 
   public TestAuthMD5(String name) {
 
@@ -120,7 +121,6 @@ public class TestAuthMD5
   }
 
   public void testAuth(){
-    BasicConfigurator.configure();
     byte[] msg = {
         (byte) 0x30, (byte) 0x7A, (byte) 0x02, (byte) 0x01,
         (byte) 0x03, (byte) 0x30, (byte) 0x0F, (byte) 0x02,

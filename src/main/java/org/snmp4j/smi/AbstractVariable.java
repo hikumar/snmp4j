@@ -289,10 +289,10 @@ public abstract class AbstractVariable implements Variable, Serializable {
           regSyntaxes.put(new Integer(id), c);
         }
         catch (ClassNotFoundException cnfe) {
-          logger.error(cnfe);
+          logger.error("Unable to find class with name " + className, cnfe);
         }
         catch (ClassCastException ccex) {
-          logger.error(ccex);
+          logger.error("Could not cast " + className + " to Class<? extends Variable>", ccex);
         }
       }
       // atomic syntax registration
@@ -309,7 +309,7 @@ public abstract class AbstractVariable implements Variable, Serializable {
         is.close();
       }
       catch (IOException ex) {
-        logger.warn(ex);
+        logger.warn(ex.getMessage(), ex);
       }
     }
   }

@@ -21,14 +21,15 @@
 
 package org.snmp4j.security;
 
-import org.apache.log4j.*;
 import junit.framework.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.OctetString;
 
 public class TestPrivDES
     extends TestCase {
 
-  static Logger cat = Logger.getLogger(TestPrivDES.class.getName());
+  static Logger cat = LoggerFactory.getLogger(TestPrivDES.class.getName());
 
   public static String asHex(byte buf[]) {
     return new OctetString(buf).toHexString();
@@ -46,8 +47,6 @@ public class TestPrivDES
 
   public static void testEncrypt()
   {
-      BasicConfigurator.configure();
-
       PrivDES pd = new PrivDES();
       DecryptParams pp = new DecryptParams();
       byte[] key = "1234567890123456".getBytes();

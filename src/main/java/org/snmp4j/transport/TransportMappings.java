@@ -119,17 +119,11 @@ public class TransportMappings {
       }
     }
     catch (InvocationTargetException ite) {
-      if (logger.isDebugEnabled()) {
-        ite.printStackTrace();
-      }
-      logger.error(ite);
+      logger.error(ite.getMessage(), ite);
       throw new RuntimeException(ite.getTargetException());
     }
     catch (Exception ex) {
-      if (logger.isDebugEnabled()) {
-        ex.printStackTrace();
-      }
-      logger.error(ex);
+      logger.error(ex.getMessage(), ex);
       return null;
     }
   }
@@ -157,7 +151,7 @@ public class TransportMappings {
             t.put(addressClassName, c);
           }
           catch (ClassNotFoundException cnfe) {
-            logger.error(cnfe);
+            logger.error(cnfe.getMessage(), cnfe);
           }
         }
         // atomic syntax registration
@@ -174,7 +168,7 @@ public class TransportMappings {
           is.close();
         }
         catch (IOException ex) {
-          logger.warn(ex);
+          logger.warn(ex.getMessage(), ex);
         }
       }
     }

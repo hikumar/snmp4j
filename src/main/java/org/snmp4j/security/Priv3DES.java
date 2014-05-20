@@ -134,7 +134,7 @@ public class Priv3DES implements PrivacyProtocol {
       cipherPool.offerCipher(alg);
     }
     catch (Exception e) {
-      logger.error(e);
+      logger.error(e.getMessage(), e);
       if (logger.isDebugEnabled()) {
         e.printStackTrace();
       }
@@ -192,7 +192,7 @@ public class Priv3DES implements PrivacyProtocol {
       cipherPool.offerCipher(alg);
     }
     catch (Exception e) {
-      logger.error(e);
+      logger.error(e.getMessage(), e);
       if (logger.isDebugEnabled()) {
         e.printStackTrace();
       }

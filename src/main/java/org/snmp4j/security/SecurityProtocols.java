@@ -130,7 +130,7 @@ public class SecurityProtocols implements Serializable {
             }
           }
           catch (Exception cnfe) {
-            logger.error(cnfe);
+            logger.error(cnfe.getMessage(), cnfe);
             throw new InternalError(cnfe.toString());
           }
         }
@@ -147,7 +147,7 @@ public class SecurityProtocols implements Serializable {
         }
         catch (IOException ex) {
           // ignore
-          logger.warn(ex);
+          logger.warn(ex.getMessage(), ex);
         }
       }
     }

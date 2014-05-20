@@ -148,7 +148,7 @@ public class GenericAddress extends SMIAddress {
             h.put(id, c);
           }
           catch (ClassNotFoundException cnfe) {
-            logger.error(cnfe);
+            logger.error(cnfe.getMessage(), cnfe);
           }
           catch (ClassCastException ccex) {
             logger.error("Class name '"+className+"' is not a subclass of "+Address.class.getName());
@@ -167,7 +167,7 @@ public class GenericAddress extends SMIAddress {
         }
         catch (IOException ex) {
           // ignore
-          logger.warn(ex);
+          logger.warn(ex.getMessage(), ex);
         }
       }
     }
@@ -222,7 +222,7 @@ public class GenericAddress extends SMIAddress {
       return null;
     }
     catch (Exception ex) {
-      logger.warn(ex);
+      logger.warn(ex.getMessage(), ex);
     }
     return null;
   }

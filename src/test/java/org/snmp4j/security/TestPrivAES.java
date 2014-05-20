@@ -21,14 +21,15 @@
 
 package org.snmp4j.security;
 
-import org.apache.log4j.*;
 import junit.framework.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.OctetString;
 
 
 public class TestPrivAES
     extends TestCase {
-  static Logger cat = Logger.getLogger(TestPrivAES.class);
+  static Logger cat = LoggerFactory.getLogger(TestPrivAES.class);
   private SecurityProtocols secProts;
 
   public static String asHex(byte buf[]) {
@@ -51,8 +52,6 @@ public class TestPrivAES
   }
 
   public static void testCrypt() {
-    BasicConfigurator.configure();
-
     PrivAES128 pd = new PrivAES128();
     DecryptParams pp = new DecryptParams();
     byte[] key = {

@@ -135,7 +135,7 @@ public class PrivDES
       cipherPool.offerCipher(alg);
     }
     catch (Exception e) {
-      logger.error(e);
+      logger.error(e.getMessage(), e);
       if (logger.isDebugEnabled()) {
         e.printStackTrace();
       }
@@ -212,10 +212,7 @@ public class PrivDES
       cipherPool.offerCipher(alg);
     }
     catch (Exception e) {
-      logger.error(e);
-      if (logger.isDebugEnabled()) {
-        e.printStackTrace();
-      }
+      logger.error(e.getMessage(), e);
     }
 
     return decryptedData;

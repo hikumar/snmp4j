@@ -371,7 +371,7 @@ public class TLSTM extends TcpTransportMapping {
         st.join();
       }
       catch (InterruptedException ex) {
-        logger.warn(ex);
+        logger.warn(ex.getMessage(), ex);
       }
       server = null;
       for (SocketEntry entry : sockets.values()) {
@@ -393,7 +393,7 @@ public class TLSTM extends TcpTransportMapping {
           }
           catch (IOException iox) {
             // ignore
-            logger.debug(iox);
+            logger.debug(iox.getMessage(), iox);
           }
         }
       }
@@ -861,7 +861,7 @@ public class TLSTM extends TcpTransportMapping {
                       " closed due to timeout");
         }
         catch (IOException ex) {
-          logger.error(ex);
+          logger.error(ex.getMessage(), ex);
         }
       }
       else {
@@ -1010,7 +1010,7 @@ public class TLSTM extends TcpTransportMapping {
             }
           }
           catch (CancelledKeyException ckex) {
-            logger.warn(ckex);
+            logger.warn(ckex.getMessage(), ckex);
             pending.remove(entry);
             try {
               entry.getSocket().getChannel().close();
@@ -1022,11 +1022,11 @@ public class TLSTM extends TcpTransportMapping {
               fireConnectionStateChanged(e);
             }
             catch (IOException ex) {
-              logger.error(ex);
+              logger.error(ex.getMessage(), ex);
             }
           }
           catch (IOException iox) {
-            logger.error(iox);
+            logger.error(iox.getMessage(), iox);
             pending.remove(entry);
             // Something went wrong, so close the channel and
             // record the failure
@@ -1040,7 +1040,7 @@ public class TLSTM extends TcpTransportMapping {
               fireConnectionStateChanged(e);
             }
             catch (IOException ex) {
-              logger.error(ex);
+              logger.error(ex.getMessage(), ex);
             }
             lastError = iox;
             if (SNMP4JSettings.isForwardRuntimeExceptions()) {
@@ -1204,7 +1204,7 @@ public class TLSTM extends TcpTransportMapping {
           logger.debug("Trying to connect to "+address);
         }
         catch (IOException iox) {
-          logger.error(iox);
+          logger.error(iox.getMessage(), iox);
           throw iox;
         } catch (NoSuchAlgorithmException e) {
           logger.error("NoSuchAlgorithmException while sending message to "+address+": "+e.getMessage(), e);
@@ -1305,7 +1305,7 @@ public class TLSTM extends TcpTransportMapping {
                     }
                     catch (IOException iox) {
                       // IO exception -> channel closed remotely
-                      logger.warn(iox);
+                      logger.warn(iox.getMessage(), iox);
                       iox.printStackTrace();
                       sk.cancel();
                       readChannel.close();
@@ -1345,7 +1345,7 @@ public class TLSTM extends TcpTransportMapping {
         }
       }
       catch (IOException iox) {
-        logger.error(iox);
+        logger.error(iox.getMessage(), iox);
         lastError = iox;
       }
       if (!stop) {
@@ -1391,7 +1391,7 @@ public class TLSTM extends TcpTransportMapping {
         }
       }
       catch (IOException iox) {
-        logger.warn(iox);
+        logger.warn(iox.getMessage(), iox);
         sk.cancel();
         closeChannel(sk.channel());
         if (entry != null) {
@@ -1418,7 +1418,7 @@ public class TLSTM extends TcpTransportMapping {
         }
       }
       catch (IOException iox) {
-        logger.warn(iox);
+        logger.warn(iox.getMessage(), iox);
         TransportStateEvent e =
             new TransportStateEvent(TLSTM.this,
                                     incomingAddress,
@@ -1437,7 +1437,7 @@ public class TLSTM extends TcpTransportMapping {
         channel.close();
       }
       catch (IOException channelCloseException) {
-        logger.warn(channelCloseException);
+        logger.warn(channelCloseException.getMessage(), channelCloseException);
       }
     }
 

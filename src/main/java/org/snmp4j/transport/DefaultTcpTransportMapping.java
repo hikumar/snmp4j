@@ -195,7 +195,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
         st.join();
       }
       catch (InterruptedException ex) {
-        logger.warn(ex);
+        logger.warn(ex.getMessage(), ex);
       }
       server = null;
       for (SocketEntry entry : sockets.values()) {
@@ -217,7 +217,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
           }
           catch (IOException iox) {
             // ingore
-            logger.debug(iox);
+            logger.debug(iox.getMessage(), iox);
           }
         }
       }
@@ -549,7 +549,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
           }
         }
         catch (IOException ex) {
-          logger.error(ex);
+          logger.error(ex.getMessage(), ex);
         }
       }
       else {
@@ -623,7 +623,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
             }
           }
           catch (CancelledKeyException ckex) {
-            logger.warn(ckex);
+            logger.warn(ckex.getMessage(), ckex);
             pending.remove(entry);
             try {
               entry.getSocket().getChannel().close();
@@ -635,11 +635,11 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
               fireConnectionStateChanged(e);
             }
             catch (IOException ex) {
-              logger.error(ex);
+              logger.error(ex.getMessage(), ex);
             }
           }
           catch (IOException iox) {
-            logger.error(iox);
+            logger.error(iox.getMessage(), iox);
             pending.remove(entry);
             // Something went wrong, so close the channel and
             // record the failure
@@ -653,7 +653,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
               fireConnectionStateChanged(e);
             }
             catch (IOException ex) {
-              logger.error(ex);
+              logger.error(ex.getMessage(), ex);
             }
             lastError = iox;
             if (SNMP4JSettings.isForwardRuntimeExceptions()) {
@@ -724,7 +724,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
           logger.debug("Trying to connect to "+address);
         }
         catch (IOException iox) {
-          logger.error(iox);
+          logger.error(iox.getMessage(), iox);
           throw iox;
         }
       }
@@ -814,7 +814,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
                     }
                     catch (IOException iox) {
                       // IO exception -> channel closed remotely
-                      logger.warn(iox);
+                      logger.warn(iox.getMessage(), iox);
                       sk.cancel();
                       readChannel.close();
                       TransportStateEvent e =
@@ -851,7 +851,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
         }
       }
       catch (IOException iox) {
-        logger.error(iox);
+        logger.error(iox.getMessage(), iox);
         lastError = iox;
       }
       if (!stop) {
@@ -897,7 +897,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
         }
       }
       catch (IOException iox) {
-        logger.warn(iox);
+        logger.warn(iox.getMessage(), iox);
         sk.cancel();
         closeChannel(sk.channel());
         if (entry != null) {
@@ -924,7 +924,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
         }
       }
       catch (IOException iox) {
-        logger.warn(iox);
+        logger.warn(iox.getMessage(), iox);
         TransportStateEvent e =
             new TransportStateEvent(DefaultTcpTransportMapping.this,
                                     incomingAddress,
@@ -943,7 +943,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
         channel.close();
       }
       catch (IOException channelCloseException) {
-        logger.warn(channelCloseException);
+        logger.warn(channelCloseException.getMessage(), channelCloseException);
       }
     }
 

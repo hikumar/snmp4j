@@ -276,7 +276,9 @@ Released on 2009-04-30.
   textual representation of the PDU error status instead of an
   empty string.
 
-[2008-12-15] Version 1.9.3d:
+## Version 1.9.3d
+
+Released on 2008-12-15.
 
 * Fixed: Possible OutOfMemory when sync request often
   gets an IOException.
@@ -286,21 +288,27 @@ Released on 2009-04-30.
   by timeout while messsage has been received in
   DefaultTCPTransportMapping.
 
-[2008-08-29] Version 1.9.3c:
+## Version 1.9.3c
+
+Released on 2008-08-29.
 
 * Fixed: DefaultTCPTransportMapping could not handle
   source messages where a SNMP message was not sent
   as complete TCP message by the source, but sent
   in junks.
 
-[2008-08-11] Version 1.9.3b:
+## Version 1.9.3b
+
+Released on 2008-08-11.
 
 * Fixed: NullPointerException when processing Report
   (regression from 1.9.3).
 * Improved: InterruptedException is forwarded to calling
   thread where appropriate.
 
-[2008-07-22] Version 1.9.3a:
+## Version 1.9.3a
+
+Released on 2008-07-22.
 
 * Fixed: Regression when using null TransportMapping in
   Snmp requests not returning a response when agent
@@ -317,7 +325,9 @@ Released on 2008-07-21.
   reduce memory consumption, for example, when retries
   are used with Snmp.
 
-[2008-06-30] Version 1.9.2a:
+## Version 1.9.2a
+
+Released on 2008-06-30.
 
 * Fixed: Possible NPE in DefaultUdpTransportMapping.close()
   and DefaultUdpTransportMapping.ListenThread.run().
@@ -333,12 +343,16 @@ Released on 2008-06-11.
 * Fixed: Possible NullPointerException when sending async
   request (regression from 1.9.1f).
 
-[2008-05-27] Version 1.9.1g:
+## Version 1.9.1g
+
+Released on 2008-05-27.
 
 * Fixed: NullPointerException in Snmp.close() when
   there has not been any confirmed request processed before.
 
-[2008-05-19] Version 1.9.1f:
+## Version 1.9.1f
+
+Released on 2008-05-19.
 
 * Improved: Performance of PrivAES.extendShortKey.
 * Fixed: Inconsistent descriptions in org.snmp4j
@@ -355,13 +369,17 @@ Released on 2008-06-11.
   with listen() again. Internal timer is only
   created when needed.
 
-[2008-04-22] Version 1.9.1e:
+## Version 1.9.1e
+
+Released on 2008-04-22.
 
 * Improved: Exception handling when transport mapping
   cannot be initialized due to IO exceptions.
 * Added: VersionInfo in org.snmp4j.version.
 
-[2008-04-09] Version 1.9.1d:
+## Version 1.9.1d
+
+Released on 2008-04-09.
 
 * Improved: Asymmetric checking of SNMPv1 compatible
   variable binding in PDUv1 removed.
@@ -369,7 +387,9 @@ Released on 2008-06-11.
   which could cause wrong transport usage when processing
   retries (was not fixed correctly in 1.9.1b).
 
-[2008-04-03] Version 1.9.1c:
+## Version 1.9.1c
+
+Released on 2008-04-03.
 
 * Fixed: Missing PDUv1.clone() which could lead to wrong
   SNMPv1 trap PDU encoding.
@@ -381,13 +401,17 @@ Released on 2008-06-11.
 * Fixed: TableUtils did not return all rows if request
   PDUs had to be splitted because of too much columns.
 
-[2008-03-27] Version 1.9.1b:
+## Version 1.9.1b
+
+Released on 2008-03-27.
 
 * Fixed: Transport not copied in Snmp.PendingRequest
   which could cause wrong transport usage when processing
   retries.
 
-[2008-03-25] Version 1.9.1a:
+## Version 1.9.1a
+
+Released on 2008-03-25.
 
 * Fixed: Async request processing for broadcasts (regression
   bug in 1.9.1 which prevented mutliple responses for a
@@ -436,13 +460,17 @@ Released on 2008-01-31.
 * Fixed: Local engine ID could not be set for simple PDU
   request for the command line tool.
 
-[2007-11-06] Version 1.9 RC2:
+## Version 1.9 RC2
+
+Released on 2007-11-06.
 
 * Fixed: Walk modus of console example.
 * Added: -Ocs and -Ods to create and dump subtree
   snapshot files.
 
-[2007-10-18] Version 1.9 RC1:
+## Version 1.9 RC1
+
+Released on 2007-10-18.
 
 * Fixed: LogFactory.getLogFactory() returned null if
   log factory has not been initialized yet. Now
@@ -464,7 +492,9 @@ Released on 2007-05-04.
 * Fixed: MPv3.addEngineID added engine ID to the local cache
   although if it matched the local engine ID.
 
-[2007-04-23] Version 1.8.1a:
+## Version 1.8.1a
+
+Released on 2007-04-23.
 
 * Fixed: No error was reported by TableUtils when sending
   of a request failed.
@@ -500,7 +530,9 @@ Released on 2007-02-01.
 * Changed: PduHandleCallback.pduHandleAssigned(..) to
   use Object as type of the PDU reference.
 
-[2007-01-08] Version 1.8 RC1:
+## Version 1.8 RC1
+
+Released on 2007-01-08.
 
 * Changed: Variable is now an interface and the former
   abstract class implementation is now moved to
@@ -552,7 +584,9 @@ Released on 2007-02-01.
 * Added: Security check for transport not listening when
   sending confirmed PDU.
 
-[2006-10-07] Version 1.7.6a:
+## Version 1.7.6a
+
+Released on 2006-10-07.
 
 * Fixed: Possible deadlock in ThreadPool when
   stopping a busy thread pool.
@@ -572,7 +606,9 @@ Released on 2006-09-04.
   did not work.
 * Fixed: OctetString.split(OctetString, OctetString).
 
-[2006-08-19] Version 1.7.4a:
+## Version 1.7.4a
+
+Released on 2006-08-19.
 
 * Fixed: Concurrent access to the internal server
   thread during close() calls does no longer cause
@@ -664,23 +700,31 @@ Released on 2006-04-10.
   DefaultTCPTransportMapping.
 * Added sysOREntry OID constant in SnmpConstants.
 
-[2005-12-27] Version 1.6e:
+## Version 1.6e
+
+Released on 2005-12-27.
 
 * Improved: Performance of TableUtils by using a better
   end condition when traversing a table.
 
-[2005-12-06] Version 1.6d:
+## Version 1.6d
+
+Released on 2005-12-06.
 
 * Fixed: SNMP4J did not detect USM out-of-time-window errors
   when checking non-authoritative times.
 
-[2005-11-30] Version 1.6c:
+## Version 1.6c
+
+Released on 2005-11-30.
 
 * Fixed: Sync requests were not removed from pending requests list
   when a response has been received which resulted in additional
   retries.
 
-[2005-11-23] Version 1.6b:
+## Version 1.6b
+
+Released on 2005-11-23.
 
 * Fixed: Request ID handling for request IDs > 2^31.
 * Fixed: If request ID < 0 of a incoming request a different
@@ -703,7 +747,9 @@ Released on 2005-10-23.
 * Added: MessageDispatcher.getTransport(..) and made corresponding
   private method in MessageDispatcherImpl public.
 
-[2005-10-13] Version 1.6 RC 1:
+## Version 1.6 RC 1
+
+Released on 2005-10-13.
 
 * Fixed: Asynchronous Snmp.inform() used wrong PDU type (GETBULK
   instead INFORM).
@@ -721,7 +767,9 @@ Released on 2005-10-23.
 * Added: ConsoleLogAdapter and ConsoleLogFactory for console
   logging.
 
-[2005-08-24] Version 1.6 beta 1:
+## Version 1.6 beta 1
+
+Released on 2005-08-24.
 
 * Added: LogAdapter.fatal(..) methods.
 * Fixed: TransportIpAddress.parse did not parse IPv6 addresses
@@ -852,7 +900,9 @@ Released on 2005-02-17.
   CVS dumps of tabular SNMP data with the console
   example (SnmpRequest.java).
 
-[2005-02-04] Version 1.1a:
+## Version 1.1a
+
+Released on 2005-02-04.
 
 * Added: UsmUser checks for minimum passphrase length (8).
   See RFC3414 �11.2.
@@ -899,19 +949,25 @@ Released on 2005-02-02.
 * Changed: Replaced -D option of console tool by -d to avoid
   name clashes with JVM option -D.
 
-[2005-01-13] Version 1.0.4c:
+## Version 1.0.4c
+
+Released on 2005-01-13.
 
 * Fixed: UsmUserKey.compareTo and UsmUserEntry.compareTo
   methods did not compare classes engine ID correctly.
 
-[2004-11-22] Version 1.0.4b:
+## Version 1.0.4b
+
+Released on 2004-11-22.
 
 * Fixed: In some situations an SNMPv3_USM_ERROR could
   have returned when trying to send a request/response
   PDU to a target for whose engine ID no engine time
   notion has been stored in the local cache.
 
-[2004-11-18] Version 1.0.4a:
+## Version 1.0.4a
+
+Released on 2004-11-18.
 
 * Fixed: TableUtils.getTable did not cancel requests
   which caused a memory leak.
@@ -932,7 +988,9 @@ Released on 2005-02-02.
 * Added: DefaultPDUFactory implementation.
 * Fixed: PDU.isConfirmedPdu().
 
-[2004-11-04] Version 1.0.3c:
+## Version 1.0.3c
+
+Released on 2004-11-04.
 
 * Added: The DefaultUdpTransportMapping and
   DefaultTcpTransportMapping now by default support
@@ -941,7 +999,9 @@ Released on 2005-02-02.
   asyncMsgProcessingSupported should be set to false, to
   increase performance!
 
-[2004-10-30] Version 1.0.3b:
+## Version 1.0.3b
+
+Released on 2004-10-30.
 
 * Fixed: TableUtils did use GETBULK PDU type also for
   SNMPv1 targets.
@@ -949,7 +1009,9 @@ Released on 2005-02-02.
   now checks for inconsistencies between PDU type and
   used SNMP version.
 
-[2004-10-13] Version 1.0.3a:
+## Version 1.0.3a
+
+Released on 2004-10-13.
 
 * Fixed: Race condition in Variable.registerSyntaxes().
   In a multithreaded usage, this could have caused some
@@ -985,7 +1047,9 @@ Released on 2004-08-07.
   tables effeciently and row oriented using GETBULK requests.
 * Added: OID(int[] rawOID, int offset, int length) constructor.
 
-[2004-07-02] Version 1.0.1a:
+## Version 1.0.1a
+
+Released on 2004-07-02.
 
 * Fixed: Two regression issues that broke the TCP transport
   mapping.
@@ -1009,7 +1073,9 @@ Released on 2004-06-26.
 * Added: clone() method to VariableBinding.
 * Added: Counter32.increment() and Counter64.increment() methods.
 
-[2004-06-21] Version 1.0a:
+## Version 1.0a
+
+Released on 2004-06-21.
 
 * Fixed: Stack overflow when using PDUv1 for other PDU types
   than PDU.V1TRAP (which is *not* recommended anyway!).
@@ -1029,7 +1095,9 @@ Released on 2004-05-21.
 * Fixed: Several small cosmetic fixes in code, build, and
   JavaDoc.
 
-[2004-05-08] Version 1.0 RC2:
+## Version 1.0 RC2
+
+Released on 2004-05-08.
 
 * Fixed: SNMPv3 interoperability problems due to incorrect
   (too long) Mesage Authentication Code length.
@@ -1038,7 +1106,9 @@ Released on 2004-05-21.
 * Fixed: The SNMP4J-Tool did not use supplied context and
   contextEngineID parameters.
 
-[2004-04-20] Version 1.0 RC:
+## Version 1.0 RC
+
+Released on 2004-04-20.
 
 * Fixed: Bug in Counter64.getBERLength() - length was too
   short by one for very big counter values.
@@ -1053,7 +1123,9 @@ Released on 2004-05-21.
   are freed now - also the internal message processing
   thread.
 
-[2004-04-07] Version 1.0beta(2):
+# Version 1.0beta(2)
+
+Released on 2004-04-07.
 
 * Fixed: The dist/lib/SNMP4J.jar was not up-to-date
   and contained a bug, the sources did not contain.

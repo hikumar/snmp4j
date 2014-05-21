@@ -211,7 +211,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
         }
 
         int bufferSize = socket.getReceiveBufferSize();
-        logger.debug("UDP receive buffer size for socket {} is set to: {}", getAddress(), bufferSize);
+        logger.debug("UDP receive buffer size for {} is set to {} bytes", this, bufferSize);
 
         while (!shouldStop()) {
           byte[] receivedData = new byte[bufferSize];

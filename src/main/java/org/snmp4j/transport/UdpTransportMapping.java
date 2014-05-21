@@ -30,9 +30,7 @@ import org.snmp4j.smi.UdpAddress;
  * @version 1.0
  */
 
-public abstract class UdpTransportMapping
-    extends AbstractTransportMapping<UdpAddress> {
-
+public abstract class UdpTransportMapping extends AbstractTransportMapping<UdpAddress> {
   protected UdpAddress udpAddress;
 
   public UdpTransportMapping(UdpAddress udpAddress) {
@@ -43,19 +41,7 @@ public abstract class UdpTransportMapping
     return UdpAddress.class;
   }
 
-  /**
-   * Returns the transport address that is configured for this transport mapping for
-   * sending and receiving messages.
-   * @return
-   *    the <code>Address</code> used by this transport mapping. The returned
-   *    instance must not be modified!
-   */
-  public UdpAddress getAddress() {
-    return udpAddress;
-  }
-
   public UdpAddress getListenAddress() {
     return udpAddress;
   }
-
 }

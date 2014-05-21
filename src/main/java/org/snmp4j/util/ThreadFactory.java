@@ -27,7 +27,7 @@ package org.snmp4j.util;
  * @version 1.9
  * @since 1.9
  */
-public interface ThreadFactory {
+public interface ThreadFactory extends java.util.concurrent.ThreadFactory {
 
   /**
    * Creates a new thread of execution for the supplied task. The returned

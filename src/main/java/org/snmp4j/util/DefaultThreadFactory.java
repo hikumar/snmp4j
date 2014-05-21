@@ -47,6 +47,7 @@ public class DefaultThreadFactory implements ThreadFactory {
    * @return the <code>WorkerTask</code> wrapper to control start and
    *   termination of the thread.
    */
+  @Deprecated
   public WorkerTask createWorkerThread(String name, WorkerTask task,
                                        boolean daemon) {
     WorkerThread wt = new WorkerThread(name, task);
@@ -64,6 +65,14 @@ public class DefaultThreadFactory implements ThreadFactory {
     this.joinTimeout = millis;
   }
 
+  @Override
+  public Thread newThread(Runnable r) {
+    Thread newThread = new Thread(r, r.toString());
+    newThread.setDaemon(true);
+    return newThread;
+  }
+
+  @Deprecated
   public class WorkerThread implements WorkerTask {
 
     private Thread thread;

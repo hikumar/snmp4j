@@ -55,18 +55,6 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
   protected SocketListener listener;
 
   /**
-   * Creates a UDP transport with an arbitrary local port on all local
-   * interfaces.
-   *
-   * @throws IOException
-   *    if socket binding fails.
-   */
-  public DefaultUdpTransportMapping() throws UnknownHostException, SocketException {
-    super(new UdpAddress(InetAddress.getLocalHost(), 0));
-    socket = new DatagramSocket(udpAddress.getPort());
-  }
-
-  /**
    * Creates a UDP transport with optional reusing the address if is currently
    * in timeout state (TIME_WAIT) after the connection is closed.
    *
@@ -75,7 +63,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
    * @param reuseAddress
    *    if <code>true</code> addresses are reused which provides faster socket
    *    binding if an application is restarted for instance.
-   * @throws IOException
+   * @throws java.net.SocketException
    *    if socket binding fails.
    * @since 1.7.3
    */
@@ -90,18 +78,29 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
   }
 
   /**
+   * Creates a UDP transport with an arbitrary local port on all local
+   * interfaces.
+   *
+   * @throws java.net.SocketException
+   *    if socket binding fails.
+   * @throws java.net.UnknownHostException
+   *    if the local address to bind to could not be resolved
+   */
+  public DefaultUdpTransportMapping() throws UnknownHostException, SocketException {
+    this(new UdpAddress(InetAddress.getLocalHost(), 0), false);
+  }
+
+  /**
    * Creates a UDP transport on the specified address. The address will not be
    * reused if it is currently in timeout state (TIME_WAIT).
    *
    * @param udpAddress
    *    the local address for sending and receiving of UDP messages.
-   * @throws IOException
+   * @throws java.net.SocketException
    *    if socket binding fails.
    */
   public DefaultUdpTransportMapping(UdpAddress udpAddress) throws SocketException {
-    super(udpAddress);
-    socket = new DatagramSocket(udpAddress.getPort(),
-                                udpAddress.getInetAddress());
+    this(udpAddress, false);
   }
 
   public void sendMessage(UdpAddress targetAddress, byte[] message,

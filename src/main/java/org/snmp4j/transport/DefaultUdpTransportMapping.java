@@ -47,7 +47,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
   private static final Logger logger =
       LoggerFactory.getLogger(DefaultUdpTransportMapping.class);
 
-  protected DatagramSocket socket = null;
+  private final DatagramSocket socket;
   private int socketTimeout = 0;
   private int receiveBufferSize = 0; // not set by default
 
@@ -109,17 +109,20 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
     InetSocketAddress targetSocketAddress =
         new InetSocketAddress(targetAddress.getInetAddress(),
                               targetAddress.getPort());
+
     if (logger.isDebugEnabled()) {
       logger.debug("Sending message to {} with length {}: {}", targetAddress, message.length, new OctetString(message).toHexString());
     }
-    DatagramSocket s = ensureSocket();
-    s.send(new DatagramPacket(message, message.length, targetSocketAddress));
+
+    socket.send(new DatagramPacket(message, message.length, targetSocketAddress));
   }
 
   /**
    * Closes the socket and stops the listener thread.
    */
   public synchronized void close() {
+    logger.info("Close requested for {}", this);
+
     if (listenerThread != null) {
       listener.askToStop();
       listenerThread.interrupt();
@@ -129,36 +132,26 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
 
     if (socket != null && !socket.isClosed()) {
       socket.close();
-      socket = null;
     }
   }
 
   /**
-   * Starts the listener thread that accepts incoming messages. The thread is
-   * started in daemon mode and thus it will not block application terminated.
-   * Nevertheless, the {@link #close()} method should be called to stop the
-   * listen thread gracefully and free associated ressources.
+   * Starts the listener thread that accepts incoming messages. The
+   * {@link #close()} method should be called to stop the listen thread
+   * gracefully and free associated ressources.
    *
-   * @throws IOException
+   * @throws java.net.SocketException
+   *    When this method is called when the socket is closed
    */
   public synchronized void listen() throws SocketException {
-    if (listenerThread != null) {
-      throw new SocketException("Port already listening");
-    }
-    ensureSocket();
-    listener = new SocketListener();
-    listenerThread = SNMP4JSettings.getThreadFactory().newThread(listener);
-    listenerThread.start();
-  }
+    if (socket.isClosed())
+      throw new SocketException("Socket is closed");
 
-  private synchronized DatagramSocket ensureSocket() throws SocketException {
-    DatagramSocket s = socket;
-    if (s == null) {
-      s = new DatagramSocket(udpAddress.getPort());
-      s.setSoTimeout(socketTimeout);
-      this.socket = s;
+    if (listenerThread == null) {
+      listener = new SocketListener();
+      listenerThread = SNMP4JSettings.getThreadFactory().newThread(listener);
+      listenerThread.start();
     }
-    return s;
   }
 
   public void setMaxInboundMessageSize(int maxInboundMessageSize) {
@@ -213,32 +206,6 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
       actualListenAddress = new UdpAddress(socketCopy.getInetAddress(), socketCopy.getLocalPort());
     }
     return actualListenAddress;
-  }
-
-  /**
-   * If receiving new datagrams fails with a {@link SocketException}, this method is called to renew the
-   * socket - if possible.
-   * @param socketException
-   *    the exception that occurred.
-   * @param failedSocket
-   *    the socket that caused the exception. By default, he socket will be closed
-   *    in order to be able to reopen it. Implementations may also try to reuse the socket, in dependence
-   *    of the <code>socketException</code>.
-   * @return
-   *    the new socket or <code>null</code> if the listen thread should be terminated with the provided
-   *    exception.
-   * @throws SocketException
-   *    a new socket exception if the socket could not be renewed.
-   * @since 2.2.2
-   */
-  protected DatagramSocket renewSocketAfterException(SocketException socketException,
-                                                     DatagramSocket failedSocket) throws SocketException {
-    if ((failedSocket != null) && (!failedSocket.isClosed())) {
-      failedSocket.close();
-    }
-    DatagramSocket s = new DatagramSocket(udpAddress.getPort(), udpAddress.getInetAddress());
-    s.setSoTimeout(socketTimeout);
-    return s;
   }
 
   class SocketListener extends ControlableRunnable {
@@ -327,18 +294,12 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
           throw new RuntimeException(iox);
         }
       }
-      synchronized (DefaultUdpTransportMapping.this) {
-        listenerThread = null;
-        askToStop();
-        DatagramSocket closingSocket = socket;
-        if ((closingSocket != null) && (!closingSocket.isClosed())) {
-          closingSocket.close();
-        }
-        socket = null;
-      }
-      if (logger.isDebugEnabled()) {
-        logger.debug("Worker task stopped:{}", getClass().getName());
-      }
+
+      // If the loop above returns there was either an error or it was
+      // requested of us to stop. Either way, all resources should be freed.
+      close();
+
+      logger.info("Thread {} is stopping", getName());
     }
 
     @Override

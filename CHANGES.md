@@ -1,8 +1,7 @@
 
-CHANGE LOG OF SNMP4J
-====================
+# Changelog of SNMP4J
 
-[2014-05-12] Version 2.3:
+# Version 2.3 - 2014-05-12
 
 * Improved: Performance of the SimpleOIDTextFormat.
 * Improved: Migrated to standard Maven src directory layout.
@@ -12,19 +11,19 @@ CHANGE LOG OF SNMP4J
 * Improved: Relaxed type checking for constructor with variable bindings.
 * Improved: TLSTM exception logging and handling.
 
-[2014-02-11] Version 2.2.5:
+# Version 2.2.5 - 2014-02-11
 
 * Fixed: LogLevel handling of the ConsoleLogAdapter.
 * Added: SnmpConstants.MILLISECONDS_TO_NANOSECONDS constant needed by SNMP4J-Agent 2.1.1.
 
-[2014-01-24] Version 2.2.4:
+# Version 2.2.4 - 2014-01-24
 
 * Fixed: [SFJ-83] OID BER decoding error for OIDs with the first sub-identifier 2 and the second
   greater or equal to 40.
 * Fixed: [SFJ-84] OID BER encoding error for OIDs starting with 2 and a second subidentifier greater
   than 47.
 
-[2013-11-01] Version 2.2.3:
+# Version 2.2.3 - 2013-11-01
 
 * Added: Support for nonstandard AES 192 and 256 using 3DES key extend algorithm.
 * Improved: EngineID event firing to ignore already fired events.
@@ -38,7 +37,7 @@ CHANGE LOG OF SNMP4J
 * Improved: Generics refactorings.
 * Fixed: Second constructor of ResponseEvent to take any object as source, not only the Snmp class.
 
-[2013-06-10] Version 2.2.2:
+# Version 2.2.2 - 2013-06-10
 
 * Fixed [SFJ-76]: Performance hotspot in encrypt and decrypt methods of the supported privacy 
   protocol. Cipher instances are now reused up to the number of processors for each protocol
@@ -52,14 +51,14 @@ CHANGE LOG OF SNMP4J
   Snmp.NotificationDispatcher inner class.
 * Fixed: Typo in method name SNMP4JSettings.isForwardRuntimeExceptions().
 
-[2013-04-04] Version 2.2.1:
+# Version 2.2.1 - 2013-04-04
 
 * Fixed [SFJ-70]: DefaultTcpTransportMapping does not cleanup its connections timely. This
   is a regression caused by the SFJ-57 fix implemented for SNMP4J 2.1.0. In addition,
   a theoretically possible NullPointerException has been fixed too (such a NPE was never
   reported though).
 
-[2013-03-19] Version 2.2.0:
+# Version 2.2.0 - 2013-03-19
 
 * Added: Option in SNMP4Settings to allow parsing Counter64 variables in SNMPv1 PDUs
   which is not allowed by SNMPv1 but a common bug in many devices.
@@ -86,7 +85,7 @@ CHANGE LOG OF SNMP4J
 * Improved: TLS JavaDoc.
 * Added: Default target in SnmpURI.
 
-[2012-04-03] Version 2.1.0:
+# Version 2.1.0 - 2012-04-03
 
 * Added: org.snmp4j.uri package with SnmpURI class which supports RFC 4088.
 * Fixed: [SFJ-60] AuthenticationFailureEvent is not fired by MessageDispatcherImpl
@@ -95,25 +94,25 @@ CHANGE LOG OF SNMP4J
   while a new message is being sent out.
 * Added: Options to set security model to SnmpConfigurator.
 
-[2011-11-23] Version 2.0.3:
+# Version 2.0.3 - 2011-11-23
 
 * Fixed [SFJ-53]: Possible NullPointerException because of a race condition when closing
   Snmp session immediately after sending sync request.
 * Improved: TLSTM configurability for TLS 1.1 and 1.2 support.
 * Added: TLS protocol & version can be configured now.
 
-[2011-09-09] Version 2.0.2:
+# Version 2.0.2 - 2011-09-09
 
 Improved [SFJ-49]: TTLSTM and DefaultTcoTransportMapping on AIX did
 caught in an endless loop because select() there returns a spurious
 read indication while write data is pending in fact.
 
-[2011-08-25] Version 2.0.1:
+# Version 2.0.1 - 2011-08-25
 
 * Fixed: [SFJ-44] Possible NullPointerException in DefaultTcpTransportMapping
   when starting master agent.
 
-[2011-08-22] Version 2.0.0:
+# Version 2.0.0 - 2011-08-22
 
 * Added: Support of RFC 5343 (context engine ID discovery),
   RFC 5590 (Transport Subsystem for the SNMP),
@@ -128,7 +127,7 @@ read indication while write data is pending in fact.
 * Fixed: A couple of minor bug and performance fixes.
 * Improved: Address interface (removed Comparable and added AssignableFromByteArray).
 
-[2010-10-22] Version 1.11.2:
+# Version 1.11.2 - 2010-10-22
 
 * Added: USM.hasUser to easily check if an user already exists
   in an USM.
@@ -142,14 +141,14 @@ read indication while write data is pending in fact.
   connected yet.
 * Fixed: [SFJ-30] CounterSupport parameter ignored in MPv3 constructor.
 
-[2010-06-09] Version 1.11.1:
+# Version 1.11.1 - 2010-06-09
 
 * Fixed: [SJF-24] CPU usage problem in DefaultTcpTransportMapping
   when using certain releases of Java 1.5.
 * Fixed: [SFJ-23] Race condition in DefaultUdpTransportMapping
   close method which could cause a NullPointerException.
 
-[2010-02-20] Version 1.11:
+# Version 1.11 - 2010-02-20
 
 * Fixed: OID for AES128 encryption was 1.3.6.1.6.3.10.1.2.19
   but is defined by RFC3826 as 1.3.6.1.6.3.10.1.2.4.
@@ -165,7 +164,7 @@ read indication while write data is pending in fact.
   when trying to connect to a non-existing (or connection refusing)
   peer.
 
-[2009-10-22] Version 1.10.2:
+# Version 1.10.2 - 2009-10-22
 
 * Fixed: [SFJ-10] Snmp.discoverAuthoritativeEngineId sends second
   GET request after receive of unknownEngineID report (which
@@ -198,7 +197,7 @@ read indication while write data is pending in fact.
 * Fixed: NPE in ArgumentParser.java when parsing empty command line.
 * Fixed: Error status texts for wrongLength(8) and wrongEncoding(9).
 
-[2009-07-27] Version 1.10.1:
+# Version 1.10.1 - 2009-07-27
 
 * Fixed: USM.setLocalTime(..) did not reset USM time table.
 * Fixed: ArgumentParser also accepts regex with comma.
@@ -212,7 +211,7 @@ read indication while write data is pending in fact.
   correctly. Using this option can cause endless loops however!
 * Changed: Precompiled JAR has debug information turned on.
 
-[2009-04-30] Version 1.10:
+# Version 1.10 - 2009-04-30
 
 * Added: Tool to control log level of SNMP4J-Agent.
 * Improved: ArgumentParser to allow command oriented
@@ -271,7 +270,7 @@ read indication while write data is pending in fact.
   Snmp requests not returning a response when agent
   does not respond in time on first retry.
 
-[2008-07-21] Version 1.9.3:
+# Version 1.9.3 - 2008-07-21
 
 * Improved: Removed creation of unnecessary Null istances.
 * Improved: Reduced object creation through OID and
@@ -285,7 +284,7 @@ read indication while write data is pending in fact.
 * Fixed: Possible NPE in DefaultUdpTransportMapping.close()
   and DefaultUdpTransportMapping.ListenThread.run().
 
-[2008-06-11] Version 1.9.2:
+# Version 1.9.2 - 2008-06-11
 
 * Improved: If no context engine ID is set for NOTIFICATION
   and INFORM PDUs, SNMP4J now sets it to its local engine ID.
@@ -354,7 +353,7 @@ read indication while write data is pending in fact.
   bug in 1.9.1 which prevented mutliple responses for a
   single async request).
 
-[2008-03-18] Version 1.9.1:
+# Version 1.9.1 - 2008-03-18
 
 * Improved: OID parsing from string now supports embedded
   string to OID conversion, for example the following OIDs
@@ -378,7 +377,7 @@ read indication while write data is pending in fact.
 * Improved: Target is cloned when used internally by Snmp
   instance to avoid errors through concurrent target usage.
 
-[2008-01-31] Version 1.9:
+# Version 1.9 - 2008-01-31
 
 * Improved: PDU.add(VariableBinding) no longer clones
   VariableBindings while adding it if the contained variable
@@ -413,7 +412,7 @@ read indication while write data is pending in fact.
   key extension.
 * Fixed: Race condition in DefaultTCPTransportMapping.
 
-[2007-05-04] Version 1.8.2:
+# Version 1.8.2 - 2007-05-04
 
 * Fixed: Null.clone() did not copy/preserve syntax.
 * Fixed: MPv3.addEngineID added engine ID to the local cache
@@ -426,7 +425,7 @@ read indication while write data is pending in fact.
 * Fixed: MPv3.removeEngineID fired "engine ID added"
   event.
 
-[2007-03-12] Version 1.8.1:
+# Version 1.8.1 - 2007-03-12
 
 * Fixed: Race condition in DefaultTCPTransportMapping
   that could cause message loss because messages are
@@ -443,7 +442,7 @@ read indication while write data is pending in fact.
   transport mapping as the message reported on has been
   received. This improves firewall interoperability.
 
-[2007-02-01] Version 1.8:
+# Version 1.8 - 2007-02-01
 
 * Fixed: Race condition with sync requests in Snmp.send
   that could cause a deadlock.
@@ -513,7 +512,7 @@ read indication while write data is pending in fact.
 * Added: TableUtils.destroyRow(..).
 * Fixed: Opaque.clone() was missing.
 
-[2006-09-04] Version 1.7.5:
+# Version 1.7.5 - 2006-09-04
 
 * Changed: VariableBinding(OID, Variable) now checks OID
   for not being null.
@@ -533,7 +532,7 @@ read indication while write data is pending in fact.
   call SNMP4JSettings.setExtensibilityEnabled(true).
   See also the org.snmp4j.smi.BitString class.
 
-[2006-08-03] Version 1.7.3:
+# Version 1.7.3 - 2006-08-03
 
 * Added: SnmpConstants.getTrapOID to convert a v1 trap info
   to a v2/v3 notification OID.
@@ -552,7 +551,7 @@ read indication while write data is pending in fact.
   to get lost when more than one incoming request were processed
   concurrently.
 
-[2006-05-29] Version 1.7.2:
+# Version 1.7.2 - 2006-05-29
 
 * Added: JavaLogFactory and JavaLogAdapter for Java logging.
   This is now also the default logging for the SnmpRequest
@@ -562,13 +561,13 @@ read indication while write data is pending in fact.
 * Fixed: When connection closed remotely the corresponding
   event has not been fired in all cases (DefaultTCPTransportMapping).
 
-[2006-04-24] Version 1.7.1:
+# Version 1.7.1 - 2006-04-24
 
 * Fixed: Stackoverflow in OID.nextPeer().
 * Added: ConnectionOrientedTransportMapping.close(Address peerAddress).
 * Improved: Reporting of RuntimeExceptions while handling retries.
 
-[2006-04-10] Version 1.7:
+# Version 1.7 - 2006-04-10
 
 * Improved: Logging interface enhanced.
 * Added: Variable.toInt() and Variable.toLong() to reduce
@@ -635,7 +634,7 @@ read indication while write data is pending in fact.
   also led SNMP4J send requests messages even though a response
   had already been received.
 
-[2005-10-23] Version 1.6:
+# Version 1.6 - 2005-10-23
 
 * Fixed: Retry handling of Snmp.
 * Added: TaskScheduler and SchedulerTask.
@@ -688,7 +687,7 @@ read indication while write data is pending in fact.
   reports (out of time, etc.) due to garbage collection on
   WeakHashMap.
 
-[2005-04-26] Version 1.5:
+# Version 1.5 - 2005-04-26
 
 * Fixed: Encoding of OIDs with sub-identifiers > 2^31.
 * Fixed: Counter64 encoding error for some values > 2^24.
@@ -722,7 +721,7 @@ read indication while write data is pending in fact.
 * Changed: Made Snmp default constructor public.
 * Added: Snmp(MessageDispatcher).
 
-[2005-04-04] Version 1.2.1:
+# Version 1.2.1 - 2005-04-04
 
 * Changed: Due to incomplete state of Log4J 1.3-alpha6 and
   for the sake of a more flexible logging interface the
@@ -731,7 +730,7 @@ read indication while write data is pending in fact.
   Log4J logging which is supported out-of-the-box, use
   "static { LogFactory.setLogFactory(new Log4LogFactory());}"
 
-[2005-03-30] Version 1.2:
+# Version 1.2 - 2005-03-30
 
 * Improved: Replaced the log4j-1.3alpha-6.jar with a patched
   version that does not print out Log4J internal messages.
@@ -775,7 +774,7 @@ read indication while write data is pending in fact.
   columns of a table (for example '1.3.6.1.2.1.2.2.1-18').
 * Fixed: JavaDoc of Snmp class used deprecated methods.
 
-[2005-02-17] Version 1.1.1:
+# Version 1.1.1 - 2005-02-17
 
 * Fixed: BER decoding of zero Counter64 value and optimized
   encoding of Counter64 values.
@@ -790,7 +789,7 @@ read indication while write data is pending in fact.
 * Fixed: TableUtils did not recognize SNMP exception VB
   status and errors (SNMPv1) indicating table boundary.
 
-[2005-02-02] Version 1.1:
+# Version 1.1 - 2005-02-02
 
 * Improved: ResponseEvent now includes the peer address
   of the response sending entity.
@@ -885,7 +884,7 @@ read indication while write data is pending in fact.
   BER decoding failures.
 * Improved: Minor JavaDoc improvements.
 
-[2004-08-20] Version 1.0.3:
+# Version 1.0.3 - 2004-08-20
 
 * Added: Variable.isException().
 * Improved: DefaultUdpTransportMapping now closes socket
@@ -897,7 +896,7 @@ read indication while write data is pending in fact.
 * Improved: Several JavaDoc improvements, for example added
   documentation for the different PDU types.
 
-[2004-08-07] Version 1.0.2:
+# Version 1.0.2 - 2004-08-07
 
 * Improved: Added constants for exception Null variables and
   Null constructor that takes an exception status syntax as
@@ -917,7 +916,7 @@ read indication while write data is pending in fact.
 * Fixed: TCP transport mapping left an unused timer thread
   running when closed.
 
-[2004-06-26] Version 1.0.1:
+# Version 1.0.1 - 2004-06-26
 
 * Fixed: SNMPv3 trap sending did not use local engine ID
   and time values (although it should have because the
@@ -945,7 +944,7 @@ read indication while write data is pending in fact.
 * Improved: Console example returned "strange variable ..."
   when reaching end of a subtree-walk.
 
-[2004-05-21] Version 1.0:
+# Version 1.0 - 2004-05-21
 
 * Fixed: Several small cosmetic fixes in code, build, and
   JavaDoc.

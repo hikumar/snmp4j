@@ -48,7 +48,6 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
       LoggerFactory.getLogger(DefaultUdpTransportMapping.class);
 
   private final DatagramSocket socket;
-  private int socketTimeout = 0;
   private int receiveBufferSize = 0; // not set by default
 
   protected Thread listenerThread;
@@ -152,20 +151,12 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
       listenerThread = SNMP4JSettings.getThreadFactory().newThread(listener);
       listenerThread.start();
     }
+
+    logger.info("Now listening with {}", listener);
   }
 
   public void setMaxInboundMessageSize(int maxInboundMessageSize) {
     this.maxInboundMessageSize = maxInboundMessageSize;
-  }
-
-  /**
-   * Returns the socket timeout.
-   * 0 returns implies that the option is disabled (i.e., timeout of infinity).
-   * @return
-   *    the socket timeout setting.
-   */
-  public int getSocketTimeout() {
-    return socketTimeout;
   }
 
   /**
@@ -219,7 +210,6 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
       DatagramSocket socketCopy = socket;
       if (socketCopy != null) {
         try {
-          socketCopy.setSoTimeout(getSocketTimeout());
           if (receiveBufferSize > 0) {
             socketCopy.setReceiveBufferSize(Math.max(receiveBufferSize,
                                                       maxInboundMessageSize));
@@ -270,9 +260,6 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
                                         false, socketCopy);
           fireProcessMessage(new UdpAddress(packet.getAddress(),
                                             packet.getPort()), bis, stateReference);
-        }
-        catch (SocketTimeoutException stex) {
-          // ignore
         }
         catch (PortUnreachableException purex) {
           synchronized (DefaultUdpTransportMapping.this) {

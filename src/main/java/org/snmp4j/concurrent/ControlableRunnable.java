@@ -23,4 +23,9 @@ public abstract class ControlableRunnable implements Runnable {
    * @see org.snmp4j.util.ThreadFactory
    */
   public abstract String getName();
+
+  @Override
+  public String toString() {
+    return getName();
+  }
 }

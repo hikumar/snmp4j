@@ -18,9 +18,10 @@
   _##  
   _##########################################################################*/
 
-package org.snmp4j;
+package org.snmp4j.test;
 
 import org.junit.*;
+import org.snmp4j.*;
 import org.snmp4j.event.ResponseEvent;
 import org.snmp4j.event.ResponseListener;
 import org.snmp4j.mp.*;
@@ -34,9 +35,9 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Junit 4 test class for testing the {@link Snmp} class. The tests are run
+ * Junit 4 test class for testing the {@link org.snmp4j.Snmp} class. The tests are run
  * against a {@link DummyTransport} which allows to directly link two virtual
- * {@link TransportMapping}s used blocking queues.
+ * {@link org.snmp4j.TransportMapping}s used blocking queues.
  *
  * @author Frank Fock
  * @version 2.0

@@ -43,7 +43,6 @@ import java.nio.ByteBuffer;
  * @version 1.9
  */
 public class DefaultUdpTransportMapping extends UdpTransportMapping implements Closeable {
-
   private static final Logger logger =
       LoggerFactory.getLogger(DefaultUdpTransportMapping.class);
 
@@ -102,6 +101,11 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
     this(udpAddress, false);
   }
 
+  @Override
+  public synchronized UdpAddress getListenAddress() {
+    return new UdpAddress(socket.getLocalAddress(), socket.getLocalPort());
+  }
+
   public void sendMessage(UdpAddress targetAddress, byte[] message,
                           TransportStateReference tmStateReference)
       throws IOException {
@@ -155,8 +159,18 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
     logger.info("Now listening with {}", listener);
   }
 
-  public void setMaxInboundMessageSize(int maxInboundMessageSize) {
-    this.maxInboundMessageSize = maxInboundMessageSize;
+  public synchronized boolean isListening() {
+    return (listenerThread != null);
+  }
+
+  public synchronized void setMaxInboundMessageSize(int newSize) {
+    if (newSize <= 0)
+      throw new IllegalArgumentException("The max inbound message size must be > 0");
+
+    if (listenerThread.isAlive())
+      throw new UnsupportedOperationException("Unable to change message size after the listen thread has been started");
+
+    maxInboundMessageSize = newSize;
   }
 
   /**
@@ -167,7 +181,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
    *    <=0 if the default buffer size of the OS is used, or a value >0 if the
    *    user specified a buffer size.
    */
-  public int getReceiveBufferSize() {
+  public synchronized int getReceiveBufferSize() {
     return receiveBufferSize;
   }
 
@@ -175,111 +189,73 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
    * Sets the receive buffer size, which should be > the maximum inbound message
    * size. This method has to be called before {@link #listen()} to be
    * effective.
-   * @param receiveBufferSize
+   * @param newSize
    *    an integer value >0 and > {@link #getMaxInboundMessageSize()}.
    */
-  public void setReceiveBufferSize(int receiveBufferSize) {
-    if (receiveBufferSize <= 0) {
+  public synchronized void setReceiveBufferSize(int newSize) {
+    if (newSize <= 0)
       throw new IllegalArgumentException("Receive buffer size must be > 0");
-    }
-    this.receiveBufferSize = receiveBufferSize;
-  }
 
-  public boolean isListening() {
-    return (listenerThread != null);
-  }
+    if (listenerThread.isAlive())
+      throw new UnsupportedOperationException("Unable to change buffer size after the listen thread has been started");
 
-  @Override
-  public UdpAddress getListenAddress() {
-    UdpAddress actualListenAddress = null;
-    DatagramSocket socketCopy = socket;
-    if (socketCopy != null) {
-      actualListenAddress = new UdpAddress(socketCopy.getInetAddress(), socketCopy.getLocalPort());
-    }
-    return actualListenAddress;
+    receiveBufferSize = newSize;
   }
 
   class SocketListener extends ControlableRunnable {
-    private byte[] buf;
+    public void run() {
+      try {
+        if (receiveBufferSize > 0) {
+          socket.setReceiveBufferSize(Math.max(receiveBufferSize,
+              maxInboundMessageSize));
+        }
 
-    public SocketListener() {
-      buf = new byte[getMaxInboundMessageSize()];
+        int bufferSize = socket.getReceiveBufferSize();
+        logger.debug("UDP receive buffer size for socket {} is set to: {}", getAddress(), bufferSize);
+
+        while (!shouldStop()) {
+          byte[] receivedData = new byte[bufferSize];
+          DatagramPacket packet = new DatagramPacket(receivedData, receivedData.length,
+              udpAddress.getInetAddress(),
+              udpAddress.getPort());
+
+          socket.receive(packet);
+
+          handlePacket(packet);
+        }
+      } catch (InterruptedIOException iiox) {
+        logger.info("{} was interrupted during IO and {} bytes are being discarded", this, iiox.bytesTransferred);
+      } catch (SocketException ex) {
+        logger.error("Could not set DatagramSockets receive buffer size", ex);
+      } catch (IOException iox) {
+        logger.error(iox.getMessage(), iox);
+        throw new Error("An I/O error occurred when reading from socket", iox);
+      } finally {
+        // If the loop above returns there was either an error or it was
+        // requested of us to stop. Either way, all resources should be freed.
+        close();
+      }
+
+      logger.info("Thread {} is stopping", this);
     }
 
-    public void run() {
-      DatagramSocket socketCopy = socket;
-      if (socketCopy != null) {
-        try {
-          if (receiveBufferSize > 0) {
-            socketCopy.setReceiveBufferSize(Math.max(receiveBufferSize,
-                                                      maxInboundMessageSize));
-          }
-          if (logger.isDebugEnabled()) {
-            logger.debug("UDP receive buffer size for socket {} is set to: {}", getAddress(), socketCopy.getReceiveBufferSize());
-          }
-        } catch (SocketException ex) {
-          logger.error(ex.getMessage(), ex);
-        }
-      }
-      while (!shouldStop()) {
-        DatagramPacket packet = new DatagramPacket(buf, buf.length,
-                                                   udpAddress.getInetAddress(),
-                                                   udpAddress.getPort());
-        try {
-          socketCopy = socket;
-          try {
-            if (socketCopy == null) {
-              askToStop();
-              continue;
-            }
-            socketCopy.receive(packet);
-          }
-          catch (InterruptedIOException iiox) {
-            if (iiox.bytesTransferred <= 0) {
-              continue;
-            }
-          }
-          if (logger.isDebugEnabled()) {
-            logger.debug("Received message from {}/{} with length {}: {}", packet.getAddress(), packet.getPort(), packet.getLength(), new OctetString(packet.getData(), 0,
-                packet.getLength()).toHexString());
-          }
-
-          ByteBuffer bis = ByteBuffer.allocate(packet.getLength());
-          bis.put(packet.getData());
-
-          TransportStateReference stateReference =
-            new TransportStateReference(DefaultUdpTransportMapping.this, udpAddress, null,
-                                        SecurityLevel.undefined, SecurityLevel.undefined,
-                                        false, socketCopy);
-          fireProcessMessage(new UdpAddress(packet.getAddress(),
-                                            packet.getPort()), bis, stateReference);
-        }
-        catch (PortUnreachableException purex) {
-          synchronized (DefaultUdpTransportMapping.this) {
-            listenerThread = null;
-          }
-          logger.error(purex.getMessage(), purex);
-          throw new RuntimeException(purex);
-        }
-        catch (SocketException soex) {
-          if (!shouldStop()) {
-            logger.warn("Socket for transport mapping {} error: {}", this, soex.getMessage());
-          }
-
-          askToStop();
-          throw new RuntimeException(soex);
-        }
-        catch (IOException iox) {
-          logger.warn(iox.getMessage(), iox);
-          throw new RuntimeException(iox);
-        }
+    private void handlePacket(DatagramPacket packet) {
+      if (logger.isDebugEnabled()) {
+        logger.debug("Received message from {} with length {}: {}",
+            packet.getSocketAddress(),
+            packet.getLength(),
+            new OctetString(packet.getData()).toHexString());
       }
 
-      // If the loop above returns there was either an error or it was
-      // requested of us to stop. Either way, all resources should be freed.
-      close();
+      ByteBuffer bis = ByteBuffer.wrap(packet.getData());
 
-      logger.info("Thread {} is stopping", getName());
+      TransportStateReference stateReference =
+          new TransportStateReference(DefaultUdpTransportMapping.this, udpAddress, null,
+              SecurityLevel.undefined, SecurityLevel.undefined,
+              false, socket);
+
+      fireProcessMessage(new UdpAddress(packet.getAddress(),
+          packet.getPort()), bis, stateReference);
     }
 
     @Override

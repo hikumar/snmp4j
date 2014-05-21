@@ -243,17 +243,10 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
             logger.debug("Received message from {}/{} with length {}: {}", packet.getAddress(), packet.getPort(), packet.getLength(), new OctetString(packet.getData(), 0,
                 packet.getLength()).toHexString());
           }
-          ByteBuffer bis;
-          // If messages are processed asynchronously (i.e. multi-threaded)
-          // then we have to copy the buffer's content here!
-          if (isAsyncMsgProcessingSupported()) {
-            byte[] bytes = new byte[packet.getLength()];
-            System.arraycopy(packet.getData(), 0, bytes, 0, bytes.length);
-            bis = ByteBuffer.wrap(bytes);
-          }
-          else {
-            bis = ByteBuffer.wrap(packet.getData());
-          }
+
+          ByteBuffer bis = ByteBuffer.allocate(packet.getLength());
+          bis.put(packet.getData());
+
           TransportStateReference stateReference =
             new TransportStateReference(DefaultUdpTransportMapping.this, udpAddress, null,
                                         SecurityLevel.undefined, SecurityLevel.undefined,

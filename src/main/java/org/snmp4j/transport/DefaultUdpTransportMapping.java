@@ -26,8 +26,9 @@ import org.snmp4j.TransportStateReference;
 import org.snmp4j.security.SecurityLevel;
 import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.UdpAddress;
-import org.snmp4j.util.WorkerTask;
+import org.snmp4j.concurrent.ControlableRunnable;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.*;
@@ -41,17 +42,17 @@ import java.nio.ByteBuffer;
  * @author Frank Fock
  * @version 1.9
  */
-public class DefaultUdpTransportMapping extends UdpTransportMapping {
+public class DefaultUdpTransportMapping extends UdpTransportMapping implements Closeable {
 
   private static final Logger logger =
       LoggerFactory.getLogger(DefaultUdpTransportMapping.class);
 
   protected DatagramSocket socket = null;
-  protected WorkerTask listener;
-  protected ListenThread listenerThread;
   private int socketTimeout = 0;
-
   private int receiveBufferSize = 0; // not set by default
+
+  protected Thread listenerThread;
+  protected SocketListener listener;
 
   /**
    * Creates a UDP transport with an arbitrary local port on all local
@@ -118,33 +119,18 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
 
   /**
    * Closes the socket and stops the listener thread.
-   *
-   * @throws IOException
    */
-  public void close() {
-    boolean interrupted = false;
-    WorkerTask l = listener;
-    if (l != null) {
-      l.terminate();
-      l.interrupt();
-      if (socketTimeout > 0) {
-        try {
-          l.join();
-        }
-        catch (InterruptedException ex) {
-          interrupted = true;
-          logger.warn(ex.getMessage(), ex);
-        }
-      }
+  public synchronized void close() {
+    if (listenerThread != null) {
+      listener.askToStop();
+      listenerThread.interrupt();
+      listenerThread = null;
       listener = null;
     }
-    DatagramSocket closingSocket = socket;
-    if ((closingSocket != null) && (!closingSocket.isClosed())) {
-      closingSocket.close();
-    }
-    socket = null;
-    if (interrupted) {
-      Thread.currentThread().interrupt();
+
+    if (socket != null && !socket.isClosed()) {
+      socket.close();
+      socket = null;
     }
   }
 
@@ -157,14 +143,13 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
    * @throws IOException
    */
   public synchronized void listen() throws SocketException {
-    if (listener != null) {
+    if (listenerThread != null) {
       throw new SocketException("Port already listening");
     }
     ensureSocket();
-    listenerThread = new ListenThread();
-    listener = SNMP4JSettings.getThreadFactory().createWorkerThread(
-        "DefaultUDPTransportMapping_"+getAddress(), listenerThread, true);
-    listener.run();
+    listener = new SocketListener();
+    listenerThread = SNMP4JSettings.getThreadFactory().newThread(listener);
+    listenerThread.start();
   }
 
   private synchronized DatagramSocket ensureSocket() throws SocketException {
@@ -175,72 +160,6 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
       this.socket = s;
     }
     return s;
-  }
-
-  /**
-   * Changes the priority of the listen thread for this UDP transport mapping.
-   * This method has no effect, if called before {@link #listen()} has been
-   * called for this transport mapping.
-   *
-   * @param newPriority
-   *    the new priority.
-   * @see Thread#setPriority(int)
-   * @since 1.2.2
-   */
-  public void setPriority(int newPriority) {
-    WorkerTask lt = listener;
-    if (lt instanceof Thread) {
-      ((Thread)lt).setPriority(newPriority);
-    }
-  }
-
-  /**
-   * Returns the priority of the internal listen thread.
-   * @return
-   *    a value between {@link Thread#MIN_PRIORITY} and
-   *    {@link Thread#MAX_PRIORITY}.
-   * @since 1.2.2
-   */
-  public int getPriority() {
-    WorkerTask lt = listener;
-    if (lt instanceof Thread) {
-      return ((Thread)lt).getPriority();
-    }
-    else {
-      return Thread.NORM_PRIORITY;
-    }
-  }
-
-  /**
-   * Sets the name of the listen thread for this UDP transport mapping.
-   * This method has no effect, if called before {@link #listen()} has been
-   * called for this transport mapping.
-   *
-   * @param name
-   *    the new thread name.
-   * @since 1.6
-   */
-  public void setThreadName(String name) {
-    WorkerTask lt = listener;
-    if (lt instanceof Thread) {
-      ((Thread)lt).setName(name);
-    }
-  }
-
-  /**
-   * Returns the name of the listen thread.
-   * @return
-   *    the thread name if in listening mode, otherwise <code>null</code>.
-   * @since 1.6
-   */
-  public String getThreadName() {
-    WorkerTask lt = listener;
-    if (lt instanceof Thread) {
-      return ((Thread)lt).getName();
-    }
-    else {
-      return null;
-    }
   }
 
   public void setMaxInboundMessageSize(int maxInboundMessageSize) {
@@ -283,26 +202,8 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
     this.receiveBufferSize = receiveBufferSize;
   }
 
-  /**
-   * Sets the socket timeout in milliseconds.
-   * @param socketTimeout
-   *    the socket timeout for incoming messages in milliseconds.
-   *    A timeout of zero is interpreted as an infinite timeout.
-   */
-  public void setSocketTimeout(int socketTimeout) {
-    this.socketTimeout = socketTimeout;
-    if (socket != null) {
-      try {
-        socket.setSoTimeout(socketTimeout);
-      }
-      catch (SocketException ex) {
-        throw new RuntimeException(ex);
-      }
-    }
-  }
-
   public boolean isListening() {
-    return (listener != null);
+    return (listenerThread != null);
   }
 
   @Override
@@ -341,13 +242,10 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
     return s;
   }
 
-  class ListenThread implements WorkerTask {
-
+  class SocketListener extends ControlableRunnable {
     private byte[] buf;
-    private volatile boolean stop = false;
 
-
-    public ListenThread() {
+    public SocketListener() {
       buf = new byte[getMaxInboundMessageSize()];
     }
 
@@ -365,10 +263,9 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
           }
         } catch (SocketException ex) {
           logger.error(ex.getMessage(), ex);
-          setSocketTimeout(0);
         }
       }
-      while (!stop) {
+      while (!shouldStop()) {
         DatagramPacket packet = new DatagramPacket(buf, buf.length,
                                                    udpAddress.getInetAddress(),
                                                    udpAddress.getPort());
@@ -376,7 +273,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
           socketCopy = socket;
           try {
             if (socketCopy == null) {
-              stop = true;
+              askToStop();
               continue;
             }
             socketCopy.receive(packet);
@@ -413,17 +310,17 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
         }
         catch (PortUnreachableException purex) {
           synchronized (DefaultUdpTransportMapping.this) {
-            listener = null;
+            listenerThread = null;
           }
           logger.error(purex.getMessage(), purex);
           throw new RuntimeException(purex);
         }
         catch (SocketException soex) {
-          if (!stop) {
+          if (!shouldStop()) {
             logger.warn("Socket for transport mapping {} error: {}", this, soex.getMessage());
           }
 
-          stop = true;
+          askToStop();
           throw new RuntimeException(soex);
         }
         catch (IOException iox) {
@@ -432,8 +329,8 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
         }
       }
       synchronized (DefaultUdpTransportMapping.this) {
-        listener = null;
-        stop = true;
+        listenerThread = null;
+        askToStop();
         DatagramSocket closingSocket = socket;
         if ((closingSocket != null) && (!closingSocket.isClosed())) {
           closingSocket.close();
@@ -445,28 +342,9 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping {
       }
     }
 
-    public void close() {
-      stop = true;
-    }
-
-    public void terminate() {
-      close();
-      if (logger.isDebugEnabled()) {
-        logger.debug("Terminated worker task: {}", getClass().getName());
-      }
-    }
-
-    public void join() throws InterruptedException {
-      if (logger.isDebugEnabled()) {
-        logger.debug("Joining worker task: {}", getClass().getName());
-      }
-    }
-
-    public void interrupt() {
-      if (logger.isDebugEnabled()) {
-        logger.debug("Interrupting worker task: {}", getClass().getName());
-      }
-      close();
+    @Override
+    public String getName() {
+      return DefaultUdpTransportMapping.class.getSimpleName() + "Listener_" + getListenAddress();
     }
   }
 }

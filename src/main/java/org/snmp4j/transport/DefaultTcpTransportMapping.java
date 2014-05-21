@@ -52,7 +52,6 @@ import java.util.*;
  * @version 1.11
  */
 public class DefaultTcpTransportMapping extends TcpTransportMapping {
-
   private static final Logger logger =
       LoggerFactory.getLogger(DefaultTcpTransportMapping.class);
 
@@ -114,73 +113,6 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
       socketCleaner = SNMP4JSettings.getTimerFactory().createTimer();
     }
     server.run();
-  }
-
-  /**
-   * Changes the priority of the server thread for this TCP transport mapping.
-   * This method has no effect, if called before {@link #listen()} has been
-   * called for this transport mapping or if SNMP4J is configured to use
-   * a non-default thread factory.
-   *
-   * @param newPriority
-   *    the new priority.
-   * @see Thread#setPriority
-   * @since 1.2.2
-   */
-  public void setPriority(int newPriority) {
-    WorkerTask st = server;
-    if (st instanceof Thread) {
-      ((Thread)st).setPriority(newPriority);
-    }
-  }
-
-  /**
-   * Returns the priority of the internal listen thread.
-   * @return
-   *    a value between {@link Thread#MIN_PRIORITY} and
-   *    {@link Thread#MAX_PRIORITY}.
-   * @since 1.2.2
-   */
-  public int getPriority() {
-    WorkerTask st = server;
-    if (st instanceof Thread) {
-      return ((Thread)st).getPriority();
-    }
-    else {
-      return Thread.NORM_PRIORITY;
-    }
-  }
-
-  /**
-   * Sets the name of the listen thread for this UDP transport mapping.
-   * This method has no effect, if called before {@link #listen()} has been
-   * called for this transport mapping.
-   *
-   * @param name
-   *    the new thread name.
-   * @since 1.6
-   */
-  public void setThreadName(String name) {
-    WorkerTask st = server;
-    if (st instanceof Thread) {
-      ((Thread)st).setName(name);
-    }
-  }
-
-  /**
-   * Returns the name of the listen thread.
-   * @return
-   *    the thread name if in listening mode, otherwise <code>null</code>.
-   * @since 1.6
-   */
-  public String getThreadName() {
-    WorkerTask st = server;
-    if (st != null) {
-      return ((Thread)st).getName();
-    }
-    else {
-      return null;
-    }
   }
 
   /**

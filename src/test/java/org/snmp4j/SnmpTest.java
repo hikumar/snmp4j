@@ -18,7 +18,7 @@
   _##  
   _##########################################################################*/
 
-package org.snmp4j.test;
+package org.snmp4j;
 
 import org.junit.*;
 import org.snmp4j.*;

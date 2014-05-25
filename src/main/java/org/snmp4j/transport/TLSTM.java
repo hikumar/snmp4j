@@ -137,16 +137,12 @@ public class TLSTM extends TcpTransportMapping {
     catch (ClassNotFoundException ex) {
       //throw new IOException("Failed to load TLSTMTrustManagerFactory: "+ex.getMessage(), ex);
     }
-    catch (InvocationTargetException ex) {
+    catch (InvocationTargetException | IllegalAccessException ex) {
       throw new IOException("Failed to init TLSTMTrustManagerFactory: "+ex.getMessage(), ex);
     }
     catch (IllegalArgumentException ex) {
       throw new IOException("Failed to setup TLSTMTrustManagerFactory: "+ex.getMessage(), ex);
-    }
-    catch (IllegalAccessException ex) {
-      throw new IOException("Failed to init TLSTMTrustManagerFactory: "+ex.getMessage(), ex);
-    }
-    catch (InstantiationException ex) {
+    } catch (InstantiationException ex) {
       throw new IOException("Failed to instantiate TLSTMTrustManagerFactory: "+ex.getMessage(), ex);
     }
   }

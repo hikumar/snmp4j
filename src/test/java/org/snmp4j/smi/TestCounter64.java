@@ -21,62 +21,58 @@
 
 package org.snmp4j.smi;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 import org.snmp4j.asn1.BER;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 
-public class TestCounter64 extends TestCase {
-
-  public TestCounter64(String s) {
-    super(s);
-  }
-
-  protected void setUp() {
-  }
-
-  protected void tearDown() {
-  }
-
+public class TestCounter64 {
+  @Test
   public void testToString() {
     Counter64 counter64 = new Counter64(0xFFFFFFFFFFFFFFFFl);
     String stringRet = counter64.toString();
-    assertEquals("18446744073709551615", stringRet);
+    Assert.assertEquals("18446744073709551615", stringRet);
   }
+
+  @Test
   public void testCompareTo() {
     Counter64 counter64 = new Counter64(0xFFFFFFFFFFFFFFFFl);
     Counter64 counter32 = new Counter64(0x00000000FFFFFFFFl);
     Counter64 counter0=  new Counter64(0);
     Counter64 counter1=  new Counter64(1);
     int intRet = counter64.compareTo(counter0);
-    assertEquals(1, intRet);
-    assertEquals(-1, counter0.compareTo(counter64));
-    assertEquals(-1, counter32.compareTo(counter64));
-    assertEquals(1, counter64.compareTo(counter32));
-    assertEquals(0, counter32.compareTo(counter32));
-    assertEquals(0, counter64.compareTo(counter64));
-    assertEquals(0, counter0.compareTo(counter0));
-    assertEquals(1, counter1.compareTo(counter0));
-    assertEquals(-1, counter0.compareTo(counter1));
+    Assert.assertEquals(1, intRet);
+    Assert.assertEquals(-1, counter0.compareTo(counter64));
+    Assert.assertEquals(-1, counter32.compareTo(counter64));
+    Assert.assertEquals(1, counter64.compareTo(counter32));
+    Assert.assertEquals(0, counter32.compareTo(counter32));
+    Assert.assertEquals(0, counter64.compareTo(counter64));
+    Assert.assertEquals(0, counter0.compareTo(counter0));
+    Assert.assertEquals(1, counter1.compareTo(counter0));
+    Assert.assertEquals(-1, counter0.compareTo(counter1));
 
     long l = 0;
     for (int i=0; i<64; i++) {
       Counter64 lesser = new Counter64(l);
       Counter64 greater = new Counter64(1l << i);
-      assertEquals(-1, lesser.compareTo(greater));
-      assertEquals(1, greater.compareTo(lesser));
+      Assert.assertEquals(-1, lesser.compareTo(greater));
+      Assert.assertEquals(1, greater.compareTo(lesser));
       l = greater.getValue();
     }
   }
+
+  @Test
   public void testEquals() {
     Counter64 counter64 = new Counter64(0xFFFFFFFFFFFFFFFFl);
     Variable o1=  new Counter64(0xFFFFFFFFFFFFFFFFl);
     boolean booleanRet = counter64.equals(o1);
-    assertTrue(booleanRet);
+    Assert.assertTrue(booleanRet);
   }
 
+  @Test
   public void testBER0() {
     ByteArrayOutputStream bos64 = new ByteArrayOutputStream();
     try {
@@ -94,10 +90,11 @@ public class TestCounter64 extends TestCase {
       ex.printStackTrace();
     }
     OctetString os32 = new OctetString(bos32.toByteArray());
-    assertEquals(os32, os64);
+    Assert.assertEquals(os32, os64);
 
   }
 
+  @Test
   public void testBER3() {
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
     try {
@@ -107,7 +104,7 @@ public class TestCounter64 extends TestCase {
       ex.printStackTrace();
     }
     OctetString os = new OctetString(bos.toByteArray());
-    assertEquals(OctetString.fromHexString("46:01:03"), os);
+    Assert.assertEquals(OctetString.fromHexString("46:01:03"), os);
 
   }
 

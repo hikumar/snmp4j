@@ -21,30 +21,20 @@
 
 package org.snmp4j.security;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.OctetString;
 
-public class TestAuthMD5
-    extends TestCase {
+public class TestAuthMD5 {
   static Logger cat = LoggerFactory.getLogger(TestAuthMD5.class);
 
-  public TestAuthMD5(String name) {
-
-    super(name);
-  }
   public static String asHex(byte buf[]) {
     return new OctetString(buf).toHexString();
   }
 
-
-  protected void setUp() {
-  }
-
-  protected void tearDown() {
-  }
-
+  @Test
   public void testPasswordToKey1() {
     String password = "maplesyrup";
     byte[] engineId = {
@@ -60,12 +50,13 @@ public class TestAuthMD5
     AuthMD5 auth = new AuthMD5();
 
     byte[] key = auth.passwordToKey(new OctetString(password), engineId);
-    assertEquals(expectedKey.length, key.length);
+    Assert.assertEquals(expectedKey.length, key.length);
     for (int i = 0; i < key.length; i++) {
-      assertEquals(key[i], expectedKey[i]);
+      Assert.assertEquals(key[i], expectedKey[i]);
     }
   }
 
+  @Test
   public void testPasswordToKey2() {
     String password = "newsyrup";
     byte[] engineId = {
@@ -80,12 +71,13 @@ public class TestAuthMD5
 
     AuthMD5 auth = new AuthMD5();
     byte[] key = auth.passwordToKey(new OctetString(password), engineId);
-    assertEquals(expectedKey.length, key.length);
+    Assert.assertEquals(expectedKey.length, key.length);
     for (int i = 0; i < key.length; i++) {
-      assertEquals(expectedKey[i], key[i]);
+      Assert.assertEquals(expectedKey[i], key[i]);
     }
   }
 
+  @Test
   public void testChangeDelta() {
     String oldPass = "maplesyrup";
     String newPass = "newsyrup";
@@ -114,12 +106,13 @@ public class TestAuthMD5
     oldKey = auth.passwordToKey(new OctetString(oldPass), engineId);
     newKey = auth.passwordToKey(new OctetString(newPass), engineId);
     byte[] delta = auth.changeDelta(oldKey, newKey, random);
-    assertEquals(expectedDelta.length, delta.length);
+    Assert.assertEquals(expectedDelta.length, delta.length);
     for (int i = 0; i < delta.length; i++) {
-      assertEquals(delta[i], expectedDelta[i]);
+      Assert.assertEquals(delta[i], expectedDelta[i]);
     }
   }
 
+  @Test
   public void testAuth(){
     byte[] msg = {
         (byte) 0x30, (byte) 0x7A, (byte) 0x02, (byte) 0x01,
@@ -180,13 +173,14 @@ public class TestAuthMD5
                                     new ByteArrayWindow(msg, 59, 12));
     cat.debug("msg after: {}", asHex(msg));
 
-    assertEquals(true, res);
+    Assert.assertEquals(true, res);
     for (int i = 0; i < 12; i++) {
       cat.debug("{}", i);
-      assertEquals(expectedDigest[i], msg[59+i]);
+      Assert.assertEquals(expectedDigest[i], msg[59 + i]);
     }
   }
 
+  @Test
   public void testAuthenticate() {
     byte[] msg = {
         /* Some Dummy values */
@@ -266,65 +260,65 @@ public class TestAuthMD5
                                                         messageOffset + digestOffset,
                                                         12));
 
-    assertEquals(true, res);
+    Assert.assertEquals(true, res);
 
-    assertEquals(expectedMsg.length, msg.length);
+    Assert.assertEquals(expectedMsg.length, msg.length);
     for (int i = 0; i < msg.length; i++) {
-      assertEquals(msg[i], expectedMsg[i]);
+      Assert.assertEquals(msg[i], expectedMsg[i]);
     }
 
     byte [] tmsg = msg.clone();
     res = auth.isAuthentic(key, tmsg, messageOffset, messageLength,
                           new ByteArrayWindow(tmsg, messageOffset + digestOffset, 12));
-    assertEquals(true, res);
+    Assert.assertEquals(true, res);
 
     tmsg = msg.clone();
     tmsg[33] = (byte)(tmsg[33] + 5);
     res = auth.isAuthentic(key, tmsg, messageOffset, messageLength,
                           new ByteArrayWindow(tmsg, messageOffset + digestOffset, 12));
-    assertEquals(false, res);
+    Assert.assertEquals(false, res);
 
     tmsg = msg.clone();
     res = auth.isAuthentic(key, tmsg, messageOffset, messageLength + 1,
                           new ByteArrayWindow(tmsg, messageOffset + digestOffset, 12));
-    assertEquals(false, res);
+    Assert.assertEquals(false, res);
 
     tmsg = msg.clone();
     res = auth.isAuthentic(key, tmsg, messageOffset, messageLength - 1,
                           new ByteArrayWindow(tmsg, messageOffset + digestOffset, 12));
-    assertEquals(false, res);
+    Assert.assertEquals(false, res);
 
     tmsg = msg.clone();
     res = auth.isAuthentic(key, tmsg, messageOffset + 1, messageLength,
                           new ByteArrayWindow(tmsg, messageOffset + 1 + digestOffset, 12));
-    assertEquals(false, res);
+    Assert.assertEquals(false, res);
 
     tmsg = msg.clone();
     res = auth.isAuthentic(key, tmsg, messageOffset - 1, messageLength,
                           new ByteArrayWindow(tmsg, messageOffset - 1 + digestOffset, 12));
-    assertEquals(false, res);
+    Assert.assertEquals(false, res);
 
     tmsg = msg.clone();
     res = auth.isAuthentic(key, tmsg, messageOffset, messageLength,
                           new ByteArrayWindow(tmsg, messageOffset + digestOffset + 1, 12));
-    assertEquals(false, res);
+    Assert.assertEquals(false, res);
 
     tmsg = msg.clone();
     res = auth.isAuthentic(key, tmsg, messageOffset, messageLength,
                           new ByteArrayWindow(tmsg, messageOffset + digestOffset - 1, 12));
-    assertEquals(false, res);
+    Assert.assertEquals(false, res);
 
     tmsg = msg.clone();
     byte[] shortKey = new byte[2];
     System.arraycopy(key, 0, shortKey, 0, 2);
     res = auth.isAuthentic(shortKey, tmsg, messageOffset, messageLength,
                           new ByteArrayWindow(tmsg, messageOffset + digestOffset, 12));
-    assertEquals(false, res);
+    Assert.assertEquals(false, res);
 
 
     key[2] = (byte)(key[2] + 1);
     res = auth.isAuthentic(key, msg,messageOffset, messageLength,
                           new ByteArrayWindow(msg, messageOffset + digestOffset, 12));
-    assertEquals(false, res);
+    Assert.assertEquals(false, res);
   }
 }

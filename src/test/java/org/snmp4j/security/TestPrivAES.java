@@ -21,14 +21,14 @@
 
 package org.snmp4j.security;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.OctetString;
 
 
-public class TestPrivAES
-    extends TestCase {
+public class TestPrivAES {
   static Logger cat = LoggerFactory.getLogger(TestPrivAES.class);
   private SecurityProtocols secProts;
 
@@ -41,17 +41,8 @@ public class TestPrivAES
     secProts.addDefaultProtocols();
   }
 
-  public TestPrivAES(String p0) {
-    super(p0);
-  }
-
-  protected void setUp() {
-  }
-
-  protected void tearDown() {
-  }
-
-  public static void testCrypt() {
+  @Test
+  public void testCrypt() {
     PrivAES128 pd = new PrivAES128();
     DecryptParams pp = new DecryptParams();
     byte[] key = {
@@ -79,12 +70,13 @@ public class TestPrivAES
     decrypted = pd.decrypt(ciphertext, 0, ciphertext.length, key, engine_boots, engine_time, pp);
     cat.debug("Cleartext: {}", asHex(decrypted));
 
-    assertEquals(asHex(plaintext), asHex(decrypted));
+    Assert.assertEquals(asHex(plaintext), asHex(decrypted));
 
     cat.info("pp length is: {}", pp.length);
-    assertEquals(8, pp.length);
+    Assert.assertEquals(8, pp.length);
   }
 
+  @Test
   public void testAesKeyExtension() {
     SecurityProtocols.getInstance().addAuthenticationProtocol(new AuthSHA());
     SecurityProtocols.getInstance().addPrivacyProtocol(new PrivAES256());
@@ -93,7 +85,7 @@ public class TestPrivAES
         new byte[] {(byte) 0, (byte) 0, (byte) 0, (byte)0,
                     (byte) 0, (byte) 0, (byte) 0, (byte)0,
                     (byte) 0, (byte) 0, (byte) 0, (byte)2 });
-    assertEquals("66:95:fe:bc:92:88:e3:62:82:23:5f:c7:15:1f:12:84:97:b3:8f:3f:50:5e:07:eb:9a:f2:55:68:fa:1f:5d:be",
+    Assert.assertEquals("66:95:fe:bc:92:88:e3:62:82:23:5f:c7:15:1f:12:84:97:b3:8f:3f:50:5e:07:eb:9a:f2:55:68:fa:1f:5d:be",
         new OctetString(key).toHexString());
   }
 }

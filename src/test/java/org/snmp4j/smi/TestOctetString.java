@@ -20,50 +20,55 @@
 
 package org.snmp4j.smi;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Collection;
 import java.util.StringTokenizer;
 
-public class TestOctetString
-    extends TestCase {
+public class TestOctetString {
   private OctetString octetString = null;
 
-  protected void setUp() throws Exception {
-    super.setUp();
+  @Before
+  public void setUp() throws Exception {
     octetString = new OctetString();
   }
 
-  protected void tearDown() throws Exception {
+  @After
+  public void tearDown() throws Exception {
     octetString = null;
-    super.tearDown();
   }
 
+  @Test
   public void testConstructors() {
     byte[] ba = {
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'};
 
     octetString = new OctetString(ba);
 
-    assertEquals(octetString.toString(), "abcdefghi");
+    Assert.assertEquals(octetString.toString(), "abcdefghi");
 
     octetString = new OctetString(ba, 2, 2);
-    assertEquals(octetString.toString(), "cd");
+    Assert.assertEquals(octetString.toString(), "cd");
   }
 
+  @Test
   public void testSlip() {
     String s = "A short string with several delimiters  and a short word!";
     OctetString sp = new OctetString(s);
     Collection<OctetString> words = OctetString.split(sp, new OctetString("! "));
     StringTokenizer st = new StringTokenizer(s, "! ");
     for (OctetString os : words) {
-      assertEquals(os.toString(), st.nextToken());
+      Assert.assertEquals(os.toString(), st.nextToken());
     }
-    assertFalse(st.hasMoreTokens());
+    Assert.assertFalse(st.hasMoreTokens());
   }
 
+  @Test
   public void testIsPrintable() {
     OctetString nonPrintable = OctetString.fromHexString("1C:32:41:1C:4E:38");
-    assertFalse(nonPrintable.isPrintable());
+    Assert.assertFalse(nonPrintable.isPrintable());
   }
 }

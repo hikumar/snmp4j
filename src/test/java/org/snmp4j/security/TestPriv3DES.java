@@ -20,12 +20,12 @@
 
 package org.snmp4j.security;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 import org.snmp4j.asn1.BER;
 import org.snmp4j.smi.OctetString;
 
-public class TestPriv3DES
-    extends TestCase {
+public class TestPriv3DES {
      static {
        BER.setCheckSequenceLength(false);
      }
@@ -34,17 +34,8 @@ public class TestPriv3DES
     return new OctetString(buf).toHexString();
   }
 
-  public TestPriv3DES(String name) {
-    super(name);
-  }
-
-  protected void setUp() {
-  }
-
-  protected void tearDown() {
-  }
-
-  public static void testKey()
+  @Test
+  public void testKey()
   {
     SecurityProtocols protos = SecurityProtocols.getInstance();
     protos.addDefaultProtocols();
@@ -56,11 +47,12 @@ public class TestPriv3DES
     byte[] key = protos.passwordToKey(Priv3DES.ID, AuthMD5.ID, password, engineid.toByteArray());
 
     for (int i = 0; i < expectedKey.length; i++) {
-      assertEquals(expectedKey[i], key[i]);
+      Assert.assertEquals(expectedKey[i], key[i]);
     }
   }
 
-  public static void testEncrypt()
+  @Test
+  public void testEncrypt()
   {
 
       Priv3DES pd = new Priv3DES();
@@ -78,9 +70,9 @@ public class TestPriv3DES
       decrypted = pd.decrypt(ciphertext, 0, ciphertext.length, key, engine_boots, engine_time, pp);
 
       for (int i = 0; i < plaintext.length; i++) {
-        assertEquals(plaintext[i], decrypted[i]);
+        Assert.assertEquals(plaintext[i], decrypted[i]);
       }
-      assertEquals(8, pp.length);
+    Assert.assertEquals(8, pp.length);
     }
   /*
     public static void testPasswordToKeyMD5() {

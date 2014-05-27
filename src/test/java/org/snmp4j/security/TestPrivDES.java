@@ -21,31 +21,21 @@
 
 package org.snmp4j.security;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.OctetString;
 
-public class TestPrivDES
-    extends TestCase {
-
+public class TestPrivDES {
   static Logger cat = LoggerFactory.getLogger(TestPrivDES.class.getName());
 
   public static String asHex(byte buf[]) {
     return new OctetString(buf).toHexString();
   }
 
-  public TestPrivDES(String name) {
-    super(name);
-  }
-
-  protected void setUp() {
-  }
-
-  protected void tearDown() {
-  }
-
-  public static void testEncrypt()
+  @Test
+  public void testEncrypt()
   {
       PrivDES pd = new PrivDES();
       DecryptParams pp = new DecryptParams();
@@ -65,9 +55,9 @@ public class TestPrivDES
     cat.debug("Cleartext: {}", asHex(decrypted));
 
       for (int i = 0; i < plaintext.length; i++) {
-	      assertEquals(plaintext[i], decrypted[i]);
+        Assert.assertEquals(plaintext[i], decrypted[i]);
       }
     cat.info("pp length is: {}", pp.length);
-      assertEquals(8, pp.length);
+    Assert.assertEquals(8, pp.length);
     }
 }

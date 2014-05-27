@@ -21,32 +21,24 @@
 
 package org.snmp4j.smi;
 
-import junit.framework.TestCase;
 
+import org.junit.Assert;
+import org.junit.Test;
 
-public class TestTimeTicks extends TestCase {
-
-  public TestTimeTicks(String s) {
-    super(s);
-  }
-
-  protected void setUp() {
-  }
-
-  protected void tearDown() {
-  }
-
+public class TestTimeTicks {
+  @Test
   public void testToString() {
     TimeTicks timeticks = new TimeTicks();
     String stringRet = timeticks.toString();
-    assertEquals("0:00:00.00", stringRet);
+    Assert.assertEquals("0:00:00.00", stringRet);
   }
 
+  @Test
   public void testToMaxValue() {
     TimeTicks timeticks = new TimeTicks(4294967295L);
     String stringRet = timeticks.toString();
     System.out.println(stringRet);
-    assertEquals("497 days, 2:27:52.95", stringRet);
+    Assert.assertEquals("497 days, 2:27:52.95", stringRet);
   }
 
 }

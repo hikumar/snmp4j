@@ -20,23 +20,13 @@
 
 package org.snmp4j.security;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 import org.snmp4j.smi.OctetString;
 
 
-public class TestAuthSHA
-    extends TestCase {
-
-  public TestAuthSHA(String name) {
-    super(name);
-  }
-
-  protected void setUp() {
-  }
-
-  protected void tearDown() {
-  }
-
+public class TestAuthSHA {
+  @Test
   public void testPasswordToKey1() {
     String password = "maplesyrup";
     byte[] engineId = {
@@ -53,9 +43,9 @@ public class TestAuthSHA
     AuthSHA auth = new AuthSHA();
     try {
       byte[] key = auth.passwordToKey(new OctetString(password), engineId);
-      assertEquals(expectedKey.length, key.length);
+      Assert.assertEquals(expectedKey.length, key.length);
       for (int i = 0; i < key.length; i++) {
-        assertEquals(key[i], expectedKey[i]);
+        Assert.assertEquals(key[i], expectedKey[i]);
       }
     }
     catch (RuntimeException e) {
@@ -63,6 +53,7 @@ public class TestAuthSHA
     }
   }
 
+  @Test
   public void testPasswordToKey2() {
     String password = "newsyrup";
     byte[] engineId = {
@@ -79,9 +70,9 @@ public class TestAuthSHA
     AuthSHA auth = new AuthSHA();
     try {
       byte[] key = auth.passwordToKey(new OctetString(password), engineId);
-      assertEquals(expectedKey.length, key.length);
+      Assert.assertEquals(expectedKey.length, key.length);
       for (int i = 0; i < key.length; i++) {
-        assertEquals(expectedKey[i], key[i]);
+        Assert.assertEquals(expectedKey[i], key[i]);
       }
     }
     catch (RuntimeException e) {
@@ -89,6 +80,7 @@ public class TestAuthSHA
     }
   }
 
+  @Test
   public void testChangeDelta() {
     String oldPass = "maplesyrup";
     String newPass = "newsyrup";
@@ -121,9 +113,9 @@ public class TestAuthSHA
       oldKey = auth.passwordToKey(new OctetString(oldPass), engineId);
       newKey = auth.passwordToKey(new OctetString(newPass), engineId);
       byte[] delta = auth.changeDelta(oldKey, newKey, random);
-      assertEquals(expectedDelta.length, delta.length);
+      Assert.assertEquals(expectedDelta.length, delta.length);
       for (int i = 0; i < delta.length; i++) {
-        assertEquals(delta[i], expectedDelta[i]);
+        Assert.assertEquals(delta[i], expectedDelta[i]);
       }
     }
     catch (RuntimeException e) {

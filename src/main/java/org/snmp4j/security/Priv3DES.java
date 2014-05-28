@@ -58,6 +58,7 @@ public class Priv3DES implements PrivacyProtocol {
     cipherPool = new CipherPool();
   }
 
+  @Override
   public byte[] encrypt(byte[] unencryptedData,
                         int offset,
                         int length,
@@ -140,6 +141,7 @@ public class Priv3DES implements PrivacyProtocol {
     return encryptedData;
   }
 
+  @Override
   public byte[] decrypt(byte[] cryptedData,
                         int offset,
                         int length,
@@ -195,10 +197,12 @@ public class Priv3DES implements PrivacyProtocol {
    * @return
    *    an <code>OID</code> instance.
    */
+  @Override
   public OID getID() {
     return (OID) ID.clone();
   }
 
+  @Override
   public int getEncryptedLength(int scopedPDULength) {
     if (scopedPDULength % 8 == 0) {
       return scopedPDULength;
@@ -206,18 +210,22 @@ public class Priv3DES implements PrivacyProtocol {
     return 8 * ( (scopedPDULength / 8) + 1);
   }
 
+  @Override
   public int getMinKeyLength() {
     return 32;
   }
 
+  @Override
   public int getDecryptParamsLength() {
     return DECRYPT_PARAMS_LENGTH;
   }
 
+  @Override
   public int getMaxKeyLength() {
     return getMinKeyLength();
   }
 
+  @Override
   public byte[] extendShortKey(byte[] shortKey, OctetString password,
                                byte[] engineID,
                                AuthenticationProtocol authProtocol) {

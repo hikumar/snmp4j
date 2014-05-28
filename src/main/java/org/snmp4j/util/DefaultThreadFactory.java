@@ -47,6 +47,7 @@ public class DefaultThreadFactory implements ThreadFactory {
    * @return the <code>WorkerTask</code> wrapper to control start and
    *   termination of the thread.
    */
+  @Override
   @Deprecated
   public WorkerTask createWorkerThread(String name, WorkerTask task,
                                        boolean daemon) {
@@ -84,15 +85,18 @@ public class DefaultThreadFactory implements ThreadFactory {
       this.task = task;
     }
 
+    @Override
     public void terminate() {
       task.terminate();
     }
 
+    @Override
     public void join() throws InterruptedException {
       task.join();
       thread.join(joinTimeout);
     }
 
+    @Override
     public void run() {
       if (!started) {
         started = true;
@@ -103,6 +107,7 @@ public class DefaultThreadFactory implements ThreadFactory {
       }
     }
 
+    @Override
     public void interrupt() {
       task.interrupt();
       thread.interrupt();

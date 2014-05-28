@@ -70,6 +70,7 @@ public class SimpleOIDTextFormat implements OIDTextFormat {
    * @return
    *    the textual representation.
    */
+  @Override
   public String format(int[] value) {
     return SimpleOIDTextFormat.formatOID(value);
   }
@@ -83,6 +84,7 @@ public class SimpleOIDTextFormat implements OIDTextFormat {
    * @return
    *    the textual representation.
    */
+  @Override
   public String formatForRoundTrip(int[] value) {
     return format(value);
   }
@@ -147,6 +149,7 @@ public class SimpleOIDTextFormat implements OIDTextFormat {
    * @throws ParseException
    *    if the OID cannot be parsed successfully.
    */
+  @Override
   public int[] parse(String text) {
     return SimpleOIDTextFormat.parseOID(text);
   }

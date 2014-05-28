@@ -57,6 +57,7 @@ public class SimpleVariableTextFormat implements VariableTextFormat {
    *    representation.
    * @return the textual representation.
    */
+  @Override
   public String format(OID instanceOID, Variable variable, boolean withOID) {
     return (withOID) ?
         SNMP4JSettings.getOIDTextFormat().format(instanceOID.getValue())+
@@ -73,6 +74,7 @@ public class SimpleVariableTextFormat implements VariableTextFormat {
    * @return the new <code>Variable</code> instance.
    * @throws ParseException if the variable cannot be parsed successfully.
    */
+  @Override
   public Variable parse(int smiSyntax, String text) {
     Variable v = AbstractVariable.createFromSyntax(smiSyntax);
     if (v instanceof AssignableFromString) {
@@ -94,10 +96,12 @@ public class SimpleVariableTextFormat implements VariableTextFormat {
    * @throws ParseException
    *    if the variable cannot be parsed successfully.
    */
+  @Override
   public Variable parse(OID classOrInstanceOID, String text) {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public VariableBinding parseVariableBinding(String text) throws ParseException {
     int assignmentPos = text.indexOf(" = ");
     if (assignmentPos <= 0) {

@@ -39,11 +39,13 @@ public class DefaultTimeoutModel implements TimeoutModel {
   public DefaultTimeoutModel() {
   }
 
+  @Override
   public long getRetryTimeout(int retryCount,
                               int totalNumberOfRetries, long targetTimeout) {
     return targetTimeout;
   }
 
+  @Override
   public long getRequestTimeout(int totalNumberOfRetries, long targetTimeout) {
     return (totalNumberOfRetries+1)*targetTimeout;
   }

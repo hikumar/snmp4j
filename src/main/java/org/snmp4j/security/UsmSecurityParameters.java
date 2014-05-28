@@ -112,11 +112,13 @@ public class UsmSecurityParameters implements SecurityParameters {
     return privacyProtocol;
   }
 
+  @Override
   public int getBERLength() {
     int length = getBERPayloadLength();
     return length + BER.getBERLengthOfLength(length) + 1;
   }
 
+  @Override
   public int getBERPayloadLength() {
     int length = getBERUsmPayloadLength();
     length += BER.getBERLengthOfLength(length)+1;
@@ -125,6 +127,7 @@ public class UsmSecurityParameters implements SecurityParameters {
 
 
 
+  @Override
   public void decodeBER(BERInputStream inputStream) throws IOException {
     int pos = (int)inputStream.getPosition();
     this.decodedLength = pos;
@@ -182,6 +185,7 @@ public class UsmSecurityParameters implements SecurityParameters {
     return sequencePosition;
   }
 
+  @Override
   public void encodeBER(OutputStream outputStream) throws IOException {
     BER.encodeHeader(outputStream, BER.OCTETSTRING, getBERPayloadLength());
     BER.encodeHeader(outputStream, BER.SEQUENCE, getBERUsmPayloadLength());
@@ -208,6 +212,7 @@ public class UsmSecurityParameters implements SecurityParameters {
     return length;
   }
 
+  @Override
   public int getBERMaxLength(int securityLevel) {
     SecurityProtocols secProtocol = SecurityProtocols.getInstance();
     int securityParamsLength = 2;
@@ -250,9 +255,11 @@ public class UsmSecurityParameters implements SecurityParameters {
   public void setAuthenticationParameters(OctetString authenticationParameters) {
     this.authenticationParameters = authenticationParameters;
   }
+  @Override
   public int getSecurityParametersPosition() {
     return securityParametersPosition;
   }
+  @Override
   public void setSecurityParametersPosition(int securityParametersPosition) {
     this.securityParametersPosition = securityParametersPosition;
   }

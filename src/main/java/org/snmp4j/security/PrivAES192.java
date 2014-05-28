@@ -47,6 +47,7 @@ public class PrivAES192 extends PrivAES {
    * @return
    *    an <code>OID</code> instance.
    */
+  @Override
   public OID getID() {
         return (OID) ID.clone();
   }

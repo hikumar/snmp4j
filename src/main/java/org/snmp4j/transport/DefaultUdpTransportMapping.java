@@ -106,6 +106,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
     return new UdpAddress(socket.getLocalAddress(), socket.getLocalPort());
   }
 
+  @Override
   public void sendMessage(UdpAddress targetAddress, byte[] message,
                           TransportStateReference tmStateReference)
       throws IOException {
@@ -123,6 +124,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
   /**
    * Closes the socket and stops the listener thread.
    */
+  @Override
   public synchronized void close() {
     logger.info("Close requested for {}", this);
 
@@ -146,6 +148,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
    * @throws java.net.SocketException
    *    When this method is called when the socket is closed
    */
+  @Override
   public synchronized void listen() throws SocketException {
     if (socket.isClosed())
       throw new SocketException("Socket is closed");
@@ -159,6 +162,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
     logger.info("Now listening with {}", listener);
   }
 
+  @Override
   public synchronized boolean isListening() {
     return (listenerThread != null);
   }
@@ -203,6 +207,7 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
   }
 
   class SocketListener extends ControlableRunnable {
+    @Override
     public void run() {
       try {
         if (receiveBufferSize > 0) {

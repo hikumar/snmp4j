@@ -38,6 +38,7 @@ public class AuthMD5
     super("MD5", 16);
   }
 
+  @Override
   public OID getID() {
     return (OID) ID.clone();
   }

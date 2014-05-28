@@ -92,6 +92,7 @@ public abstract class AbstractVariable implements Variable, Serializable, Clonea
   public AbstractVariable() {
   }
 
+  @Override
   public int getBERPayloadLength() {
     return getBERLength();
   }
@@ -242,6 +243,7 @@ public abstract class AbstractVariable implements Variable, Serializable, Clonea
    * @return
    *    a new instance of this <code>Variable</code> with the same value.
    */
+  @Override
   public abstract Object clone();
 
   /**
@@ -308,6 +310,7 @@ public abstract class AbstractVariable implements Variable, Serializable, Clonea
    *    <LI>{@link SMIConstants#EXCEPTION_END_OF_MIB_VIEW}</LI>
    *    </UL>
    */
+  @Override
   public boolean isException() {
     return Null.isExceptionSyntax(getSyntax());
   }
@@ -363,6 +366,7 @@ public abstract class AbstractVariable implements Variable, Serializable, Clonea
    *    '?' is returned if the syntax is unknown.
    * @since 1.7
    */
+  @Override
   public final String getSyntaxString() {
     return getSyntaxString(getSyntax());
   }
@@ -399,6 +403,7 @@ public abstract class AbstractVariable implements Variable, Serializable, Clonea
    *    if implementing dynamic {@link Variable} instances.
    * @since 1.8
    */
+  @Override
   public boolean isDynamic() {
     return false;
   }

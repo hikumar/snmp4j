@@ -92,6 +92,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
    * @param model
    *    a MessageProcessingModel instance.
    */
+  @Override
   public synchronized void addMessageProcessingModel(MessageProcessingModel model) {
     while (mpm.size() <= model.getID()) {
       mpm.add(null);
@@ -106,6 +107,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
    * @param model
    *    a previously added MessageProcessingModel instance.
    */
+  @Override
   public synchronized void removeMessageProcessingModel(MessageProcessingModel model) {
     mpm.set(model.getID(), null);
   }
@@ -121,6 +123,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
    *    <code>transport</code> will be registered but not used for messages
    *    without specific transport mapping.
    */
+  @Override
   @SuppressWarnings("unchecked")
   public synchronized void addTransportMapping(TransportMapping transport) {
     List<TransportMapping> transports =
@@ -140,6 +143,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
    *    the supplied TransportMapping if it has been successfully removed,
    *    <code>null</code>otherwise.
    */
+  @Override
   public TransportMapping removeTransportMapping(TransportMapping transport) {
     List<? extends TransportMapping> tm =
             transportMappings.remove(transport.getSupportedAddressClass());
@@ -156,6 +160,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
    * @return
    *    a Collection instance.
    */
+  @Override
   public Collection<TransportMapping> getTransportMappings() {
     ArrayList<TransportMapping> l = new ArrayList<>(transportMappings.size());
     synchronized (transportMappings) {
@@ -166,6 +171,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
     return l;
   }
 
+  @Override
   public synchronized int getNextRequestID() {
     int nextID = nextTransactionID++;
     if (nextID <= 0) {
@@ -228,6 +234,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
    *    such a transport mapping does not exists.
    * @since 1.6
    */
+  @Override
   public TransportMapping getTransport(Address destAddress) {
     Class addressClass = destAddress.getClass();
     do {
@@ -334,6 +341,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
     }
   }
 
+  @Override
   public void processMessage(TransportMapping sourceTransport,
                              Address incomingAddress,
                              ByteBuffer wholeMessage,
@@ -389,12 +397,14 @@ public class MessageDispatcherImpl implements MessageDispatcher {
     }
   }
 
+  @Override
   public PduHandle sendPdu(Target target,
                            PDU pdu,
                            boolean expectResponse) throws MessageException {
     return sendPdu(null, target, pdu, expectResponse);
   }
 
+  @Override
   public PduHandle sendPdu(TransportMapping transport,
                            Target target,
                            PDU pdu,
@@ -562,6 +572,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
     }
   }
 
+  @Override
   public int returnResponsePdu(int messageProcessingModel,
                                int securityModel,
                                byte[] securityName,
@@ -618,6 +629,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
     }
   }
 
+  @Override
   public void releaseStateReference(int messageProcessingModel,
                                     PduHandle pduHandle) {
     MessageProcessingModel mp = getMessageProcessingModel(messageProcessingModel);
@@ -628,12 +640,14 @@ public class MessageDispatcherImpl implements MessageDispatcher {
     mp.releaseStateReference(pduHandle);
   }
 
+  @Override
   public synchronized void removeCommandResponder(CommandResponder l) {
     if (commandResponderListeners != null && commandResponderListeners.contains(l)) {
       commandResponderListeners.remove(l);
     }
   }
 
+  @Override
   public synchronized void addCommandResponder(CommandResponder l) {
     if (commandResponderListeners == null) {
       commandResponderListeners = new Vector<>(2);
@@ -675,6 +689,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
    *    a MessageProcessingModel instance if the ID is known, otherwise
    *    <code>null</code>
    */
+  @Override
   public MessageProcessingModel getMessageProcessingModel(int messageProcessingModel) {
     try {
       return mpm.get(messageProcessingModel);
@@ -798,6 +813,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
     }
   }
 
+  @Override
   public PduHandle sendPdu(TransportMapping transportMapping,
                            Target target,
                            PDU pdu,

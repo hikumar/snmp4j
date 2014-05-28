@@ -38,6 +38,7 @@ public class AuthSHA
     super("SHA-1", 20);
   }
 
+  @Override
   public OID getID() {
     return (OID) ID.clone();
   }

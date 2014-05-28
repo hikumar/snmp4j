@@ -109,6 +109,7 @@ public class USM extends SNMPv3SecurityModel {
     return new OctetString(randomID);
   }
 
+  @Override
   public int getID() {
     return SECURITY_MODEL_USM;
   }
@@ -173,14 +174,17 @@ public class USM extends SNMPv3SecurityModel {
     return this.timeTable.getEngineTime();
   }
 
+  @Override
   public SecurityParameters newSecurityParametersInstance() {
     return new UsmSecurityParameters();
   }
 
+  @Override
   public SecurityStateReference newSecurityStateReference() {
     return new UsmSecurityStateReference();
   }
 
+  @Override
   public int generateRequestMessage(int snmpVersion,
                                     byte[] globalData,
                                     int maxMessageSize,
@@ -286,6 +290,7 @@ public class USM extends SNMPv3SecurityModel {
     return entry;
   }
 
+  @Override
   public int generateResponseMessage(int snmpVersion,
                                      byte[] globalData,
                                      int maxMessageSize,
@@ -522,6 +527,7 @@ public class USM extends SNMPv3SecurityModel {
     return null;
   }
 
+  @Override
   public int processIncomingMsg(int snmpVersion, // typically, SNMP version
                                 int maxMessageSize, // of the sending SNMP entity - maxHeaderLength of the MP
                                 SecurityParameters securityParameters, // for the received message

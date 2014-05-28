@@ -45,6 +45,7 @@ public abstract class AuthGeneric implements AuthenticationProtocol {
     this.digestLength = digestLength;
   }
 
+  @Override
   public int getDigestLength() {
     return digestLength;
   }
@@ -67,6 +68,7 @@ public abstract class AuthGeneric implements AuthenticationProtocol {
     return md;
   }
 
+  @Override
   public boolean authenticate(byte[] authenticationKey,
                               byte[] message,
                               int messageOffset,
@@ -120,6 +122,7 @@ public abstract class AuthGeneric implements AuthenticationProtocol {
     return true;
   }
 
+  @Override
   public boolean isAuthentic(byte[] authenticationKey,
                              byte[] message,
                              int messageOffset,
@@ -141,6 +144,7 @@ public abstract class AuthGeneric implements AuthenticationProtocol {
     return digest.equals(origDigest, 12);
   }
 
+  @Override
   public byte[] changeDelta(byte[] oldKey,
                             byte[] newKey,
                             byte[] random) {
@@ -191,6 +195,7 @@ public abstract class AuthGeneric implements AuthenticationProtocol {
     return keyChange;
   }
 
+  @Override
   public byte[] passwordToKey(OctetString passwordString, byte[] engineID) {
 
     MessageDigest md = getDigestObject();
@@ -232,12 +237,14 @@ public abstract class AuthGeneric implements AuthenticationProtocol {
     return digest;
   }
 
+  @Override
   public byte[] hash(byte[] data) {
     MessageDigest md = getDigestObject();
     md.update(data);
     return md.digest();
   }
 
+  @Override
   public byte[] hash(byte[] data, int offset, int length) {
     MessageDigest md = getDigestObject();
     md.update(data, offset, length);

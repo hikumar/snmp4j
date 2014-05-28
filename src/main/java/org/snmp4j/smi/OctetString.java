@@ -143,10 +143,12 @@ public class OctetString extends AbstractVariable
     value = new byte[0];
   }
 
+  @Override
   public void encodeBER(OutputStream outputStream) throws IOException {
     BER.encodeString(outputStream, BER.OCTETSTRING, getValue());
   }
 
+  @Override
   public void decodeBER(BERInputStream inputStream) throws IOException {
     BER.MutableByte type = new BER.MutableByte();
     byte[] v = BER.decodeString(inputStream, type);
@@ -157,10 +159,12 @@ public class OctetString extends AbstractVariable
     setValue(v);
   }
 
+  @Override
   public int getBERLength() {
     return value.length + BER.getBERLengthOfLength(value.length) + 1;
   }
 
+  @Override
   public int getSyntax() {
     return SMIConstants.SYNTAX_OCTET_STRING;
   }
@@ -218,6 +222,7 @@ public class OctetString extends AbstractVariable
     return Arrays.equals(value, v);
   }
 
+  @Override
   public int compareTo(Variable o) {
     if (o instanceof OctetString) {
       OctetString other = (OctetString)o;
@@ -443,10 +448,12 @@ public class OctetString extends AbstractVariable
     return buf.toString();
   }
 
+  @Override
   public void setValue(String value) {
     setValue(value.getBytes());
   }
 
+  @Override
   public void setValue(byte[] value) {
     if (value == null) {
       throw new IllegalArgumentException(
@@ -468,6 +475,7 @@ public class OctetString extends AbstractVariable
     return value.length;
   }
 
+  @Override
   public Object clone() {
     return new OctetString(value);
   }
@@ -478,14 +486,17 @@ public class OctetString extends AbstractVariable
    *
    * @return the BER encoded length of this variable.
    */
+  @Override
   public int getBERPayloadLength() {
     return value.length;
   }
 
+  @Override
   public int toInt() {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public long toLong() {
     throw new UnsupportedOperationException();
   }
@@ -509,6 +520,7 @@ public class OctetString extends AbstractVariable
     return new OctetString(masked);
   }
 
+  @Override
   public OID toSubIndex(boolean impliedLength) {
     int[] subIndex;
     int offset = 0;
@@ -525,6 +537,7 @@ public class OctetString extends AbstractVariable
     return new OID(subIndex);
   }
 
+  @Override
   public void fromSubIndex(OID subIndex, boolean impliedLength) {
     if (impliedLength) {
       setValue(subIndex.toByteArray());
@@ -599,6 +612,7 @@ public class OctetString extends AbstractVariable
     return new OctetString(value);
   }
 
+  @Override
   public byte[] toByteArray() {
     return getValue();
   }

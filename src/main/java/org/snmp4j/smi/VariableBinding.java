@@ -171,10 +171,12 @@ public class VariableBinding
     return variable.isException();
   }
 
+  @Override
   public final int getBERPayloadLength() {
     return oid.getBERLength() + variable.getBERLength();
   }
 
+  @Override
   public final int getBERLength() {
     int length = getBERPayloadLength();
     // add type byte and length of length
@@ -182,6 +184,7 @@ public class VariableBinding
     return length;
   }
 
+  @Override
   public final void decodeBER(BERInputStream inputStream) throws IOException {
     BER.MutableByte type = new BER.MutableByte();
     int length = BER.decodeHeader(inputStream, type);
@@ -198,6 +201,7 @@ public class VariableBinding
     }
   }
 
+  @Override
   public final void encodeBER(OutputStream outputStream) throws IOException {
     int length = getBERPayloadLength();
     BER.encodeHeader(outputStream, BER.SEQUENCE,
@@ -229,6 +233,7 @@ public class VariableBinding
     return varFormat.format(oid, variable, false);
   }
 
+  @Override
   public Object clone() {
     return new VariableBinding(oid, variable);
   }

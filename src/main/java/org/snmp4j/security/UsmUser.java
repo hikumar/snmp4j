@@ -233,12 +233,14 @@ public class UsmUser implements User, Comparable, Cloneable {
    *    a negative integer, zero, or a positive integer as this object is
    *    less than, equal to, or greater than the specified object.
    */
+  @Override
   public int compareTo(Object o) {
     // allow only comparison with UsmUsers
     UsmUser other = (UsmUser)o;
     return securityName.compareTo(other.securityName);
   }
 
+  @Override
   public Object clone() {
     return new UsmUser(this.securityName, this.authenticationProtocol,
                                this.authenticationPassphrase,

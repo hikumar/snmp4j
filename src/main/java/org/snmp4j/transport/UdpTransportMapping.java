@@ -37,10 +37,12 @@ public abstract class UdpTransportMapping extends AbstractTransportMapping<UdpAd
     this.udpAddress = udpAddress;
   }
 
+  @Override
   public Class<? extends Address> getSupportedAddressClass() {
     return UdpAddress.class;
   }
 
+  @Override
   public UdpAddress getListenAddress() {
     return udpAddress;
   }

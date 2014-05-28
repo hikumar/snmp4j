@@ -55,12 +55,14 @@ public class Null extends AbstractVariable {
    setSyntax(exceptionSyntax);
   }
 
+  @Override
   public void decodeBER(BERInputStream inputStream) throws IOException {
     MutableByte type = new BER.MutableByte();
     BER.decodeNull(inputStream, type);
     this.syntax = type.getValue() & 0xFF;
   }
 
+  @Override
   public int getSyntax() {
     return syntax;
   }
@@ -69,6 +71,7 @@ public class Null extends AbstractVariable {
     return getSyntax();
   }
 
+  @Override
   public int getBERLength() {
     return 2;
   }
@@ -77,6 +80,7 @@ public class Null extends AbstractVariable {
     return (o instanceof Null) && (((Null) o).getSyntax() == getSyntax());
   }
 
+  @Override
   public int compareTo(Variable o) {
     return (getSyntax() - o.getSyntax());
   }
@@ -93,6 +97,7 @@ public class Null extends AbstractVariable {
     return "Null";
   }
 
+  @Override
   public void encodeBER(OutputStream outputStream) throws IOException {
     BER.encodeHeader(outputStream, (byte)getSyntax(), 0);
   }
@@ -105,6 +110,7 @@ public class Null extends AbstractVariable {
     this.syntax = syntax;
   }
 
+  @Override
   public Object clone() {
     return new Null(this.syntax);
   }
@@ -128,6 +134,7 @@ public class Null extends AbstractVariable {
    *    {@link SMIConstants#EXCEPTION_END_OF_MIB_VIEW}
    * @since 1.7
    */
+  @Override
   public final int toInt() {
     return getSyntax();
   }
@@ -141,14 +148,17 @@ public class Null extends AbstractVariable {
    *    {@link SMIConstants#EXCEPTION_END_OF_MIB_VIEW}
    * @since 1.7
    */
+  @Override
   public final long toLong() {
     return getSyntax();
   }
 
+  @Override
   public OID toSubIndex(boolean impliedLength) {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public void fromSubIndex(OID subIndex, boolean impliedLength) {
     throw new UnsupportedOperationException();
   }

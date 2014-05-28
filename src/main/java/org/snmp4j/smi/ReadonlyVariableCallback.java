@@ -33,6 +33,7 @@ public abstract class ReadonlyVariableCallback implements VariantVariableCallbac
   public ReadonlyVariableCallback() {
   }
 
+  @Override
   public final void variableUpdated(VariantVariable variable) {
   }
 }

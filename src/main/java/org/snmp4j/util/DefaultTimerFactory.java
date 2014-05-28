@@ -36,6 +36,7 @@ public class DefaultTimerFactory implements TimerFactory {
   public DefaultTimerFactory() {
   }
 
+  @Override
   public CommonTimer createTimer() {
     return new TimerAdapter();
   }
@@ -44,18 +45,22 @@ public class DefaultTimerFactory implements TimerFactory {
 
     private Timer timer = new Timer(true);
 
+    @Override
     public void schedule(TimerTask task, long delay) {
       timer.schedule(task, delay);
     }
 
+    @Override
     public void cancel() {
       timer.cancel();
     }
 
+    @Override
     public void schedule(TimerTask task, Date firstTime, long period) {
       timer.schedule(task, firstTime, period);
     }
 
+    @Override
     public void schedule(TimerTask task, long delay, long period) {
       timer.schedule(task, delay, period);
     }

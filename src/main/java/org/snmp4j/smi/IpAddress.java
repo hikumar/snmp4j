@@ -101,10 +101,12 @@ public class IpAddress extends SMIAddress implements AssignableFromByteArray {
     }
   }
 
+  @Override
   public int getSyntax() {
     return SMIConstants.SYNTAX_IPADDRESS;
   }
 
+  @Override
   public boolean isValid() {
     return (inetAddress != null);
   }
@@ -144,6 +146,7 @@ public class IpAddress extends SMIAddress implements AssignableFromByteArray {
     }
   }
 
+  @Override
   public boolean parseAddress(String address) {
     try {
       inetAddress = InetAddress.getByName(address);
@@ -154,6 +157,7 @@ public class IpAddress extends SMIAddress implements AssignableFromByteArray {
     }
   }
 
+  @Override
   public int compareTo(Variable o) {
     OctetString a = new OctetString(inetAddress.getAddress());
     return a.compareTo(new OctetString(((IpAddress)o).getInetAddress().getAddress()));
@@ -163,6 +167,7 @@ public class IpAddress extends SMIAddress implements AssignableFromByteArray {
     return (o instanceof IpAddress) && (compareTo((IpAddress)o) == 0);
   }
 
+  @Override
   public void decodeBER(BERInputStream inputStream) throws IOException {
     BER.MutableByte type = new BER.MutableByte();
     byte[] value = BER.decodeString(inputStream, type);
@@ -177,6 +182,7 @@ public class IpAddress extends SMIAddress implements AssignableFromByteArray {
     inetAddress = InetAddress.getByAddress(value);
   }
 
+  @Override
   public void encodeBER(OutputStream outputStream) throws IOException {
     byte[] address = new byte[4];
     if (inetAddress instanceof Inet6Address) {
@@ -192,6 +198,7 @@ public class IpAddress extends SMIAddress implements AssignableFromByteArray {
     BER.encodeString(outputStream, BER.IPADDRESS, address);
   }
 
+  @Override
   public int getBERLength() {
     return 6;
   }
@@ -217,18 +224,22 @@ public class IpAddress extends SMIAddress implements AssignableFromByteArray {
     return null;
   }
 
+  @Override
   public Object clone() {
     return new IpAddress(inetAddress);
   }
 
+  @Override
   public int toInt() {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public long toLong() {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public OID toSubIndex(boolean impliedLength) {
     byte[] address = new byte[4];
     System.arraycopy(inetAddress.getAddress(), 0, address, 0, 4);
@@ -239,6 +250,7 @@ public class IpAddress extends SMIAddress implements AssignableFromByteArray {
     return subIndex;
   }
 
+  @Override
   public void fromSubIndex(OID subIndex, boolean impliedLength) {
     byte[] rawValue = new byte[4];
     for (int i=0; i<rawValue.length; i++) {
@@ -252,6 +264,7 @@ public class IpAddress extends SMIAddress implements AssignableFromByteArray {
     }
   }
 
+  @Override
   public void setValue(String value) {
     if (!parseAddress(value)) {
       throw new IllegalArgumentException(value+" cannot be parsed by "+
@@ -259,6 +272,7 @@ public class IpAddress extends SMIAddress implements AssignableFromByteArray {
     }
   }
 
+  @Override
   public void setValue(byte[] value) {
     try {
       setAddress(value);
@@ -268,6 +282,7 @@ public class IpAddress extends SMIAddress implements AssignableFromByteArray {
     }
   }
 
+  @Override
   public byte[] toByteArray() {
     if (getInetAddress() != null) {
       return getInetAddress().getAddress();

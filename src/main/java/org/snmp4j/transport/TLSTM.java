@@ -301,6 +301,7 @@ public class TLSTM extends TcpTransportMapping {
    *    when the transport is already listening for incoming/outgoing messages.
    * @throws java.io.IOException
    */
+  @Override
   public synchronized void listen() throws IOException {
     if (server != null) {
       throw new SocketException("Port already listening");
@@ -351,6 +352,7 @@ public class TLSTM extends TcpTransportMapping {
    * Closes all open sockets and stops the internal server thread that
    * processes messages.
    */
+  @Override
   public void close() {
     for (SocketEntry entry : sockets.values()) {
       entry.closeSession();
@@ -409,6 +411,7 @@ public class TLSTM extends TcpTransportMapping {
    *    if the remote address cannot be closed due to an IO exception.
    * @since 1.7.1
    */
+  @Override
   public synchronized boolean close(TcpAddress remoteAddress) throws IOException {
     if (logger.isDebugEnabled()) {
       logger.debug("Closing socket for peer address {}", remoteAddress);
@@ -446,6 +449,7 @@ public class TLSTM extends TcpTransportMapping {
    *    RFC 5590 section 6.1.
    * @throws java.io.IOException
    */
+  @Override
   public void sendMessage(TcpAddress address, byte[] message,
                           TransportStateReference tmStateReference)
       throws IOException
@@ -474,6 +478,7 @@ public class TLSTM extends TcpTransportMapping {
    *    any timeout and connections opened by this transport mapping will stay
    *    opened until they are explicitly closed.
    */
+  @Override
   public void setConnectionTimeout(long connectionTimeout) {
     this.connectionTimeout = connectionTimeout;
   }
@@ -532,6 +537,7 @@ public class TLSTM extends TcpTransportMapping {
     }
   }
 
+  @Override
   public boolean isListening() {
     return (server != null);
   }
@@ -806,6 +812,7 @@ public class TLSTM extends TcpTransportMapping {
     /**
      * run
      */
+    @Override
     public void run() {
       long now = System.nanoTime();
       if ((socketCleaner == null) ||
@@ -835,6 +842,7 @@ public class TLSTM extends TcpTransportMapping {
       }
     }
 
+    @Override
     public boolean cancel(){
         boolean result = super.cancel();
         // free objects early
@@ -1180,6 +1188,7 @@ public class TLSTM extends TcpTransportMapping {
     }
 
 
+    @Override
     public void run() {
       // Here's where everything happens. The select method will
       // return when any operations registered above have occurred, the
@@ -1578,6 +1587,7 @@ public class TLSTM extends TcpTransportMapping {
       }
     }
 
+    @Override
     public void terminate() {
       stop = true;
       if (logger.isDebugEnabled()) {
@@ -1585,12 +1595,14 @@ public class TLSTM extends TcpTransportMapping {
       }
     }
 
+    @Override
     public void join() {
       if (logger.isDebugEnabled()) {
         logger.debug("Joining worker task: {}", getClass().getName());
       }
     }
 
+    @Override
     public void interrupt() {
       stop = true;
       if (logger.isDebugEnabled()) {
@@ -1929,6 +1941,7 @@ public class TLSTM extends TcpTransportMapping {
   }
 
   private class DefaultTLSTMTrustManagerFactory implements TLSTMTrustManagerFactory {
+    @Override
     public X509TrustManager create(X509TrustManager trustManager, boolean useClientMode,
                                  TransportStateReference tmStateReference) {
       return new TlsTrustManager(trustManager, useClientMode, tmStateReference);

@@ -60,18 +60,22 @@ public class TimeTicks extends UnsignedInteger32 {
     super(value);
   }
 
+  @Override
   public Object clone() {
     return new TimeTicks(value);
   }
 
+  @Override
   public int getSyntax() {
     return SMIConstants.SYNTAX_TIMETICKS;
   }
 
+  @Override
   public void encodeBER(OutputStream os) throws IOException {
     BER.encodeUnsignedInteger(os, BER.TIMETICKS, super.getValue());
   }
 
+  @Override
   public void decodeBER(BERInputStream inputStream) throws IOException {
     BER.MutableByte type = new BER.MutableByte();
     long newValue = BER.decodeUnsignedInteger(inputStream, type);

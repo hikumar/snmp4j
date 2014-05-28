@@ -58,10 +58,12 @@ public abstract class TransportIpAddress extends IpAddress {
     this.port = port;
   }
 
+  @Override
   public boolean isValid() {
     return super.isValid() && (port >= 0) && (port <= 65535);
   }
 
+  @Override
   public int compareTo(Variable o) {
     int result = super.compareTo(o);
     if (result == 0) {
@@ -74,6 +76,7 @@ public abstract class TransportIpAddress extends IpAddress {
     return (o instanceof TransportIpAddress) && (super.equals(o) && ((TransportIpAddress)o).getPort() == port);
   }
 
+  @Override
   public boolean parseAddress(String address) {
     try {
       StringTokenizer st = new StringTokenizer(address, "/");
@@ -187,6 +190,7 @@ public abstract class TransportIpAddress extends IpAddress {
     return retval;
   }
 
+  @Override
   public void decodeBER(BERInputStream inputStream) throws IOException {
     OctetString os = new OctetString();
     os.decodeBER(inputStream);
@@ -200,19 +204,23 @@ public abstract class TransportIpAddress extends IpAddress {
     }
   }
 
+  @Override
   public void encodeBER(OutputStream outputStream) throws IOException {
     OctetString os = new OctetString(getValue());
     os.encodeBER(outputStream);
   }
 
+  @Override
   public int getBERLength() {
     return getValue().length;
   }
 
+  @Override
   public int getBERPayloadLength() {
     return getBERLength();
   }
 
+  @Override
   public int getSyntax() {
     return SMIConstants.SYNTAX_OCTET_STRING;
   }

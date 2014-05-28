@@ -174,6 +174,7 @@ public class UsmUserTable implements Serializable {
       return false;
     }
 
+    @Override
     public int compareTo(Object o) {
       if (o instanceof UsmUserEntry) {
         return compareTo(new UsmUserKey((UsmUserEntry)o));

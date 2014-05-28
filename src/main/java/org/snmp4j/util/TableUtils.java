@@ -418,6 +418,7 @@ public class TableUtils extends AbstractSnmpUtility {
       session.send(pdu, target, startCol, this);
     }
 
+    @Override
     public void onResponse(ResponseEvent event) {
       // Do not forget to cancel the asynchronous request! ;-)
       session.cancel(event.getRequest(), this);
@@ -617,6 +618,7 @@ public class TableUtils extends AbstractSnmpUtility {
             upperBoundIndex);
     }
 
+    @Override
     public synchronized void onResponse(ResponseEvent event) {
       // Do not forget to cancel the asynchronous request! ;-)
       session.cancel(event.getRequest(), this);
@@ -812,11 +814,13 @@ public class TableUtils extends AbstractSnmpUtility {
     private List<TableEvent> rows = new LinkedList<>();
     private volatile boolean finished = false;
 
+    @Override
     public boolean next(TableEvent event) {
       rows.add(event);
       return true;
     }
 
+    @Override
     public synchronized void finished(TableEvent event) {
       if ((event.getStatus() != TableEvent.STATUS_OK) ||
           (event.getIndex() != null)) {
@@ -830,6 +834,7 @@ public class TableUtils extends AbstractSnmpUtility {
       return rows;
     }
 
+    @Override
     public boolean isFinished() {
       return finished;
     }

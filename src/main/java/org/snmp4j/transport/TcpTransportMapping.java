@@ -54,6 +54,7 @@ public abstract class TcpTransportMapping
     this.tcpAddress = tcpAddress;
   }
 
+  @Override
   public Class<? extends Address> getSupportedAddressClass() {
     return TcpAddress.class;
   }
@@ -69,10 +70,12 @@ public abstract class TcpTransportMapping
     return tcpAddress;
   }
 
+  @Override
   public TcpAddress getListenAddress() {
     return tcpAddress;
   }
 
+  @Override
   public synchronized void addTransportStateListener(TransportStateListener l) {
     if (transportStateListeners == null) {
       transportStateListeners = new Vector<>(2);
@@ -80,6 +83,7 @@ public abstract class TcpTransportMapping
     transportStateListeners.add(l);
   }
 
+  @Override
   public synchronized void removeTransportStateListener(TransportStateListener
       l) {
     if (transportStateListeners != null) {

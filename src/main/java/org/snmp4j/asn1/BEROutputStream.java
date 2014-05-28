@@ -60,21 +60,26 @@ public class BEROutputStream extends OutputStream {
     this.offset = buffer.position();
   }
 
+  @Override
   public void write(int b) throws IOException {
     buffer.put((byte)b);
   }
 
+  @Override
   public void write(byte[] b) throws IOException {
     buffer.put(b);
   }
 
+  @Override
   public void write(byte[] b, int off, int len) throws IOException {
       buffer.put(b, off, len);
   }
 
+  @Override
   public void close() throws IOException {
   }
 
+  @Override
   public void flush() throws IOException {
   }
 

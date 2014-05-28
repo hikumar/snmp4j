@@ -262,6 +262,7 @@ public class TreeUtils extends AbstractSnmpUtility {
       }
     }
 
+    @Override
     public void onResponse(ResponseEvent event) {
       session.cancel(event.getRequest(), this);
       PDU respPDU = event.getResponse();
@@ -361,11 +362,13 @@ public class TreeUtils extends AbstractSnmpUtility {
       collectedEvents = eventList;
     }
 
+    @Override
     public synchronized boolean next(TreeEvent event) {
       collectedEvents.add(event);
       return true;
     }
 
+    @Override
     public synchronized void finished(TreeEvent event) {
       collectedEvents.add(event);
       finished = true;
@@ -376,6 +379,7 @@ public class TreeUtils extends AbstractSnmpUtility {
       return collectedEvents;
     }
 
+    @Override
     public boolean isFinished() {
       return finished;
     }

@@ -102,12 +102,14 @@ public class ScopedPDU extends PDU {
     return contextName;
   }
 
+  @Override
   public int getBERLength() {
     int length = getBERPayloadLength();
     length += 1 + BER.getBERLengthOfLength(length);
     return length;
   }
 
+  @Override
   public int getBERPayloadLength() {
     int length = super.getBERLength();
     int cid = (contextEngineID == null) ? 0 : contextEngineID.length();
@@ -117,6 +119,7 @@ public class ScopedPDU extends PDU {
     return length;
   }
 
+  @Override
   public void encodeBER(OutputStream outputStream) throws IOException {
     BER.encodeHeader(outputStream, BER.SEQUENCE, getBERPayloadLength());
     contextEngineID.encodeBER(outputStream);
@@ -126,6 +129,7 @@ public class ScopedPDU extends PDU {
 
 
 
+  @Override
   public Object clone() {
     return new ScopedPDU(this);
   }
@@ -137,6 +141,7 @@ public class ScopedPDU extends PDU {
    *   byte stream.
    * @throws IOException
    */
+  @Override
   public void decodeBER(BERInputStream inputStream) throws IOException {
     MutableByte mutableByte = new MutableByte();
     int length = BER.decodeHeader(inputStream, mutableByte);

@@ -67,6 +67,7 @@ public abstract class PrivAES
     cipherPool = new CipherPool();
   }
 
+  @Override
   public byte[] encrypt(byte[] unencryptedData, int offset, int length,
                         byte[] encryptionKey, long engineBoots,
                         long engineTime, DecryptParams decryptParams) {
@@ -137,6 +138,7 @@ public abstract class PrivAES
     return encryptedData;
   }
 
+  @Override
   public byte[] decrypt(byte[] cryptedData, int offset, int length,
                         byte[] decryptionKey, long engineBoots, long engineTime,
                         DecryptParams decryptParams) {
@@ -195,6 +197,7 @@ public abstract class PrivAES
     return decryptedData;
   }
 
+  @Override
   public int getEncryptedLength(int scopedPDULength) {
     return scopedPDULength;
   }
@@ -209,18 +212,22 @@ public abstract class PrivAES
     return new OctetString(buf).toHexString();
   }
 
+  @Override
   public int getMinKeyLength() {
     return keyBytes;
   }
 
+  @Override
   public int getMaxKeyLength() {
     return getMinKeyLength();
   }
 
+  @Override
   public int getDecryptParamsLength() {
     return DECRYPT_PARAMS_LENGTH;
   }
 
+  @Override
   public byte[] extendShortKey(byte[] shortKey, OctetString password,
                                byte[] engineID,
                                AuthenticationProtocol authProtocol) {

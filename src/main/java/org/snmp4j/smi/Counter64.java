@@ -52,10 +52,12 @@ public class Counter64 extends AbstractVariable
     setValue(value);
   }
 
+  @Override
   public void encodeBER(OutputStream outputStream) throws IOException {
     BER.encodeUnsignedInt64(outputStream, BER.COUNTER64, value);
   }
 
+  @Override
   public void decodeBER(BERInputStream inputStream) throws IOException {
     BER.MutableByte type = new BER.MutableByte();
     long newValue = BER.decodeUnsignedInt64(inputStream, type);
@@ -66,6 +68,7 @@ public class Counter64 extends AbstractVariable
     setValue(newValue);
   }
 
+  @Override
   public int getSyntax() {
     return SMIConstants.SYNTAX_COUNTER64;
   }
@@ -74,6 +77,7 @@ public class Counter64 extends AbstractVariable
     return (int) value;
   }
 
+  @Override
   public int getBERLength() {
     if (value < 0L) {
       return 11;
@@ -94,6 +98,7 @@ public class Counter64 extends AbstractVariable
     return (o instanceof Counter64) && ((Counter64) o).value == value;
   }
 
+  @Override
   public int compareTo(Variable o) {
     long other = ((Counter64) o).value;
     for (int i = 63; i >= 0; i--) {
@@ -122,10 +127,12 @@ public class Counter64 extends AbstractVariable
     return i64.toString();
   }
 
+  @Override
   public void setValue(String value) {
     this.value = Long.parseLong(value);
   }
 
+  @Override
   public void setValue(long value) {
     this.value = value;
   }
@@ -134,6 +141,7 @@ public class Counter64 extends AbstractVariable
     return value;
   }
 
+  @Override
   public Object clone() {
     return new Counter64(value);
   }
@@ -147,18 +155,22 @@ public class Counter64 extends AbstractVariable
     value++;
   }
 
+  @Override
   public final int toInt() {
     return (int)getValue();
   }
 
+  @Override
   public final long toLong() {
     return getValue();
   }
 
+  @Override
   public OID toSubIndex(boolean impliedLength) {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public void fromSubIndex(OID subIndex, boolean impliedLength) {
     throw new UnsupportedOperationException();
   }

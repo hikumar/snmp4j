@@ -50,14 +50,17 @@ public class BitString extends OctetString {
   public BitString() {
   }
 
+  @Override
   public int getSyntax() {
     return BER.ASN_BIT_STR;
   }
 
+  @Override
   public void encodeBER(OutputStream outputStream) throws IOException {
     BER.encodeString(outputStream, BER.BITSTRING, getValue());
   }
 
+  @Override
   public void decodeBER(BERInputStream inputStream) throws IOException {
     BER.MutableByte type = new BER.MutableByte();
     byte[] v = BER.decodeString(inputStream, type);
@@ -68,6 +71,7 @@ public class BitString extends OctetString {
     setValue(v);
   }
 
+  @Override
   public Object clone() {
     BitString clone = new BitString();
     clone.setValue(super.getValue());

@@ -48,14 +48,17 @@ public class Opaque extends OctetString {
     super(bytes);
   }
 
+  @Override
   public int getSyntax() {
     return SMIConstants.SYNTAX_OPAQUE;
   }
 
+  @Override
   public void encodeBER(OutputStream outputStream) throws IOException {
     BER.encodeString(outputStream, BER.OPAQUE, getValue());
   }
 
+  @Override
   public void decodeBER(BERInputStream inputStream) throws IOException {
     BER.MutableByte type = new BER.MutableByte();
     byte[] v = BER.decodeString(inputStream, type);
@@ -75,6 +78,7 @@ public class Opaque extends OctetString {
     return super.toHexString();
   }
 
+  @Override
   public Object clone() {
     return new Opaque(super.getValue());
   }

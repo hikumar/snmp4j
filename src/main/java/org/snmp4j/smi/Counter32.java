@@ -56,14 +56,17 @@ public class Counter32 extends UnsignedInteger32 {
     return false;
   }
 
+  @Override
   public int getSyntax() {
     return SMIConstants.SYNTAX_COUNTER32;
   }
 
+  @Override
   public void encodeBER(OutputStream outputStream) throws IOException {
     BER.encodeUnsignedInteger(outputStream, BER.COUNTER32, getValue());
   }
 
+  @Override
   public void decodeBER(BERInputStream inputStream) throws IOException {
     BER.MutableByte type = new BER.MutableByte();
     long newValue = BER.decodeUnsignedInteger(inputStream, type);
@@ -74,6 +77,7 @@ public class Counter32 extends UnsignedInteger32 {
     setValue(newValue);
   }
 
+  @Override
   public Object clone() {
     return new Counter32(value);
   }
@@ -91,10 +95,12 @@ public class Counter32 extends UnsignedInteger32 {
     }
   }
 
+  @Override
   public OID toSubIndex(boolean impliedLength) {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public void fromSubIndex(OID subIndex, boolean impliedLength) {
     throw new UnsupportedOperationException();
   }

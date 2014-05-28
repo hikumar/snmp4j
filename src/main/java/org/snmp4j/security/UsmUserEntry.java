@@ -162,6 +162,7 @@ public class UsmUserEntry implements Serializable, Comparable {
    *    a negative integer, zero, or a positive integer as this object is
    *    less than, equal to, or greater than the specified object.
    */
+  @Override
   public int compareTo(Object o) {
     UsmUserEntry other = (UsmUserEntry)o;
     int result = 0;

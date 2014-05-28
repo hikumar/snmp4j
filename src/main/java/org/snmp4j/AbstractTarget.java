@@ -77,6 +77,7 @@ public abstract class AbstractTarget implements Target {
    * @return
    *    an Address instance.
    */
+  @Override
   public Address getAddress() {
     return address;
   }
@@ -86,6 +87,7 @@ public abstract class AbstractTarget implements Target {
    * @param address
    *    an Address instance.
    */
+  @Override
   public void setAddress(Address address) {
     this.address = address;
   }
@@ -99,6 +101,7 @@ public abstract class AbstractTarget implements Target {
    * @see org.snmp4j.mp.SnmpConstants#version2c
    * @see org.snmp4j.mp.SnmpConstants#version3
    */
+  @Override
   public void setVersion(int version) {
     this.version = version;
   }
@@ -111,6 +114,7 @@ public abstract class AbstractTarget implements Target {
    * @see org.snmp4j.mp.SnmpConstants#version2c
    * @see org.snmp4j.mp.SnmpConstants#version3
    */
+  @Override
   public int getVersion() {
     return version;
   }
@@ -121,6 +125,7 @@ public abstract class AbstractTarget implements Target {
    *    the number of retries. <em>Note: If the number of retries is set to
    *    0, then the request will be sent out exactly once.</em>
    */
+  @Override
   public void setRetries(int retries) {
     if (retries < 0) {
       throw new IllegalArgumentException("Number of retries < 0");
@@ -133,6 +138,7 @@ public abstract class AbstractTarget implements Target {
    * @return
    *    an integer >= 0.
    */
+  @Override
   public int getRetries() {
     return retries;
   }
@@ -143,6 +149,7 @@ public abstract class AbstractTarget implements Target {
    *    timeout in milliseconds before a confirmed request is resent or
    *    timed out.
    */
+  @Override
   public void setTimeout(long timeout) {
     this.timeout = timeout;
   }
@@ -152,6 +159,7 @@ public abstract class AbstractTarget implements Target {
    * @return
    *    the timeout in milliseconds.
    */
+  @Override
   public long getTimeout() {
     return timeout;
   }
@@ -163,6 +171,7 @@ public abstract class AbstractTarget implements Target {
    *    the maximum PDU size of request PDUs for this target. Which is always
    *    greater than 484.
    */
+  @Override
   public int getMaxSizeRequestPDU() {
     return maxSizeRequestPDU;
   }
@@ -173,6 +182,7 @@ public abstract class AbstractTarget implements Target {
    *    the maximum PDU (SNMP message) size this session will be able to
    *    process.
    */
+  @Override
   public void setMaxSizeRequestPDU(int maxSizeRequestPDU) {
     if (maxSizeRequestPDU < SnmpConstants.MIN_PDU_LENGTH) {
       throw new IllegalArgumentException("The minimum PDU length is: "+
@@ -181,6 +191,7 @@ public abstract class AbstractTarget implements Target {
     this.maxSizeRequestPDU = maxSizeRequestPDU;
   }
 
+  @Override
   public List<TransportMapping<? extends Address>> getPreferredTransports() {
     return preferredTransports;
   }
@@ -215,6 +226,7 @@ public abstract class AbstractTarget implements Target {
     return getClass().getName()+"["+toStringAbstractTarget()+"]";
   }
 
+  @Override
   public Object clone() {
     try {
       return super.clone();
@@ -225,14 +237,17 @@ public abstract class AbstractTarget implements Target {
   }
 
 
+  @Override
   public int getSecurityModel() {
     return securityModel;
   }
 
+  @Override
   public final OctetString getSecurityName() {
     return securityName;
   }
 
+  @Override
   public int getSecurityLevel() {
     return securityLevel;
   }
@@ -249,6 +264,7 @@ public abstract class AbstractTarget implements Target {
    *   <LI>{@link org.snmp4j.security.SecurityLevel#AUTH_PRIV}
    *   </UL></P>
    */
+  @Override
   public void setSecurityLevel(int securityLevel) {
     this.securityLevel = securityLevel;
   }
@@ -259,6 +275,7 @@ public abstract class AbstractTarget implements Target {
    *    an <code>int</code> value as defined in the {@link org.snmp4j.security.SecurityModel}
    *    interface or any third party subclass thereof.
    */
+  @Override
   public void setSecurityModel(int securityModel) {
     this.securityModel = securityModel;
   }
@@ -269,6 +286,7 @@ public abstract class AbstractTarget implements Target {
    *    an <code>OctetString</code> instance (must not be <code>null</code>).
    * @see #getSecurityName()
    */
+  @Override
   public final void setSecurityName(OctetString securityName) {
     this.securityName = securityName;
   }

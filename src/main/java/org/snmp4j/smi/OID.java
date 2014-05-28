@@ -166,6 +166,7 @@ public class OID extends AbstractVariable
   }
 
 
+  @Override
   public final int getSyntax() {
     return SMIConstants.SYNTAX_OBJECT_IDENTIFIER;
   }
@@ -215,6 +216,7 @@ public class OID extends AbstractVariable
     return new OID(masked);
   }
 
+  @Override
   public final int compareTo(Variable o) {
     if (o instanceof OID) {
       OID other = (OID)o;
@@ -283,15 +285,18 @@ public class OID extends AbstractVariable
     return b;
   }
 
+  @Override
   public void encodeBER(OutputStream outputStream) throws IOException {
     BER.encodeOID(outputStream, BER.OID, value);
   }
 
+  @Override
   public int getBERLength() {
     int length = BER.getOIDLength(value);
     return length + BER.getBERLengthOfLength(length) + 1;
   }
 
+  @Override
   public void decodeBER(BERInputStream inputStream) throws IOException {
     BER.MutableByte type = new BER.MutableByte();
     int[] v = BER.decodeOID(inputStream, type);
@@ -302,6 +307,7 @@ public class OID extends AbstractVariable
     setValue(v);
   }
 
+  @Override
   public void setValue(String value) {
     this.value = parseDottedString(value);
   }
@@ -314,6 +320,7 @@ public class OID extends AbstractVariable
    * @throws IllegalArgumentException
    *    if value == null.
    */
+  @Override
   public final void setValue(int[] value) {
     if (value == null) {
       throw new IllegalArgumentException("OID value must not be set to null");
@@ -528,6 +535,7 @@ public class OID extends AbstractVariable
     return (leftMostCompare(min, other) == 0);
   }
 
+  @Override
   public Object clone() {
     return new OID(value);
   }
@@ -612,14 +620,17 @@ public class OID extends AbstractVariable
     return new OID(value, 0, Math.max(value.length-1, 0));
   }
 
+  @Override
   public int toInt() {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public long toLong() {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public final OID toSubIndex(boolean impliedLength) {
     if (impliedLength) {
       return new OID(value);
@@ -629,6 +640,7 @@ public class OID extends AbstractVariable
     return subIndex;
   }
 
+  @Override
   public final void fromSubIndex(OID subIndex, boolean impliedLength) {
     int offset = 1;
     if (impliedLength) {
@@ -740,6 +752,7 @@ public class OID extends AbstractVariable
     return b;
   }
 
+  @Override
   public int[] toIntArray() {
     return value;
   }

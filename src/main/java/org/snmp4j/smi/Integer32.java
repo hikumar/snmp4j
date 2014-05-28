@@ -53,10 +53,12 @@ public class Integer32 extends AbstractVariable
     setValue(value);
   }
 
+  @Override
   public void encodeBER(OutputStream outputStream) throws IOException {
     BER.encodeInteger(outputStream, BER.INTEGER, value);
   }
 
+  @Override
   public void decodeBER(BERInputStream inputStream) throws IOException {
     BER.MutableByte type = new BER.MutableByte();
     int newValue = BER.decodeInteger(inputStream, type);
@@ -66,6 +68,7 @@ public class Integer32 extends AbstractVariable
     setValue(newValue);
   }
 
+  @Override
   public int getSyntax() {
     return SMIConstants.SYNTAX_INTEGER;
   }
@@ -74,6 +77,7 @@ public class Integer32 extends AbstractVariable
     return value;
   }
 
+  @Override
   public int getBERLength() {
     if ((value <   0x80) &&
         (value >= -0x80)) {
@@ -94,6 +98,7 @@ public class Integer32 extends AbstractVariable
     return (o instanceof Integer32) && (((Integer32) o).value == value);
   }
 
+  @Override
   public int compareTo(Variable o) {
     return value - ((Integer32)o).value;
   }
@@ -102,6 +107,7 @@ public class Integer32 extends AbstractVariable
     return Integer.toString(value);
   }
 
+  @Override
   public final void setValue(String value) {
     this.value = Integer.parseInt(value);
   }
@@ -111,6 +117,7 @@ public class Integer32 extends AbstractVariable
    * @param value
    *    an integer value.
    */
+  @Override
   public final void setValue(int value) {
     this.value = value;
   }
@@ -124,22 +131,27 @@ public class Integer32 extends AbstractVariable
     return value;
   }
 
+  @Override
   public Object clone() {
     return new Integer32(value);
   }
 
+  @Override
   public final int toInt() {
     return getValue();
   }
 
+  @Override
   public final long toLong() {
     return getValue();
   }
 
+  @Override
   public OID toSubIndex(boolean impliedLength) {
     return new OID(new int[] { value });
   }
 
+  @Override
   public void fromSubIndex(OID subIndex, boolean impliedLength) {
     setValue(subIndex.get(0));
   }

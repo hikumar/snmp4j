@@ -497,6 +497,7 @@ public class Snmp implements Session, CommandResponder {
    * @throws IOException
    *    if a transport mapping cannot be closed successfully.
    */
+  @Override
   public void close() {
     for (TransportMapping tm : messageDispatcher.getTransportMappings()) {
       if (tm.isListening()) {
@@ -721,12 +722,14 @@ public class Snmp implements Session, CommandResponder {
     }
   }
 
+  @Override
   public void send(PDU pdu, Target target,
                    Object userHandle,
                    ResponseListener listener) throws IOException {
     send(pdu, target, null, userHandle, listener);
   }
 
+  @Override
   public void send(PDU pdu, Target target,
                    TransportMapping transport,
                    Object userHandle,
@@ -786,6 +789,7 @@ public class Snmp implements Session, CommandResponder {
     return null;
   }
 
+  @Override
   public void cancel(PDU request, ResponseListener listener) {
     AsyncRequestKey key = new AsyncRequestKey(request, listener);
     PduHandle pending = asyncRequests.remove(key);
@@ -939,6 +943,7 @@ public class Snmp implements Session, CommandResponder {
    *   a <code>CommandResponderEvent</code> with the decoded incoming PDU as
    *   dispatched to this method call by the associated message dispatcher.
    */
+  @Override
   public void processPdu(CommandResponderEvent event) {
     PduHandle handle = event.getPduHandle();
     PDU pdu = event.getPDU();
@@ -1038,6 +1043,7 @@ public class Snmp implements Session, CommandResponder {
 
   class ReportProcessor implements ReportHandler {
 
+    @Override
     public void processReport(PduHandle handle, CommandResponderEvent e) {
       PDU pdu = e.getPDU();
       logger.debug("Searching pending request with handle{}", handle);
@@ -1377,6 +1383,7 @@ public class Snmp implements Session, CommandResponder {
       return super.clone();
     }
 
+    @Override
     public synchronized void pduHandleAssigned(PduHandle handle, PDU pdu) {
       if (key == null) {
         key = handle;
@@ -1416,6 +1423,7 @@ public class Snmp implements Session, CommandResponder {
     /**
      * Process retries of a pending request.
      */
+    @Override
     public synchronized void run() {
       PduHandle m_key = key;
       PDU m_pdu = pdu;
@@ -1505,6 +1513,7 @@ public class Snmp implements Session, CommandResponder {
      * @return
      *    <code>true</code> if cancellation was successful.
      */
+    @Override
     public boolean cancel(){
       cancelled = true;
       boolean result = super.cancel();
@@ -1531,6 +1540,7 @@ public class Snmp implements Session, CommandResponder {
       super(listener, userObject, pdu, target, transport);
     }
 
+    @Override
     protected void registerRequest(PduHandle handle) {
       AsyncRequestKey key = new AsyncRequestKey(super.pdu, super.listener);
       asyncRequests.put(key, handle);
@@ -1615,6 +1625,7 @@ public class Snmp implements Session, CommandResponder {
       notificationListeners.clear();
     }
 
+    @Override
     public void processPdu(CommandResponderEvent event) {
       CommandResponder listener;
       synchronized (this) {

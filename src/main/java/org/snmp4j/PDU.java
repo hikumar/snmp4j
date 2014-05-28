@@ -526,6 +526,7 @@ public class PDU implements BERSerializable, Serializable {
             (type != PDU.TRAP) && (type != PDU.V1TRAP));
   }
 
+  @Override
   public int getBERLength() {
     // header for data_pdu
     int length = getBERPayloadLengthPDU();
@@ -534,10 +535,12 @@ public class PDU implements BERSerializable, Serializable {
     return length;
   }
 
+  @Override
   public int getBERPayloadLength() {
     return getBERPayloadLengthPDU();
   }
 
+  @Override
   public void decodeBER(BERInputStream inputStream) throws IOException {
     BER.MutableByte pduType = new BER.MutableByte();
     int length = BER.decodeHeader(inputStream, pduType);
@@ -616,6 +619,7 @@ public class PDU implements BERSerializable, Serializable {
     return length;
   }
 
+  @Override
   public void encodeBER(OutputStream outputStream) throws IOException {
     BER.encodeHeader(outputStream, type, getBERPayloadLengthPDU());
 
@@ -660,6 +664,7 @@ public class PDU implements BERSerializable, Serializable {
     return type;
   }
 
+  @Override
   public Object clone() {
     return new PDU(this);
   }

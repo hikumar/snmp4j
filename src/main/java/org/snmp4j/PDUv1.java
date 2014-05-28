@@ -135,6 +135,7 @@ public class PDUv1 extends PDU {
     timestamp = (TimeTicks) other.timestamp.clone();
   }
 
+  @Override
   public Object clone() {
     return new PDUv1(this);
   }
@@ -146,6 +147,7 @@ public class PDUv1 extends PDU {
    *   byte stream.
    * @throws IOException
    */
+  @Override
   public void decodeBER(BERInputStream inputStream) throws IOException {
     MutableByte pduType = new MutableByte();
     int length = BER.decodeHeader(inputStream, pduType);
@@ -214,6 +216,7 @@ public class PDUv1 extends PDU {
    * @param outputStream an <code>OutputStream</code>.
    * @throws IOException if an error occurs while writing to the stream.
    */
+  @Override
   public void encodeBER(OutputStream outputStream) throws IOException {
     BER.encodeHeader(outputStream, type, getBERPayloadLength());
 
@@ -257,6 +260,7 @@ public class PDUv1 extends PDU {
     return !(v instanceof Counter64) || SNMP4JSettings.isAllowSNMPv2InV1();
   }
 
+  @Override
   protected int getBERPayloadLengthPDU() {
     if (getType() != PDU.V1TRAP) {
       return super.getBERPayloadLengthPDU();
@@ -284,6 +288,7 @@ public class PDUv1 extends PDU {
    *    nothing
    * @throws UnsupportedOperationException
    */
+  @Override
   public int getMaxRepetitions() {
     throw new UnsupportedOperationException(OPERATION_NOT_SUPPORTED);
   }
@@ -294,6 +299,7 @@ public class PDUv1 extends PDU {
    * @param maxRepetitions int
    * @throws UnsupportedOperationException
    */
+  @Override
   public void setMaxRepetitions(int maxRepetitions) {
     throw new UnsupportedOperationException(OPERATION_NOT_SUPPORTED);
   }
@@ -316,6 +322,7 @@ public class PDUv1 extends PDU {
    * @param nonRepeaters int
    * @throws UnsupportedOperationException
    */
+  @Override
   public void setNonRepeaters(int nonRepeaters) {
     throw new UnsupportedOperationException(OPERATION_NOT_SUPPORTED);
   }

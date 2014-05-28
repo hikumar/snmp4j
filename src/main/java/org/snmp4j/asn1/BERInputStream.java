@@ -51,6 +51,7 @@ public class BERInputStream extends InputStream {
     this.buffer = buf;
   }
 
+  @Override
   public int read() throws IOException {
     try {
       return (buffer.get() & 0xFF);
@@ -70,6 +71,7 @@ public class BERInputStream extends InputStream {
    *   blocking.
    * @throws IOException if an I/O error occurs.
    */
+  @Override
   public int available() throws IOException {
     return buffer.remaining();
   }
@@ -80,6 +82,7 @@ public class BERInputStream extends InputStream {
    *
    * @throws IOException if an I/O error occurs.
    */
+  @Override
   public void close() throws IOException {
   }
 
@@ -89,6 +92,7 @@ public class BERInputStream extends InputStream {
    * @param readlimit the maximum limit of bytes that can be read before the
    *   mark position becomes invalid.
    */
+  @Override
   public synchronized void mark(int readlimit) {
     buffer.mark();
   }
@@ -100,6 +104,7 @@ public class BERInputStream extends InputStream {
    * @return <code>true</code> if this stream instance supports the mark and
    *   reset methods; <code>false</code> otherwise.
    */
+  @Override
   public boolean markSupported() {
     return true;
   }
@@ -113,6 +118,7 @@ public class BERInputStream extends InputStream {
    *   is there is no more data because the end of the stream has been reached.
    * @throws IOException if an I/O error occurs.
    */
+  @Override
   public int read(byte[] b) throws IOException {
     if (buffer.remaining() <= 0) {
       return -1;
@@ -134,6 +140,7 @@ public class BERInputStream extends InputStream {
    *   if there is no more data because the end of the stream has been reached.
    * @throws IOException if an I/O error occurs.
    */
+  @Override
   public int read(byte[] b, int off, int len) throws IOException {
     if (buffer.remaining() <= 0) {
       return -1;
@@ -150,6 +157,7 @@ public class BERInputStream extends InputStream {
    * @throws IOException if this stream has not been marked or if the mark has
    *   been invalidated.
    */
+  @Override
   public synchronized void reset() throws IOException {
     buffer.reset();
   }
@@ -161,6 +169,7 @@ public class BERInputStream extends InputStream {
    * @return the actual number of bytes skipped.
    * @throws IOException if an I/O error occurs.
    */
+  @Override
   public long skip(long n) throws IOException {
     long skipped = Math.min(buffer.remaining(), n);
     buffer.position((int)(buffer.position() + skipped));

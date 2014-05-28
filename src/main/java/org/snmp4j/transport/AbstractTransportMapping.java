@@ -43,6 +43,7 @@ public abstract class AbstractTransportMapping<A extends Address>
   protected int maxInboundMessageSize = (1 << 16) - 1;
   protected boolean asyncMsgProcessingSupported = true;
 
+  @Override
   public synchronized void addTransportListener(TransportListener l) {
     if (!transportListener.contains(l)) {
       List<TransportListener> tlCopy =
@@ -52,6 +53,7 @@ public abstract class AbstractTransportMapping<A extends Address>
     }
   }
 
+  @Override
   public synchronized void removeTransportListener(TransportListener l) {
     if (transportListener != null && transportListener.contains(l)) {
       List<TransportListener> tlCopy =
@@ -77,6 +79,7 @@ public abstract class AbstractTransportMapping<A extends Address>
    * @return
    *    the maximum inbound buffer size in bytes.
    */
+  @Override
   public int getMaxInboundMessageSize() {
     return maxInboundMessageSize;
   }

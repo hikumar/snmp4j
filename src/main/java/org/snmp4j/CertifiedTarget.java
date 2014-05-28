@@ -53,14 +53,17 @@ public class CertifiedTarget extends SecureTarget implements CertifiedIdentity, 
     this.clientFingerprint = clientFingerprint;
   }
 
+  @Override
   public OctetString getServerFingerprint() {
     return serverFingerprint;
   }
 
+  @Override
   public OctetString getClientFingerprint() {
     return clientFingerprint;
   }
 
+  @Override
   public OctetString getIdentity() {
     return super.getSecurityName();
   }

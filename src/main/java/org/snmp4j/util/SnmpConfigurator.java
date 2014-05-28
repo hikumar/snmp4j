@@ -495,6 +495,7 @@ public class SnmpConfigurator {
       this.settings = settings;
     }
 
+    @Override
     public PDU createPDU(Target target) {
       int type = getPduType();
       PDU pdu = DefaultPDUFactory.createPDU(target, type);

@@ -57,6 +57,7 @@ public class DefaultCounterListener implements CounterListener {
   public DefaultCounterListener() {
   }
 
+  @Override
   public synchronized void incrementCounter(CounterEvent event) {
     OID id = event.getOid();
     Counter32 counter = counters.get(id);

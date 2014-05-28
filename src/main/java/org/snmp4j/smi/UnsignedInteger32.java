@@ -76,10 +76,12 @@ public class UnsignedInteger32 extends AbstractVariable
     setValue(signedByteValue & 0xFF);
   }
 
+  @Override
   public void encodeBER(OutputStream outputStream) throws IOException {
     BER.encodeUnsignedInteger(outputStream, BER.GAUGE, value);
   }
 
+  @Override
   public void decodeBER(BERInputStream inputStream) throws IOException {
     BER.MutableByte type = new BER.MutableByte();
     long newValue = BER.decodeUnsignedInteger(inputStream, type);
@@ -90,6 +92,7 @@ public class UnsignedInteger32 extends AbstractVariable
     setValue(newValue);
   }
 
+  @Override
   public int getSyntax() {
     return SMIConstants.SYNTAX_UNSIGNED_INTEGER32;
   }
@@ -98,6 +101,7 @@ public class UnsignedInteger32 extends AbstractVariable
     return (int)value;
   }
 
+  @Override
   public int getBERLength() {
     if (value < 0x80L) {
       return 3;
@@ -121,6 +125,7 @@ public class UnsignedInteger32 extends AbstractVariable
     return false;
   }
 
+  @Override
   public int compareTo(Variable o) {
     long diff = (value - ((UnsignedInteger32)o).getValue());
     if (diff < 0) {
@@ -136,10 +141,12 @@ public class UnsignedInteger32 extends AbstractVariable
     return Long.toString(value);
   }
 
+  @Override
   public void setValue(String value) {
     setValue(Long.parseLong(value));
   }
 
+  @Override
   public void setValue(long value) {
     if ((value < 0) || (value > 4294967295L)) {
       throw new IllegalArgumentException(
@@ -152,22 +159,27 @@ public class UnsignedInteger32 extends AbstractVariable
     return value;
   }
 
+  @Override
   public Object clone() {
     return new UnsignedInteger32(value);
   }
 
+  @Override
   public final int toInt() {
     return (int)getValue();
   }
 
+  @Override
   public final long toLong() {
     return getValue();
   }
 
+  @Override
   public OID toSubIndex(boolean impliedLength) {
     return new OID(new int[] { toInt() });
   }
 
+  @Override
   public void fromSubIndex(OID subIndex, boolean impliedLength) {
     setValue(subIndex.getUnsigned(0));
   }

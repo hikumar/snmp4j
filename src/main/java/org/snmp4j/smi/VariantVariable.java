@@ -80,6 +80,7 @@ public class VariantVariable extends AbstractVariable implements
     this.callback = callback;
   }
 
+  @Override
   public synchronized int compareTo(Variable o) {
     updateVariable();
     return variable.compareTo(o);
@@ -97,40 +98,48 @@ public class VariantVariable extends AbstractVariable implements
     }
   }
 
+  @Override
   public synchronized void decodeBER(BERInputStream inputStream) throws IOException {
     variable.decodeBER(inputStream);
     variableUpdated();
   }
 
+  @Override
   public synchronized void encodeBER(OutputStream outputStream) throws IOException {
     updateVariable();
     variable.encodeBER(outputStream);
   }
 
+  @Override
   public synchronized void fromSubIndex(OID subIndex, boolean impliedLength) {
     variable.fromSubIndex(subIndex, impliedLength);
     variableUpdated();
   }
 
+  @Override
   public synchronized int getBERLength() {
     updateVariable();
     return variable.getBERLength();
   }
 
+  @Override
   public int getSyntax() {
     return variable.getSyntax();
   }
 
+  @Override
   public synchronized int toInt() {
     updateVariable();
     return variable.toInt();
   }
 
+  @Override
   public synchronized long toLong() {
     updateVariable();
     return variable.toLong();
   }
 
+  @Override
   public synchronized byte[] toByteArray() {
     updateVariable();
     if (variable instanceof AssignableFromByteArray) {
@@ -139,6 +148,7 @@ public class VariantVariable extends AbstractVariable implements
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public synchronized OID toSubIndex(boolean impliedLength) {
     updateVariable();
     return variable.toSubIndex(impliedLength);
@@ -159,11 +169,13 @@ public class VariantVariable extends AbstractVariable implements
     return variable.toString();
   }
 
+  @Override
   public Object clone() {
     updateVariable();
     return new VariantVariable((Variable)variable.clone());
   }
 
+  @Override
   public synchronized void setValue(int value) {
     if (variable instanceof AssignableFromInteger) {
       ((AssignableFromInteger)variable).setValue(value);
@@ -174,6 +186,7 @@ public class VariantVariable extends AbstractVariable implements
     }
   }
 
+  @Override
   public synchronized void setValue(long value) {
     if (variable instanceof AssignableFromLong) {
       ((AssignableFromLong)variable).setValue(value);
@@ -194,6 +207,7 @@ public class VariantVariable extends AbstractVariable implements
     }
   }
 
+  @Override
   public synchronized void setValue(byte[] value) {
     if (variable instanceof AssignableFromByteArray) {
       ((AssignableFromByteArray)variable).setValue(value);
@@ -204,6 +218,7 @@ public class VariantVariable extends AbstractVariable implements
     }
   }
 
+  @Override
   public synchronized void setValue(String value) {
     if (variable instanceof AssignableFromString) {
       ((AssignableFromString)variable).setValue(value);
@@ -223,6 +238,7 @@ public class VariantVariable extends AbstractVariable implements
     return variable;
   }
 
+  @Override
   public boolean isDynamic() {
     return true;
   }

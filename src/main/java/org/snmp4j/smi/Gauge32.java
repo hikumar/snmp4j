@@ -41,10 +41,12 @@ public class Gauge32 extends UnsignedInteger32 {
     super(value);
   }
 
+  @Override
   public int getSyntax() {
     return SMIConstants.SYNTAX_GAUGE32;
   }
 
+  @Override
   public Object clone() {
     return new Gauge32(value);
   }

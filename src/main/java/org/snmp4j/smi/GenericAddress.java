@@ -82,10 +82,12 @@ public class GenericAddress extends SMIAddress {
     this.address = address;
   }
 
+  @Override
   public int getSyntax() {
     return address.getSyntax();
   }
 
+  @Override
   public boolean isValid() {
     return (address != null) && address.isValid();
   }
@@ -98,6 +100,7 @@ public class GenericAddress extends SMIAddress {
     return address.hashCode();
   }
 
+  @Override
   public int compareTo(Variable o) {
     return address.compareTo(o);
   }
@@ -106,13 +109,16 @@ public class GenericAddress extends SMIAddress {
     return address.equals(o);
   }
 
+  @Override
   public void decodeBER(BERInputStream inputStream) throws IOException {
     throw new UnsupportedOperationException();
   }
+  @Override
   public void encodeBER(OutputStream outputStream) throws IOException {
     address.encodeBER(outputStream);
   }
 
+  @Override
   public int getBERLength() {
     return address.getBERLength();
   }
@@ -238,6 +244,7 @@ public class GenericAddress extends SMIAddress {
    * @return boolean
    * @see #parse(String address)
    */
+  @Override
   public boolean parseAddress(String address) {
     Address addr = parse(address);
     if (addr instanceof SMIAddress) {
@@ -247,34 +254,42 @@ public class GenericAddress extends SMIAddress {
     return false;
   }
 
+  @Override
   public void setValue(byte[] rawAddress) {
     address.setValue(rawAddress);
   }
 
+  @Override
   public Object clone() {
     return new GenericAddress(address);
   }
 
+  @Override
   public int toInt() {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public long toLong() {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public OID toSubIndex(boolean impliedLength) {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public void fromSubIndex(OID subIndex, boolean impliedLength) {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public byte[] toByteArray() {
     return address.toByteArray();
   }
 
+  @Override
   public void setValue(String value) {
     if (!parseAddress(value)) {
       throw new IllegalArgumentException(value+" cannot be parsed by "+

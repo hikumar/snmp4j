@@ -31,6 +31,7 @@ public class PrivAES192With3DESKeyExtension extends PrivAESWith3DESKeyExtension 
    * @return
    *    an <code>OID</code> instance.
    */
+  @Override
   public OID getID() {
     return (OID) ID.clone();
   }

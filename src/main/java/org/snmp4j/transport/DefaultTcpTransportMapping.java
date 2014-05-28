@@ -101,6 +101,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
    *    when the transport is already listening for incoming/outgoing messages.
    * @throws IOException
    */
+  @Override
   public synchronized void listen() throws IOException {
     if (server != null) {
       throw new SocketException("Port already listening");
@@ -119,6 +120,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
    * Closes all open sockets and stops the internal server thread that
    * processes messages.
    */
+  @Override
   public void close() {
     WorkerTask st = server;
     if (st != null) {
@@ -174,6 +176,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
    *    if the remote address cannot be closed due to an IO exception.
    * @since 1.7.1
    */
+  @Override
   public synchronized boolean close(TcpAddress remoteAddress) throws IOException {
     if (logger.isDebugEnabled()) {
       logger.debug("Closing socket for peer address {}", remoteAddress);
@@ -211,6 +214,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
    *    RFC 5590 section 6.1.
    * @throws IOException
    */
+  @Override
   public void sendMessage(TcpAddress address, byte[] message,
                           TransportStateReference tmStateReference)
       throws IOException
@@ -239,6 +243,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
    *    any timeout and connections opened by this transport mapping will stay
    *    opened until they are explicitly closed.
    */
+  @Override
   public void setConnectionTimeout(long connectionTimeout) {
     this.connectionTimeout = connectionTimeout;
   }
@@ -251,6 +256,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
     return serverEnabled;
   }
 
+  @Override
   public MessageLengthDecoder getMessageLengthDecoder() {
     return messageLengthDecoder;
   }
@@ -276,6 +282,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
    * @param messageLengthDecoder
    *    a <code>MessageLengthDecoder</code> instance.
    */
+  @Override
   public void setMessageLengthDecoder(MessageLengthDecoder messageLengthDecoder) {
     if (messageLengthDecoder == null) {
       throw new NullPointerException();
@@ -301,6 +308,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
     }
   }
 
+  @Override
   public boolean isListening() {
     return (server != null);
   }
@@ -412,9 +420,11 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
   }
 
   public static class SnmpMesssageLengthDecoder implements MessageLengthDecoder {
+    @Override
     public int getMinHeaderLength() {
       return MIN_SNMP_HEADER_LENGTH;
     }
+    @Override
     public MessageLength getMessageLength(ByteBuffer buf) throws IOException {
       MutableByte type = new MutableByte();
       BERInputStream is = new BERInputStream(buf);
@@ -431,6 +441,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
       this.entry = entry;
     }
 
+    @Override
     public void run() {
       long now = System.nanoTime();
       SocketEntry entryCopy = entry;
@@ -475,6 +486,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
       socketCleaner.schedule(new SocketTimeout(entry), nextRun);
     }
 
+    @Override
     public boolean cancel(){
         boolean result = super.cancel();
         // free objects early
@@ -643,6 +655,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
     }
 
 
+    @Override
     public void run() {
       // Here's where everything happens. The select method will
       // return when any operations registered above have occurred, the
@@ -1008,6 +1021,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
       }
     }
 
+    @Override
     public void terminate() {
       stop = true;
       if (logger.isDebugEnabled()) {
@@ -1015,12 +1029,14 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
       }
     }
 
+    @Override
     public void join() {
       if (logger.isDebugEnabled()) {
         logger.debug("Joining worker task: {}", getClass().getName());
       }
     }
 
+    @Override
     public void interrupt() {
       stop = true;
       if (logger.isDebugEnabled()) {

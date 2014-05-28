@@ -26,13 +26,13 @@ import org.snmp4j.TransportStateReference;
 import org.snmp4j.asn1.BER;
 import org.snmp4j.asn1.BER.MutableByte;
 import org.snmp4j.asn1.BERInputStream;
+import org.snmp4j.concurrent.ControlableRunnable;
 import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.security.SecurityLevel;
 import org.snmp4j.smi.Address;
 import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.TcpAddress;
 import org.snmp4j.util.CommonTimer;
-import org.snmp4j.util.WorkerTask;
 
 import java.io.IOException;
 import java.net.*;
@@ -56,7 +56,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
       LoggerFactory.getLogger(DefaultTcpTransportMapping.class);
 
   private Map<Address, SocketEntry> sockets = new Hashtable<>();
-  private WorkerTask server;
+  private Thread listenerThread;
   private SocketListener socketListener;
 
   private CommonTimer socketCleaner;
@@ -103,17 +103,13 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
    */
   @Override
   public synchronized void listen() throws IOException {
-    if (server != null) {
-      throw new SocketException("Port already listening");
+    if (listenerThread == null) {
+      socketListener = new SocketListener();
+      listenerThread = SNMP4JSettings.getThreadFactory().newThread(socketListener);
+      listenerThread.start();
     }
-    socketListener = new SocketListener();
-    server = SNMP4JSettings.getThreadFactory().createWorkerThread(
-      "DefaultTCPTransportMapping_"+getAddress(), socketListener, true);
-    if (connectionTimeout > 0) {
-      // run as daemon
-      socketCleaner = SNMP4JSettings.getTimerFactory().createTimer();
-    }
-    server.run();
+
+    logger.info("Now listening with {}", socketListener);
   }
 
   /**
@@ -122,44 +118,6 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
    */
   @Override
   public void close() {
-    WorkerTask st = server;
-    if (st != null) {
-      st.terminate();
-      st.interrupt();
-      try {
-        st.join();
-      }
-      catch (InterruptedException ex) {
-        logger.warn(ex.getMessage(), ex);
-      }
-      server = null;
-      for (SocketEntry entry : sockets.values()) {
-        Socket s = entry.getSocket();
-        if (s != null) {
-          try {
-            SocketChannel sc = s.getChannel();
-            s.close();
-            if (logger.isDebugEnabled()) {
-              logger.debug("Socket to {} closed", entry.getPeerAddress());
-            }
-            if (sc != null) {
-              sc.close();
-              if (logger.isDebugEnabled()) {
-                logger.debug("Socket channel to {} closed", entry.getPeerAddress());
-              }
-            }
-          }
-          catch (IOException iox) {
-            // ingore
-            logger.debug(iox.getMessage(), iox);
-          }
-        }
-      }
-      if (socketCleaner != null) {
-        socketCleaner.cancel();
-      }
-      socketCleaner = null;
-    }
   }
 
   /**
@@ -219,7 +177,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
                           TransportStateReference tmStateReference)
       throws IOException
   {
-    if (server == null) {
+    if (listenerThread == null) {
       listen();
     }
     socketListener.sendMessage(address, message, tmStateReference);
@@ -310,7 +268,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
 
   @Override
   public boolean isListening() {
-    return (server != null);
+    return (listenerThread != null);
   }
 
   class SocketEntry {
@@ -495,9 +453,8 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
     }
   }
 
-  class SocketListener implements WorkerTask {
+  class SocketListener extends ControlableRunnable {
     private byte[] buf;
-    private volatile boolean stop = false;
     private Throwable lastError = null;
     private ServerSocketChannel ssc;
     private Selector selector;
@@ -518,6 +475,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
         InetSocketAddress isa = new InetSocketAddress(tcpAddress.getInetAddress(),
             tcpAddress.getPort());
         ssc.socket().bind(isa);
+
         // Register accepts on the server socket with the selector. This
         // step tells the selector that the socket wants to be put on the
         // ready list when accept operations occur, so allowing multiplexed
@@ -661,12 +619,9 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
       // return when any operations registered above have occurred, the
       // thread has been interrupted, etc.
       try {
-        while (!stop) {
+        while (!shouldStop()) {
           try {
             if (selector.select() > 0) {
-              if (stop) {
-                break;
-              }
               // Someone is ready for I/O, get the ready keys
               Set<SelectionKey> readyKeys = selector.selectedKeys();
               Iterator<SelectionKey> it = readyKeys.iterator();
@@ -676,31 +631,31 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
                 try {
                   SelectionKey sk = it.next();
                   it.remove();
+
                   SocketChannel readChannel = null;
                   TcpAddress incomingAddress = null;
+
                   if (sk.isAcceptable()) {
                     logger.debug("Key is acceptable");
+
                     // The key indexes into the selector so you
                     // can retrieve the socket that's ready for I/O
-                    ServerSocketChannel nextReady =
-                        (ServerSocketChannel) sk.channel();
+                    ServerSocketChannel nextReady = (ServerSocketChannel) sk.channel();
                     Socket s = nextReady.accept().socket();
                     readChannel = s.getChannel();
                     readChannel.configureBlocking(false);
+                    readChannel.register(selector, SelectionKey.OP_READ);
 
-                    incomingAddress = new TcpAddress(s.getInetAddress(),
-                                                     s.getPort());
-                    SocketEntry entry = new SocketEntry(incomingAddress, s);
-                    entry.addRegistration(selector, SelectionKey.OP_READ);
-                    sockets.put(incomingAddress, entry);
-                    timeoutSocket(entry);
+                    incomingAddress = new TcpAddress(s.getInetAddress(), s.getPort());
+
                     TransportStateEvent e =
                         new TransportStateEvent(DefaultTcpTransportMapping.this,
                                                 incomingAddress,
-                                                TransportStateEvent.
-                                                STATE_CONNECTED,
+                                                TransportStateEvent.STATE_CONNECTED,
                                                 null);
+
                     fireConnectionStateChanged(e);
+
                     if (e.isCancelled()) {
                       logger.warn("Incoming connection cancelled");
                       s.close();
@@ -718,14 +673,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
                     incomingAddress =
                         new TcpAddress(readChannel.socket().getInetAddress(),
                                        readChannel.socket().getPort());
-                  }
-                  else if (sk.isConnectable()) {
-                    logger.debug("Key is connectable");
-                    connectChannel(sk, incomingAddress);
-                  }
 
-                  if (readChannel != null) {
-                    logger.debug("Key is reading");
                     try {
                       readMessage(sk, readChannel, incomingAddress);
                     }
@@ -736,12 +684,16 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
                       readChannel.close();
                       TransportStateEvent e =
                           new TransportStateEvent(DefaultTcpTransportMapping.this,
-                                                  incomingAddress,
-                                                  TransportStateEvent.
-                                                  STATE_DISCONNECTED_REMOTELY,
-                                                  iox);
+                              incomingAddress,
+                              TransportStateEvent.
+                                  STATE_DISCONNECTED_REMOTELY,
+                              iox);
                       fireConnectionStateChanged(e);
                     }
+                  }
+                  else if (sk.isConnectable()) {
+                    logger.debug("Key is connectable");
+                    connectChannel(sk, incomingAddress);
                   }
                 }
                 catch (CancelledKeyException ckex) {
@@ -770,15 +722,8 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
         logger.error(iox.getMessage(), iox);
         lastError = iox;
       }
-      if (!stop) {
-        stop = true;
-        synchronized (DefaultTcpTransportMapping.this) {
-          server = null;
-        }
-      }
-      if (logger.isDebugEnabled()) {
-        logger.debug("Worker task finished: {}", getClass().getName());
-      }
+
+      logger.debug("Worker task finished: {}", this);
     }
 
     private void connectChannel(SelectionKey sk, TcpAddress incomingAddress) {
@@ -1013,36 +958,9 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
       }
     }
 
-    public void close() {
-      stop = true;
-      WorkerTask st = server;
-      if (st != null) {
-        st.terminate();
-      }
-    }
-
     @Override
-    public void terminate() {
-      stop = true;
-      if (logger.isDebugEnabled()) {
-        logger.debug("Terminated worker task: {}", getClass().getName());
-      }
-    }
-
-    @Override
-    public void join() {
-      if (logger.isDebugEnabled()) {
-        logger.debug("Joining worker task: {}", getClass().getName());
-      }
-    }
-
-    @Override
-    public void interrupt() {
-      stop = true;
-      if (logger.isDebugEnabled()) {
-        logger.debug("Interrupting worker task: {}", getClass().getName());
-      }
-      selector.wakeup();
+    public String getName() {
+      return DefaultTcpTransportMapping.class.getSimpleName() + "Listener_" + getListenAddress();
     }
   }
 

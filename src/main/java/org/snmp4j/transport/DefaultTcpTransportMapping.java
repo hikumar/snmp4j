@@ -632,9 +632,6 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
                   SelectionKey sk = it.next();
                   it.remove();
 
-                  SocketChannel readChannel = null;
-                  TcpAddress incomingAddress = null;
-
                   if (sk.isAcceptable()) {
                     logger.debug("Key is acceptable");
 
@@ -642,11 +639,11 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
                     // can retrieve the socket that's ready for I/O
                     ServerSocketChannel nextReady = (ServerSocketChannel) sk.channel();
                     Socket s = nextReady.accept().socket();
-                    readChannel = s.getChannel();
+                    SocketChannel readChannel = s.getChannel();
                     readChannel.configureBlocking(false);
                     readChannel.register(selector, SelectionKey.OP_READ);
 
-                    incomingAddress = new TcpAddress(s.getInetAddress(), s.getPort());
+                    TcpAddress incomingAddress = new TcpAddress(s.getInetAddress(), s.getPort());
 
                     TransportStateEvent e =
                         new TransportStateEvent(DefaultTcpTransportMapping.this,
@@ -660,17 +657,16 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
                       logger.warn("Incoming connection cancelled");
                       s.close();
                       sockets.remove(incomingAddress);
-                      readChannel = null;
                     }
                   }
                   else if (sk.isWritable()) {
                     logger.debug("Key is writable");
-                    incomingAddress = writeData(sk, incomingAddress);
+                    writeData(sk, null);
                   }
                   else if (sk.isReadable()) {
                     logger.debug("Key is readable");
-                    readChannel = (SocketChannel) sk.channel();
-                    incomingAddress =
+                    SocketChannel readChannel = (SocketChannel) sk.channel();
+                    TcpAddress incomingAddress =
                         new TcpAddress(readChannel.socket().getInetAddress(),
                                        readChannel.socket().getPort());
 
@@ -693,7 +689,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
                   }
                   else if (sk.isConnectable()) {
                     logger.debug("Key is connectable");
-                    connectChannel(sk, incomingAddress);
+                    connectChannel(sk, null);
                   }
                 }
                 catch (CancelledKeyException ckex) {

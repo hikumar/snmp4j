@@ -724,7 +724,7 @@ public class TLSTM extends TcpTransportMapping {
         }
         tmStateReference.setSecurityName(securityName);
       }
-      else if (tmStateReference.getTransportSecurityLevel().equals(SecurityLevel.undefined)) {
+      else if (tmStateReference.getTransportSecurityLevel() == SecurityLevel.undefined) {
         tmStateReference.setTransportSecurityLevel(SecurityLevel.authPriv);
       }
     }

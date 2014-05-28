@@ -24,6 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 
 
 /**
@@ -37,6 +39,16 @@ public class TcpAddress extends TransportIpAddress {
   static final long serialVersionUID = 1165319744164017388L;
 
   private static final Logger logger = LoggerFactory.getLogger(TcpAddress.class);
+
+  public TcpAddress(SocketAddress aSocketAddress) {
+    if (aSocketAddress instanceof InetSocketAddress) {
+      InetSocketAddress inetAddress = (InetSocketAddress) aSocketAddress;
+      setInetAddress(inetAddress.getAddress());
+      setPort(inetAddress.getPort());
+    } else {
+      throw new UnsupportedOperationException("Can't instantiate " + this + " from " + aSocketAddress);
+    }
+  }
 
   public TcpAddress() {
     super();

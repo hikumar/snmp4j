@@ -57,7 +57,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
 
   private Map<Address, SocketEntry> sockets = new Hashtable<>();
   private WorkerTask server;
-  private ServerThread serverThread;
+  private SocketListener socketListener;
 
   private CommonTimer socketCleaner;
   // 1 minute default timeout
@@ -106,9 +106,9 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
     if (server != null) {
       throw new SocketException("Port already listening");
     }
-    serverThread = new ServerThread();
+    socketListener = new SocketListener();
     server = SNMP4JSettings.getThreadFactory().createWorkerThread(
-      "DefaultTCPTransportMapping_"+getAddress(), serverThread, true);
+      "DefaultTCPTransportMapping_"+getAddress(), socketListener, true);
     if (connectionTimeout > 0) {
       // run as daemon
       socketCleaner = SNMP4JSettings.getTimerFactory().createTimer();
@@ -222,7 +222,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
     if (server == null) {
       listen();
     }
-    serverThread.sendMessage(address, message, tmStateReference);
+    socketListener.sendMessage(address, message, tmStateReference);
   }
 
   /**
@@ -495,7 +495,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
     }
   }
 
-  class ServerThread implements WorkerTask {
+  class SocketListener implements WorkerTask {
     private byte[] buf;
     private volatile boolean stop = false;
     private Throwable lastError = null;
@@ -504,7 +504,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
 
     private LinkedList<SocketEntry> pending = new LinkedList<>();
 
-    public ServerThread() throws IOException {
+    public SocketListener() throws IOException {
       buf = new byte[getMaxInboundMessageSize()];
       // Selector for incoming requests
       selector = Selector.open();

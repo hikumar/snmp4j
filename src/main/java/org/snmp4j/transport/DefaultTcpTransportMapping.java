@@ -75,7 +75,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
    *    on failure of binding a local port.
    */
   public DefaultTcpTransportMapping() throws UnknownHostException {
-    super(new TcpAddress(InetAddress.getLocalHost(), 0));
+    this(new TcpAddress(InetAddress.getLocalHost(), 0));
   }
 
   /**

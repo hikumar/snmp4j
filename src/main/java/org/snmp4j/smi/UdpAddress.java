@@ -21,6 +21,7 @@ package org.snmp4j.smi;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 
 /**
  * The <code>UdpAddress</code> represents UDP/IP transport addresses.
@@ -34,9 +35,14 @@ public class UdpAddress extends TransportIpAddress {
   public UdpAddress() {
   }
 
-  public UdpAddress(InetSocketAddress aSocketAddress) {
-    setInetAddress(aSocketAddress.getAddress());
-    setPort(aSocketAddress.getPort());
+  public UdpAddress(SocketAddress aSocketAddress) {
+    if (aSocketAddress instanceof InetSocketAddress) {
+      InetSocketAddress inetAddress = (InetSocketAddress) aSocketAddress;
+      setInetAddress(inetAddress.getAddress());
+      setPort(inetAddress.getPort());
+    } else {
+      throw new UnsupportedOperationException("Can't instantiate " + this + " from " + aSocketAddress);
+    }
   }
 
   public UdpAddress(InetAddress inetAddress, int port) {

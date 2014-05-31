@@ -310,7 +310,7 @@ public class TLSTM extends TcpTransportMapping {
       "TLSTM_"+getAddress(), serverThread, true);
     if (connectionTimeout > 0) {
       // run as daemon
-      socketCleaner = SNMP4JSettings.getTimerFactory().createTimer();
+      socketCleaner = SNMP4JSettings.getSharedTimer();
     }
     server.run();
   }

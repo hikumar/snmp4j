@@ -21,6 +21,8 @@ package org.snmp4j;
 
 import org.snmp4j.util.*;
 
+import java.util.Timer;
+
 /**
  * The <code>SNMP4JSettings</code> class implements a central configuration
  * class of the SNMP4J framework. As a rule of thumb, changes to the default
@@ -85,7 +87,7 @@ public final class SNMP4JSettings {
    *
    * @since 1.9
    */
-  private static TimerFactory timerFactory = new DefaultTimerFactory();
+  private static Timer sharedTimer;
 
   /**
    * By default SNMP4J uses the {@link SimpleOIDTextFormat} to convert
@@ -207,26 +209,13 @@ public final class SNMP4JSettings {
   }
 
   /**
-   * Gets the timer factory.
-   * @return
-   *    a TimerFactory.
-   * @since 1.9
+   * Get a timer that may be shared with other objects
    */
-  public static TimerFactory getTimerFactory() {
-    return timerFactory;
-  }
+  public static Timer getSharedTimer() {
+    if (sharedTimer == null)
+      sharedTimer = new Timer(true);
 
-  /**
-   * Sets the timer factory for creating new timer instances.
-   * @param newTimerFactory
-   *    a TimerFactory (must not be <code>null</code>).
-   * @since 1.9
-   */
-  public static void setTimerFactory(TimerFactory newTimerFactory) {
-    if (newTimerFactory == null) {
-      throw new NullPointerException();
-    }
-    timerFactory = newTimerFactory;
+    return sharedTimer;
   }
 
   /**

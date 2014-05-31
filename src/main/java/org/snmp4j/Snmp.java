@@ -717,7 +717,7 @@ public class Snmp implements Session, CommandResponder {
 
   private synchronized void createPendingTimer() {
     if (timer == null) {
-      timer = SNMP4JSettings.getTimerFactory().createTimer();
+      timer = SNMP4JSettings.getSharedTimer();
     }
   }
 

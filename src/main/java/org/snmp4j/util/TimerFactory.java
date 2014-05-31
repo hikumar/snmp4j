@@ -19,6 +19,8 @@
   _##########################################################################*/
 package org.snmp4j.util;
 
+import java.util.Timer;
+
 /**
  * The <code>TimerFactory</code> describes a factory for
  * <code>CommonTimer</code> instances.
@@ -28,12 +30,11 @@ package org.snmp4j.util;
  * @since 1.9
  */
 public interface TimerFactory {
-
   /**
    * Creates a new timer instance.
    * @return
    *    a <code>Timer</code>.
    */
-  CommonTimer createTimer();
+  Timer createTimer();
 
 }

@@ -30,7 +30,6 @@ import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.security.SecurityLevel;
 import org.snmp4j.smi.*;
 import org.snmp4j.transport.tls.TlsTmSecurityCallback;
-import org.snmp4j.util.CommonTimer;
 import org.snmp4j.util.SnmpConfigurator;
 import org.snmp4j.util.WorkerTask;
 
@@ -76,7 +75,7 @@ public class TLSTM extends TcpTransportMapping {
   private WorkerTask server;
   private ServerThread serverThread;
 
-  private CommonTimer socketCleaner;
+  private Timer socketCleaner;
   // 1 minute default timeout
   private long connectionTimeout = 60000;
   private boolean serverEnabled = false;

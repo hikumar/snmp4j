@@ -31,7 +31,6 @@ import org.snmp4j.security.USM;
 import org.snmp4j.smi.*;
 import org.snmp4j.transport.ConnectionOrientedTransportMapping;
 import org.snmp4j.transport.TransportMappings;
-import org.snmp4j.util.CommonTimer;
 
 import java.io.IOException;
 import java.util.*;
@@ -163,7 +162,7 @@ public class Snmp implements Session, CommandResponder {
   private final Map<Object, PduHandle> asyncRequests = new Hashtable<>(50);
 
   // Timer for retrying pending requests
-  private CommonTimer timer;
+  private Timer timer;
 
   // Listeners for request and trap PDUs
   private List<CommandResponder> commandResponderListeners;
@@ -504,7 +503,7 @@ public class Snmp implements Session, CommandResponder {
         tm.close();
       }
     }
-    CommonTimer t = timer;
+    Timer t = timer;
     timer = null;
     if (t != null) {
       t.cancel();
@@ -1403,7 +1402,7 @@ public class Snmp implements Session, CommandResponder {
                                            t.getTimeout());
           if ((!finished) && (!responseReceived) && (!cancelled)) {
             try {
-              CommonTimer timerCopy = timer;
+              Timer timerCopy = timer;
               if (timerCopy != null) {
                 timerCopy.schedule(this, delay);
               }

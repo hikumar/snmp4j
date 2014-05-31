@@ -32,37 +32,8 @@ import java.util.TimerTask;
  * @since 1.9
  */
 public class DefaultTimerFactory implements TimerFactory {
-
-  public DefaultTimerFactory() {
-  }
-
   @Override
-  public CommonTimer createTimer() {
-    return new TimerAdapter();
-  }
-
-  class TimerAdapter implements CommonTimer {
-
-    private Timer timer = new Timer(true);
-
-    @Override
-    public void schedule(TimerTask task, long delay) {
-      timer.schedule(task, delay);
-    }
-
-    @Override
-    public void cancel() {
-      timer.cancel();
-    }
-
-    @Override
-    public void schedule(TimerTask task, Date firstTime, long period) {
-      timer.schedule(task, firstTime, period);
-    }
-
-    @Override
-    public void schedule(TimerTask task, long delay, long period) {
-      timer.schedule(task, delay, period);
-    }
+  public Timer createTimer() {
+    return new Timer(true);
   }
 }

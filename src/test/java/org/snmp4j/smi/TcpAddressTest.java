@@ -1,12 +1,11 @@
 package org.snmp4j.smi;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.net.InetSocketAddress;
 
-public class TcpAddressTest extends TestCase {
+public class TcpAddressTest {
   @Test
   public void testSocketAddressInstantiation() {
     InetSocketAddress inetSocketAddress = new InetSocketAddress(0);

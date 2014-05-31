@@ -20,7 +20,6 @@
 
 package org.snmp4j.smi;
 
-import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

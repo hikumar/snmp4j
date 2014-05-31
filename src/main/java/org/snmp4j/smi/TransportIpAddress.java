@@ -26,9 +26,7 @@ import org.snmp4j.asn1.BERInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
-import java.net.Inet6Address;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.util.StringTokenizer;
 
 /**
@@ -39,13 +37,36 @@ import java.util.StringTokenizer;
  * @version 1.5
  */
 public abstract class TransportIpAddress extends IpAddress {
-
   private static final Logger logger =
       LoggerFactory.getLogger(TransportIpAddress.class);
 
   static final long serialVersionUID = 695596530250216972L;
 
   protected int port = 0;
+
+  public TransportIpAddress() {
+    super();
+  }
+
+  public TransportIpAddress(int aPort) {
+    super();
+    setPort(aPort);
+  }
+
+  public TransportIpAddress(InetSocketAddress address) {
+    this(address.getAddress(), address.getPort());
+  }
+
+  public TransportIpAddress(InetAddress anAddress, int aPort) {
+    super(anAddress);
+    setPort(aPort);
+  }
+
+  public TransportIpAddress(String address) {
+    if (!parseAddress(address)) {
+      throw new IllegalArgumentException(address);
+    }
+  }
 
   public int getPort() {
     return port;

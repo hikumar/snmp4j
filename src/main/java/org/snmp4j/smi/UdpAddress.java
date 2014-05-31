@@ -29,43 +29,26 @@ import java.net.SocketAddress;
  * @version 1.8.3
  */
 public class UdpAddress extends TransportIpAddress {
-
   static final long serialVersionUID = -4390734262648716203L;
 
   public UdpAddress() {
+    super();
   }
 
-  public UdpAddress(SocketAddress aSocketAddress) {
-    if (aSocketAddress instanceof InetSocketAddress) {
-      InetSocketAddress inetAddress = (InetSocketAddress) aSocketAddress;
-      setInetAddress(inetAddress.getAddress());
-      setPort(inetAddress.getPort());
-    } else {
-      throw new UnsupportedOperationException("Can't instantiate " + this + " from " + aSocketAddress);
-    }
+  public UdpAddress(int aPort) {
+    super(aPort);
   }
 
-  public UdpAddress(InetAddress inetAddress, int port) {
-    setInetAddress(inetAddress);
-    setPort(port);
+  public UdpAddress(InetSocketAddress address) {
+    super(address);
   }
 
-  public UdpAddress(int port) {
-    setPort(port);
+  public UdpAddress(InetAddress anAddress, int aPort) {
+    super(anAddress, aPort);
   }
 
   public UdpAddress(String address) {
-    if (!parseAddress(address)) {
-      throw new IllegalArgumentException(address);
-    }
-  }
-
-  public static Address parse(String address) {
-    UdpAddress a = new UdpAddress();
-    if (a.parseAddress(address)) {
-      return a;
-    }
-    return null;
+    super(address);
   }
 
   public boolean equals(Object o) {

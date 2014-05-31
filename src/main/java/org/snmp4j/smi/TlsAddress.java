@@ -20,13 +20,8 @@
 
 package org.snmp4j.smi;
 
-
-
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 
 /**
  * The <code>SshAddress</code> represents a SSH transport addresses as defined
@@ -37,41 +32,30 @@ import java.net.InetAddress;
  * @since 2.0
  */
 public class TlsAddress extends TcpAddress {
-
   static final long serialVersionUID = 0L;
-
-  private static final Logger logger = LoggerFactory.getLogger(TlsAddress.class);
 
   public TlsAddress() {
     super();
   }
 
-  public TlsAddress(InetAddress inetAddress, int port) {
-    super(inetAddress, port);
+  public TlsAddress(int aPort) {
+    super(aPort);
+  }
+
+  public TlsAddress(InetSocketAddress address) {
+    super(address);
+  }
+
+  public TlsAddress(InetAddress anAddress, int aPort) {
+    super(anAddress, aPort);
   }
 
   public TlsAddress(String address) {
-    if (!parseAddress(address)) {
-      throw new IllegalArgumentException(address);
-    }
-  }
-
-  public static Address parse(String address) {
-    try {
-      TlsAddress a = new TlsAddress();
-      if (a.parseAddress(address)) {
-        return a;
-      }
-    }
-    catch (RuntimeException ex) {
-      logger.error(ex.getMessage(), ex);
-    }
-    return null;
+    super(address);
   }
 
   public boolean equals(Object o) {
     return (o instanceof TlsAddress) && super.equals(o);
   }
-
 }
 

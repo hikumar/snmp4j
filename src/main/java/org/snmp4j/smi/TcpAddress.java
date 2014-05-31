@@ -20,71 +20,39 @@
 
 package org.snmp4j.smi;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-
 
 /**
  * The <code>TcpAddress</code> represents TCP/IP transport addresses.
  * @author Frank Fock
  * @version 1.0
  */
-
 public class TcpAddress extends TransportIpAddress {
-
   static final long serialVersionUID = 1165319744164017388L;
-
-  private static final Logger logger = LoggerFactory.getLogger(TcpAddress.class);
-
-  public TcpAddress(SocketAddress aSocketAddress) {
-    if (aSocketAddress instanceof InetSocketAddress) {
-      InetSocketAddress inetAddress = (InetSocketAddress) aSocketAddress;
-      setInetAddress(inetAddress.getAddress());
-      setPort(inetAddress.getPort());
-    } else {
-      throw new UnsupportedOperationException("Can't instantiate " + this + " from " + aSocketAddress);
-    }
-  }
 
   public TcpAddress() {
     super();
   }
 
-  public TcpAddress(InetAddress inetAddress, int port) {
-    setInetAddress(inetAddress);
-    setPort(port);
+  public TcpAddress(int aPort) {
+    super(aPort);
   }
 
-  public TcpAddress(int port) {
-    super();
-    setPort(port);
+  public TcpAddress(InetSocketAddress address) {
+    super(address);
+  }
+
+  public TcpAddress(InetAddress anAddress, int aPort) {
+    super(anAddress, aPort);
   }
 
   public TcpAddress(String address) {
-    if (!parseAddress(address)) {
-      throw new IllegalArgumentException(address);
-    }
-  }
-
-  public static Address parse(String address) {
-    try {
-      TcpAddress a = new TcpAddress();
-      if (a.parseAddress(address)) {
-        return a;
-      }
-    }
-    catch (RuntimeException ex) {
-      logger.error(ex.getMessage(), ex);
-    }
-    return null;
+    super(address);
   }
 
   public boolean equals(Object o) {
     return (o instanceof TcpAddress) && super.equals(o);
   }
-
 }

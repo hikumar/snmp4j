@@ -27,12 +27,9 @@ import org.snmp4j.asn1.BER;
 import org.snmp4j.asn1.BER.MutableByte;
 import org.snmp4j.asn1.BERInputStream;
 import org.snmp4j.concurrent.ControlableRunnable;
-import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.security.SecurityLevel;
-import org.snmp4j.smi.Address;
 import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.TcpAddress;
-import org.snmp4j.util.CommonTimer;
 
 import java.io.IOException;
 import java.net.*;
@@ -55,16 +52,19 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
   private static final Logger logger =
       LoggerFactory.getLogger(DefaultTcpTransportMapping.class);
 
-  private Map<Address, SocketEntry> sockets = new Hashtable<>();
+  private static final int MIN_SNMP_HEADER_LENGTH = 6;
+  private static final long DEFAULT_CONNECTION_MS_TIMEOUT = 60000;
+
   private Thread listenerThread;
   private SocketListener socketListener;
+  private final Selector selector;
 
-  private CommonTimer socketCleaner;
+  private final Map<SocketAddress, SelectionKey> keys;
+
   // 1 minute default timeout
-  private long connectionTimeout = 60000;
-  private boolean serverEnabled = false;
+  private long connectionTimeout = DEFAULT_CONNECTION_MS_TIMEOUT;
+  private final boolean serverEnabled;
 
-  private static final int MIN_SNMP_HEADER_LENGTH = 6;
   private MessageLengthDecoder messageLengthDecoder =
       new SnmpMesssageLengthDecoder();
 
@@ -74,8 +74,8 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
    * @throws IOException
    *    on failure of binding a local port.
    */
-  public DefaultTcpTransportMapping() throws UnknownHostException {
-    this(new TcpAddress(InetAddress.getLocalHost(), 0));
+  public DefaultTcpTransportMapping() throws IOException {
+    this(new TcpAddress(InetAddress.getLocalHost(), 0), false);
   }
 
   /**
@@ -88,9 +88,14 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
    * @throws IOException
    *    if the given address cannot be bound.
    */
-  public DefaultTcpTransportMapping(TcpAddress serverAddress) {
+  public DefaultTcpTransportMapping(TcpAddress serverAddress, boolean enableServer) throws IOException {
     super(serverAddress);
-    this.serverEnabled = true;
+
+    serverEnabled = enableServer;
+    keys = new Hashtable<>();
+
+    // Selector for incoming requests
+    selector = Selector.open();
   }
 
   /**
@@ -104,7 +109,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
   @Override
   public synchronized void listen() throws IOException {
     if (listenerThread == null) {
-      socketListener = new SocketListener();
+      socketListener = new SocketListener(getListenAddress().toSocketAddress());
       listenerThread = SNMP4JSettings.getThreadFactory().newThread(socketListener);
       listenerThread.start();
     }
@@ -135,29 +140,28 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
    * @since 1.7.1
    */
   @Override
-  public synchronized boolean close(TcpAddress remoteAddress) throws IOException {
-    if (logger.isDebugEnabled()) {
-      logger.debug("Closing socket for peer address {}", remoteAddress);
+  public synchronized boolean close(TcpAddress remoteAddress) {
+    close(remoteAddress.toSocketAddress());
+    return true;
+  }
+
+  private void close(InetSocketAddress socketAddress) {
+    SelectionKey key = keys.get(socketAddress);
+    close(key);
+  }
+
+  private void close(SelectionKey key) {
+    SocketAddress remoteAddress = getEntry(key).remoteAddress;
+    logger.debug("Closing socket to {}", remoteAddress);
+
+    try {
+      keys.remove(remoteAddress);
+
+      key.cancel();
+      key.channel().close();
+    } catch (IOException e) {
+      logger.error("Encountered an I/O error when attempting to close socket to {}", remoteAddress, e);
     }
-    SocketEntry entry = sockets.remove(remoteAddress);
-    if (entry != null) {
-      Socket s = entry.getSocket();
-      if (s != null) {
-        SocketChannel sc = entry.getSocket().getChannel();
-        entry.getSocket().close();
-        if (logger.isInfoEnabled()) {
-          logger.info("Socket to {} closed", entry.getPeerAddress());
-        }
-        if (sc != null) {
-          sc.close();
-          if (logger.isDebugEnabled()) {
-            logger.debug("Closed socket channel for peer address {}", remoteAddress);
-          }
-        }
-      }
-      return true;
-    }
-    return false;
   }
 
   /**
@@ -177,10 +181,18 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
                           TransportStateReference tmStateReference)
       throws IOException
   {
-    if (listenerThread == null) {
-      listen();
-    }
-    socketListener.sendMessage(address, message, tmStateReference);
+    InetSocketAddress socketAddress = new InetSocketAddress(address.getInetAddress(),
+                                                            address.getPort());
+
+    ByteBuffer bufferMessage = ByteBuffer.wrap(message);
+
+    sendMessage(socketAddress, bufferMessage);
+  }
+
+  public void sendMessage(InetSocketAddress remoteAddress, ByteBuffer message) throws IOException {
+    logger.debug("Adding message of length {} to send queue for {}", message.remaining(), remoteAddress);
+    getEntry(remoteAddress).addMessage(message);
+    selector.wakeup();
   }
 
   /**
@@ -220,19 +232,6 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
   }
 
   /**
-   * Sets whether a server for incoming requests should be created when
-   * the transport is set into listen state. Setting this value has no effect
-   * until the {@link #listen()} method is called (if the transport is already
-   * listening, {@link #close()} has to be called before).
-   * @param serverEnabled
-   *    if <code>true</code> if the transport will listens for incoming
-   *    requests after {@link #listen()} has been called.
-   */
-  public void setServerEnabled(boolean serverEnabled) {
-    this.serverEnabled = serverEnabled;
-  }
-
-  /**
    * Sets the message length decoder. Default message length decoder is the
    * {@link SnmpMesssageLengthDecoder}. The message length decoder must be
    * able to decode the total length of a message for this transport mapping
@@ -242,10 +241,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
    */
   @Override
   public void setMessageLengthDecoder(MessageLengthDecoder messageLengthDecoder) {
-    if (messageLengthDecoder == null) {
-      throw new NullPointerException();
-    }
-    this.messageLengthDecoder = messageLengthDecoder;
+    this.messageLengthDecoder = Objects.requireNonNull(messageLengthDecoder);
   }
 
   /**
@@ -259,122 +255,9 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
     this.maxInboundMessageSize = maxInboundMessageSize;
   }
 
-
-  private synchronized void timeoutSocket(SocketEntry entry) {
-    if (connectionTimeout > 0) {
-      socketCleaner.schedule(new SocketTimeout(entry), connectionTimeout);
-    }
-  }
-
   @Override
   public boolean isListening() {
     return (listenerThread != null);
-  }
-
-  class SocketEntry {
-    private Socket socket;
-    private TcpAddress peerAddress;
-    private long lastUse;
-    private LinkedList<byte[]> message = new LinkedList<>();
-    private ByteBuffer readBuffer = null;
-    private volatile int registrations = 0;
-
-    public SocketEntry(TcpAddress address, Socket socket) {
-      this.peerAddress = address;
-      this.socket = socket;
-      this.lastUse = System.nanoTime();
-    }
-
-    public synchronized void addRegistration(Selector selector, int opKey)
-        throws ClosedChannelException
-    {
-      if ((this.registrations & opKey) == 0) {
-        this.registrations |= opKey;
-        if (logger.isDebugEnabled()) {
-          logger.debug("Adding operation {} for: {}", opKey, this);
-        }
-        socket.getChannel().register(selector, registrations, this);
-      }
-      else if (!socket.getChannel().isRegistered()) {
-        this.registrations = opKey;
-        if (logger.isDebugEnabled()) {
-          logger.debug("Registering new operation {} for: {}", opKey, this);
-        }
-        socket.getChannel().register(selector, opKey, this);
-      }
-    }
-
-    public synchronized void removeRegistration(Selector selector, int opKey)
-        throws ClosedChannelException {
-      if ((this.registrations & opKey) == opKey) {
-        this.registrations &= ~opKey;
-        socket.getChannel().register(selector, this.registrations, this);
-      }
-    }
-
-    public synchronized boolean isRegistered(int opKey) {
-      return (this.registrations & opKey) == opKey;
-    }
-
-    public long getLastUse() {
-      return lastUse;
-    }
-
-    public void used() {
-      lastUse = System.nanoTime();
-    }
-
-    public Socket getSocket() {
-      return socket;
-    }
-
-    public TcpAddress getPeerAddress() {
-      return peerAddress;
-    }
-
-    public synchronized void addMessage(byte[] message) {
-      this.message.add(message);
-    }
-
-    public synchronized byte[] nextMessage() {
-      if (!this.message.isEmpty()) {
-        return this.message.removeFirst();
-      }
-      return null;
-    }
-
-    public synchronized boolean hasMessage() {
-      return !this.message.isEmpty();
-    }
-
-    public void setReadBuffer(ByteBuffer byteBuffer) {
-      this.readBuffer = byteBuffer;
-    }
-
-    public ByteBuffer getReadBuffer() {
-      return readBuffer;
-    }
-
-    public String toString() {
-      return "SocketEntry[peerAddress="+peerAddress+
-          ",socket="+socket+",lastUse="+new Date(lastUse/SnmpConstants.MILLISECOND_TO_NANOSECOND)+"]";
-    }
-
-    /*
-    public boolean equals(Object o) {
-      if (o instanceof SocketEntry) {
-        SocketEntry other = (SocketEntry)o;
-        return other.peerAddress.equals(peerAddress) &&
-            ((other.message == message) ||
-             ((message != null) && (message.equals(other.message))));
-      }
-      return false;
-    }
-
-    public int hashCode() {
-      return peerAddress.hashCode();
-    }
-*/
   }
 
   public static class SnmpMesssageLengthDecoder implements MessageLengthDecoder {
@@ -392,565 +275,274 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
     }
   }
 
-  class SocketTimeout extends TimerTask {
-    private SocketEntry entry;
+  private void readMessage(SocketEntry entry, SelectionKey key, SocketChannel readChannel) throws IOException {
+    ByteBuffer inputBuffer = entry.inputBuffer;
+    long iterationBytesRead;
 
-    public SocketTimeout(SocketEntry entry) {
-      this.entry = entry;
-    }
+    SocketAddress remoteAddress = entry.remoteAddress;
 
-    @Override
-    public void run() {
-      long now = System.nanoTime();
-      SocketEntry entryCopy = entry;
-      if (entryCopy == null) {
-        // nothing to do
-        return;
-      }
-      long idleMillis = (now - entryCopy.getLastUse()) / SnmpConstants.MILLISECOND_TO_NANOSECOND;
-      if ((socketCleaner == null) ||
-          (idleMillis >= connectionTimeout)) {
-        if (logger.isDebugEnabled()) {
-          logger.debug("Socket has not been used for {} milliseconds, closing it", idleMillis);
+    // Continue reading from the channel until there is nothing more to read.
+    // It is a non blocking operation so it will just return with a value
+    // equal to or bellow 0 if there is nothing to read
+    while ((iterationBytesRead = readChannel.read(inputBuffer)) > 0) {
+      logger.debug("Read {} bytes from {}", iterationBytesRead, remoteAddress);
+
+      if (inputBuffer.position() == messageLengthDecoder.getMinHeaderLength()) {
+        // If we haveve read a complete header decode the message length and
+        // do stuff with it
+        MessageLength messageLength = messageLengthDecoder.getMessageLength(inputBuffer);
+        logger.debug("Message from {} will be {} bytes", remoteAddress, messageLength);
+
+        if ((messageLength.getMessageLength() > getMaxInboundMessageSize()) ||
+            (messageLength.getMessageLength() <= 0)) {
+          throw new MalformedMessageException("Message from {} has invalid length (0 <= " + messageLength.getMessageLength() + " < " + getMaxInboundMessageSize() + ")");
         }
-        try {
-          synchronized (entryCopy) {
-            if (idleMillis >= connectionTimeout) {
-              sockets.remove(entryCopy.getPeerAddress());
-              entryCopy.getSocket().close();
-              if (logger.isInfoEnabled()) {
-                logger.info("Socket to {} closed due to timeout", entryCopy.getPeerAddress());
-              }
-            }
-            else {
-              rescheduleCleanup(idleMillis, entryCopy);
-            }
-          }
-        }
-        catch (IOException ex) {
-          logger.error(ex.getMessage(), ex);
-        }
-      }
-      else {
-        rescheduleCleanup(idleMillis, entryCopy);
+
+        // Update the buffers limit so we don't read past the message
+        inputBuffer.limit(messageLength.getMessageLength());
+      } else if (!inputBuffer.hasRemaining()) {
+        // If we have read to the limit of the buffer we have read a full
+        // message so now we need to dispatch the mssage and reset this
+        // connections input buffer so we can read the next message.
+        logger.debug("Received a full message of length {} from {}", inputBuffer.position(), remoteAddress);
+
+        ByteBuffer messageBuffer = entry.copyMessage();
+        entry.resetInputBuffer();
+
+        dispatchMessage(entry, messageBuffer);
       }
     }
 
-    private void rescheduleCleanup(long idleMillisAlreadyElapsed, SocketEntry entry) {
-      long nextRun = connectionTimeout - idleMillisAlreadyElapsed;
-      if (logger.isDebugEnabled()) {
-        logger.debug("Scheduling {}", nextRun);
-      }
-      socketCleaner.schedule(new SocketTimeout(entry), nextRun);
-    }
+    if (iterationBytesRead < 0) {
+      logger.debug("Reached end-of-stream with {}", remoteAddress);
+      close(key);
 
-    @Override
-    public boolean cancel(){
-        boolean result = super.cancel();
-        // free objects early
-        entry = null;
-        return result;
+      TcpAddress incomingAddress = new TcpAddress(entry.remoteAddress);
+
+      TransportStateEvent e =
+          new TransportStateEvent(DefaultTcpTransportMapping.this,
+              incomingAddress,
+              TransportStateEvent.STATE_DISCONNECTED_REMOTELY,
+              null);
+
+      fireConnectionStateChanged(e);
     }
   }
 
+  public void writeMessages(final ArrayDeque<ByteBuffer> messages, SocketChannel channel) throws IOException {
+    ByteBuffer nextBuffer = messages.peek();
+    int writtenBytes;
+
+    while ((writtenBytes = channel.write(nextBuffer)) > 0) {
+      if (!nextBuffer.hasRemaining()) {
+        messages.pop();
+        nextBuffer = messages.peek();
+      }
+
+      logger.debug("Wrote {} bytes to {}", writtenBytes, channel);
+    }
+  }
+
+  private SelectionKey getSelectionKey(InetSocketAddress remoteAddress) throws IOException {
+    SelectionKey key = keys.get(remoteAddress);
+
+    if (key == null) {
+      // Open the channel, set it to non-blocking, initiate connect
+      SocketChannel sc = SocketChannel.open();
+      key = configureChannel(sc);
+      sc.connect(remoteAddress);
+    }
+
+    return key;
+  }
+
+  private SocketEntry getEntry(SelectionKey key) {
+    return (SocketEntry) key.attachment();
+  }
+
+  private SocketEntry getEntry(InetSocketAddress remoteAddress) throws IOException {
+    return getEntry(getSelectionKey(remoteAddress));
+  }
+
+  private SelectionKey configureChannel(SocketChannel s) throws IOException {
+    s.configureBlocking(false);
+    SelectionKey key = s.register(selector,
+        SelectionKey.OP_CONNECT |
+            SelectionKey.OP_READ |
+            SelectionKey.OP_WRITE);
+
+    SocketEntry entry = new SocketEntry((InetSocketAddress) s.getRemoteAddress());
+    key.attach(entry);
+
+    return key;
+  }
+
+  private void dispatchMessage(SocketEntry entry,
+                               ByteBuffer messageBuffer) {
+    TcpAddress remoteAddress = new TcpAddress(entry.remoteAddress);
+
+    TransportStateReference stateReference =
+        new TransportStateReference(
+            DefaultTcpTransportMapping.this,
+            remoteAddress,
+            null,
+            SecurityLevel.undefined, SecurityLevel.undefined,
+            false, entry);
+
+    fireProcessMessage(remoteAddress, messageBuffer, stateReference);
+  }
+
   class SocketListener extends ControlableRunnable {
-    private byte[] buf;
-    private Throwable lastError = null;
-    private ServerSocketChannel ssc;
-    private Selector selector;
+    private final ServerSocketChannel ssc;
 
-    private LinkedList<SocketEntry> pending = new LinkedList<>();
-
-    public SocketListener() throws IOException {
-      buf = new byte[getMaxInboundMessageSize()];
-      // Selector for incoming requests
-      selector = Selector.open();
-
+    public SocketListener(InetSocketAddress bindAddress) throws IOException {
       if (serverEnabled) {
-        // Create a new server socket and set to non blocking mode
+        // Create a new server socket, set to non blocking mode and bind to the
+        // supplied address
         ssc = ServerSocketChannel.open();
         ssc.configureBlocking(false);
-
-        // Bind the server socket
-        InetSocketAddress isa = new InetSocketAddress(tcpAddress.getInetAddress(),
-            tcpAddress.getPort());
-        ssc.socket().bind(isa);
+        ssc.bind(bindAddress);
 
         // Register accepts on the server socket with the selector. This
         // step tells the selector that the socket wants to be put on the
         // ready list when accept operations occur, so allowing multiplexed
         // non-blocking I/O to take place.
         ssc.register(selector, SelectionKey.OP_ACCEPT);
+      } else {
+        // We're not supposed to listen for incoming requests so don't create
+        // the ServerSocketChannel
+        ssc = null;
       }
     }
-
-    private void processPending() {
-      synchronized (pending) {
-        for (int i=0; i<pending.size(); i++) {
-          SocketEntry entry = pending.getFirst();
-          try {
-            // Register the channel with the selector, indicating
-            // interest in connection completion and attaching the
-            // target object so that we can get the target back
-            // after the key is added to the selector's
-            // selected-key set
-            if (entry.getSocket().isConnected()) {
-              entry.addRegistration(selector, SelectionKey.OP_WRITE);
-            }
-            else {
-              entry.addRegistration(selector, SelectionKey.OP_CONNECT);
-            }
-          }
-          catch (CancelledKeyException ckex) {
-            logger.warn(ckex.getMessage(), ckex);
-            pending.remove(entry);
-            try {
-              entry.getSocket().getChannel().close();
-              TransportStateEvent e =
-                  new TransportStateEvent(DefaultTcpTransportMapping.this,
-                                          entry.getPeerAddress(),
-                                          TransportStateEvent.STATE_CLOSED,
-                                          null);
-              fireConnectionStateChanged(e);
-            }
-            catch (IOException ex) {
-              logger.error(ex.getMessage(), ex);
-            }
-          } catch (ClosedChannelException iox) {
-            logger.error(iox.getMessage(), iox);
-            pending.remove(entry);
-            // Something went wrong, so close the channel and
-            // record the failure
-            try {
-              entry.getSocket().getChannel().close();
-              TransportStateEvent e =
-                  new TransportStateEvent(DefaultTcpTransportMapping.this,
-                      entry.getPeerAddress(),
-                      TransportStateEvent.STATE_CLOSED,
-                      iox);
-              fireConnectionStateChanged(e);
-            }
-            catch (IOException ex) {
-              logger.error(ex.getMessage(), ex);
-            }
-            lastError = iox;
-            throw new RuntimeException(iox);
-          }
-        }
-      }
-    }
-
-    public Throwable getLastError() {
-      return lastError;
-    }
-
-    public void sendMessage(Address address, byte[] message,
-                            TransportStateReference tmStateReference)
-        throws IOException
-    {
-      Socket s = null;
-      SocketEntry entry = sockets.get(address);
-      if (logger.isDebugEnabled()) {
-        logger.debug("Looking up connection for destination '{}' returned: {}", address, entry);
-        logger.debug(sockets.toString());
-      }
-      if (entry != null) {
-        synchronized (entry) {
-          entry.used();
-          s = entry.getSocket();
-        }
-      }
-      if ((s == null) || (s.isClosed()) || (!s.isConnected())) {
-        if (logger.isDebugEnabled()) {
-          logger.debug("Socket for address '{}' is closed, opening it...", address);
-        }
-        synchronized (pending) {
-          pending.remove(entry);
-        }
-        SocketChannel sc;
-        try {
-          InetSocketAddress targetAddress =
-              new InetSocketAddress(((TcpAddress)address).getInetAddress(),
-                                    ((TcpAddress)address).getPort());
-          if ((s == null) || (s.isClosed())) {
-            // Open the channel, set it to non-blocking, initiate connect
-            sc = SocketChannel.open();
-            sc.configureBlocking(false);
-            sc.connect(targetAddress);
-          }
-          else {
-            sc = s.getChannel();
-            sc.configureBlocking(false);
-            if (!sc.isConnectionPending()) {
-              sc.connect(targetAddress);
-            }
-          }
-          s = sc.socket();
-          entry = new SocketEntry((TcpAddress)address, s);
-          entry.addMessage(message);
-          sockets.put(address, entry);
-
-          synchronized (pending) {
-            pending.add(entry);
-          }
-
-          selector.wakeup();
-          logger.debug("Trying to connect to {}", address);
-        }
-        catch (IOException iox) {
-          logger.error(iox.getMessage(), iox);
-          throw iox;
-        }
-      }
-      else {
-        entry.addMessage(message);
-        synchronized (pending) {
-          pending.add(entry);
-        }
-        logger.debug("Waking up selector for new message");
-        selector.wakeup();
-      }
-    }
-
 
     @Override
     public void run() {
-      // Here's where everything happens. The select method will
-      // return when any operations registered above have occurred, the
-      // thread has been interrupted, etc.
       try {
         while (!shouldStop()) {
-          try {
-            if (selector.select() > 0) {
-              // Someone is ready for I/O, get the ready keys
-              Set<SelectionKey> readyKeys = selector.selectedKeys();
-              Iterator<SelectionKey> it = readyKeys.iterator();
+          if (selector.select() > 0) {
+            // Someone is ready for I/O, get the ready keys
+            Set<SelectionKey> readyKeys = selector.selectedKeys();
+            Iterator<SelectionKey> it = readyKeys.iterator();
 
-              // Walk through the ready keys collection and process date requests.
-              while (it.hasNext()) {
-                try {
-                  SelectionKey sk = it.next();
-                  it.remove();
+            // Walk through the ready keys collection and process date requests.
+            while (it.hasNext()) {
+              try {
+                SelectionKey sk = it.next();
+                it.remove();
 
-                  if (sk.isAcceptable()) {
-                    logger.debug("Key is acceptable");
-
-                    // The key indexes into the selector so you
-                    // can retrieve the socket that's ready for I/O
-                    ServerSocketChannel nextReady = (ServerSocketChannel) sk.channel();
-                    Socket s = nextReady.accept().socket();
-                    SocketChannel readChannel = s.getChannel();
-                    readChannel.configureBlocking(false);
-                    readChannel.register(selector, SelectionKey.OP_READ);
-
-                    TcpAddress incomingAddress = new TcpAddress(s.getInetAddress(), s.getPort());
-
-                    TransportStateEvent e =
-                        new TransportStateEvent(DefaultTcpTransportMapping.this,
-                                                incomingAddress,
-                                                TransportStateEvent.STATE_CONNECTED,
-                                                null);
-
-                    fireConnectionStateChanged(e);
-
-                    if (e.isCancelled()) {
-                      logger.warn("Incoming connection cancelled");
-                      s.close();
-                      sockets.remove(incomingAddress);
-                    }
-                  }
-                  else if (sk.isWritable()) {
-                    logger.debug("Key is writable");
-                    writeData(sk, null);
-                  }
-                  else if (sk.isReadable()) {
-                    logger.debug("Key is readable");
-                    SocketChannel readChannel = (SocketChannel) sk.channel();
-                    TcpAddress incomingAddress =
-                        new TcpAddress(readChannel.socket().getInetAddress(),
-                                       readChannel.socket().getPort());
-
-                    try {
-                      readMessage(sk, readChannel, incomingAddress);
-                    }
-                    catch (IOException iox) {
-                      // IO exception -> channel closed remotely
-                      logger.warn(iox.getMessage(), iox);
-                      sk.cancel();
-                      readChannel.close();
-                      TransportStateEvent e =
-                          new TransportStateEvent(DefaultTcpTransportMapping.this,
-                              incomingAddress,
-                              TransportStateEvent.
-                                  STATE_DISCONNECTED_REMOTELY,
-                              iox);
-                      fireConnectionStateChanged(e);
-                    }
-                  }
-                  else if (sk.isConnectable()) {
-                    logger.debug("Key is connectable");
-                    connectChannel(sk, null);
-                  }
+                if (sk.isAcceptable()) {
+                  handleAcceptable(sk);
+                } else if (sk.isConnectable()) {
+                  handleConnectable(sk);
+                } else if (sk.isReadable()) {
+                  handleReadable(sk);
+                } else if (sk.isWritable()) {
+                  handleWritable(sk);
                 }
-                catch (CancelledKeyException ckex) {
-                  if (logger.isDebugEnabled()) {
-                    logger.debug("Selection key cancelled, skipping it");
-                  }
+              } catch (CancelledKeyException ckex) {
+                if (logger.isDebugEnabled()) {
+                  logger.debug("Selection key cancelled, skipping it");
                 }
               }
             }
           }
-          catch (NullPointerException npex) {
-            // There seems to happen a NullPointerException within the select()
-            logger.warn("NullPointerException within select()?", npex);
-            stop = true;
-          }
-          processPending();
-        }
-        if (ssc != null) {
-          ssc.close();
-        }
-        if (selector != null) {
-          selector.close();
         }
       }
       catch (IOException iox) {
         logger.error(iox.getMessage(), iox);
-        lastError = iox;
       }
 
       logger.debug("Worker task finished: {}", this);
     }
 
-    private void connectChannel(SelectionKey sk, TcpAddress incomingAddress) {
-      SocketEntry entry = (SocketEntry) sk.attachment();
+    private void handleAcceptable(SelectionKey sk) throws IOException {
+      // Accept the incoming connection
+      SocketChannel s = ((ServerSocketChannel) sk.channel()).accept();
+      SocketEntry socketEntry = getEntry(sk);
+
+      SocketAddress remoteAddress = s.getRemoteAddress();
+      logger.debug("Accepting incoming connection from {}", remoteAddress);
+
+      configureChannel(s);
+
+      TcpAddress incomingAddress = new TcpAddress(socketEntry.remoteAddress);
+
+      TransportStateEvent e =
+          new TransportStateEvent(DefaultTcpTransportMapping.this,
+              incomingAddress,
+              TransportStateEvent.STATE_CONNECTED,
+              null);
+
+      fireConnectionStateChanged(e);
+
+      if (e.isCancelled()) {
+        logger.warn("Incoming connection cancelled");
+        close(sk);
+      }
+    }
+
+    private void handleConnectable(SelectionKey sk) {
+      SocketEntry entry = getEntry(sk);
+      logger.debug("Connection to {} established", entry.remoteAddress);
+
+      TcpAddress incomingAddress = new TcpAddress(entry.remoteAddress);
+
+      TransportStateEvent e =
+          new TransportStateEvent(DefaultTcpTransportMapping.this,
+              incomingAddress,
+              TransportStateEvent.STATE_CONNECTED,
+              null);
+
+      fireConnectionStateChanged(e);
+
+      if (e.isCancelled()) {
+        logger.warn("Incoming connection cancelled");
+        close(sk);
+      }
+    }
+
+    private void handleReadable(SelectionKey sk) throws IOException {
+      SocketChannel readChannel = (SocketChannel) sk.channel();
+      SocketEntry socketEntry = getEntry(sk);
+      TcpAddress incomingAddress = new TcpAddress(socketEntry.remoteAddress);
+
       try {
-        SocketChannel sc = (SocketChannel) sk.channel();
-        if (!sc.isConnected()) {
-          if (sc.finishConnect()) {
-            sc.configureBlocking(false);
-            logger.debug("Connected to {}", entry.getPeerAddress());
-            // make sure conncetion is closed if not used for timeout
-            // micro seconds
-            timeoutSocket(entry);
-            entry.removeRegistration(selector, SelectionKey.OP_CONNECT);
-            entry.addRegistration(selector, SelectionKey.OP_WRITE);
-          }
-          else {
-            entry = null;
-          }
-        }
-        if (entry != null) {
-          Address addr = (incomingAddress == null) ?
-                                      entry.getPeerAddress() : incomingAddress;
-          logger.debug("Fire connected event for {}", addr);
-          TransportStateEvent e =
-              new TransportStateEvent(DefaultTcpTransportMapping.this,
-                                      addr,
-                                      TransportStateEvent.
-                                      STATE_CONNECTED,
-                                      null);
-          fireConnectionStateChanged(e);
-        }
+        readMessage(socketEntry, sk, readChannel);
       }
       catch (IOException iox) {
+        // IO exception -> channel closed remotely
         logger.warn(iox.getMessage(), iox);
-        sk.cancel();
-        closeChannel(sk.channel());
-        if (entry != null) {
-          pending.remove(entry);
-        }
-      }
-    }
+        close(sk);
 
-    private TcpAddress writeData(SelectionKey sk, TcpAddress incomingAddress) {
-      SocketEntry entry = (SocketEntry) sk.attachment();
-      try {
-        SocketChannel sc = (SocketChannel) sk.channel();
-        incomingAddress =
-            new TcpAddress(sc.socket().getInetAddress(),
-                           sc.socket().getPort());
-        if ((entry != null) && (!entry.hasMessage())) {
-          synchronized (pending) {
-            pending.remove(entry);
-            entry.removeRegistration(selector, SelectionKey.OP_WRITE);
-          }
-        }
-        if (entry != null) {
-          writeMessage(entry, sc);
-        }
-      }
-      catch (IOException iox) {
-        logger.warn(iox.getMessage(), iox);
         TransportStateEvent e =
             new TransportStateEvent(DefaultTcpTransportMapping.this,
-                                    incomingAddress,
-                                    TransportStateEvent.
-                                    STATE_DISCONNECTED_REMOTELY,
-                                    iox);
+                incomingAddress,
+                TransportStateEvent.STATE_DISCONNECTED_REMOTELY,
+                iox);
+
         fireConnectionStateChanged(e);
-        // make sure channel is closed properly:
-        closeChannel(sk.channel());
-      }
-      return incomingAddress;
-    }
-
-    private void closeChannel(SelectableChannel channel) {
-      try {
-        channel.close();
-      }
-      catch (IOException channelCloseException) {
-        logger.warn(channelCloseException.getMessage(), channelCloseException);
       }
     }
 
-    private void readMessage(SelectionKey sk, SocketChannel readChannel,
-                             TcpAddress incomingAddress) throws IOException {
-      SocketEntry entry = (SocketEntry) sk.attachment();
-      if (entry == null) {
-        // slow but in some cases needed:
-        entry = sockets.get(incomingAddress);
-      }
-      if (entry != null) {
-        // note that socket has been used
-        entry.used();
-        ByteBuffer readBuffer = entry.getReadBuffer();
-        if (readBuffer != null) {
-          readChannel.read(readBuffer);
-          if (readBuffer.hasRemaining()) {
-            entry.addRegistration(selector, SelectionKey.OP_READ);
-          }
-          else {
-            entry.setReadBuffer(null); // <== set read buffer of entry to null
-            dispatchMessage(incomingAddress, readBuffer, readBuffer.capacity(), entry);
-          }
-          return;
-        }
-      }
-      ByteBuffer byteBuffer = ByteBuffer.wrap(buf);
-      byteBuffer.limit(messageLengthDecoder.getMinHeaderLength());
-      if (!readChannel.isOpen()) {
-        sk.cancel();
-        if (logger.isDebugEnabled()) {
-          logger.debug("Read channel not open, no bytes read from {}", incomingAddress);
-        }
-        return;
-      }
-      long bytesRead;
+    private void handleWritable(SelectionKey sk) {
+      SocketEntry socketEntry = getEntry(sk);
+      TcpAddress incomingAddress = new TcpAddress(socketEntry.remoteAddress);
+      SocketChannel sc = (SocketChannel) sk.channel();
+
       try {
-        bytesRead = readChannel.read(byteBuffer);
-        if (logger.isDebugEnabled()) {
-          logger.debug("Reading header {} bytes from {}", bytesRead, incomingAddress);
-        }
-      }
-      catch (ClosedChannelException ccex) {
-        sk.cancel();
-        if (logger.isDebugEnabled()) {
-          logger.debug("Read channel not open, no bytes read from {}", incomingAddress);
-        }
-        return;
-      }
-      if (bytesRead == messageLengthDecoder.getMinHeaderLength()) {
-        MessageLength messageLength =
-            messageLengthDecoder.getMessageLength(ByteBuffer.wrap(buf));
-        if (logger.isDebugEnabled()) {
-          logger.debug("Message length is {}", messageLength);
-        }
-        if ((messageLength.getMessageLength() > getMaxInboundMessageSize()) ||
-            (messageLength.getMessageLength() <= 0)) {
-          logger.error("Received message length {} is greater than inboundBufferSize {}", messageLength, getMaxInboundMessageSize());
-          if (entry != null) {
-            Socket s = entry.getSocket();
-            if (s != null) {
-              s.close();
-              logger.info("Socket to {} closed due to an error", entry.getPeerAddress());
-            }
-          }
-        }
-        else {
-          byteBuffer.limit(messageLength.getMessageLength());
-          bytesRead += readChannel.read(byteBuffer);
-          if (bytesRead == messageLength.getMessageLength()) {
-            dispatchMessage(incomingAddress, byteBuffer, bytesRead, entry);
-          }
-          else {
-            byte[] message = new byte[byteBuffer.limit()];
-            int buflen = byteBuffer.limit() - byteBuffer.remaining();
-            byteBuffer.flip();
-            byteBuffer.get(message, 0, buflen);
-            ByteBuffer newBuffer = ByteBuffer.wrap(message);
-            newBuffer.position(buflen);
-            if (entry != null) {
-              entry.setReadBuffer(newBuffer);
-            }
-          }
-          if (entry != null) {
-            entry.addRegistration(selector, SelectionKey.OP_READ);
-          }
-        }
-      }
-      else if (bytesRead < 0) {
-        logger.debug("Socket closed remotely");
-        sk.cancel();
-        readChannel.close();
+        writeMessages(socketEntry.messages, sc);
+      } catch (IOException iox) {
+        logger.warn(iox.getMessage(), iox);
+
         TransportStateEvent e =
             new TransportStateEvent(DefaultTcpTransportMapping.this,
-                                    incomingAddress,
-                                    TransportStateEvent.
-                                    STATE_DISCONNECTED_REMOTELY,
-                                    null);
+                incomingAddress,
+                TransportStateEvent.STATE_DISCONNECTED_REMOTELY,
+                iox);
+
         fireConnectionStateChanged(e);
-      }
-      else if (entry != null) {
-        entry.addRegistration(selector, SelectionKey.OP_READ);
-      }
-    }
 
-    private void dispatchMessage(TcpAddress incomingAddress,
-                                 ByteBuffer byteBuffer, long bytesRead,
-                                 Object sessionID) {
-      byteBuffer.flip();
-      if (logger.isDebugEnabled()) {
-        logger.debug("Received message from {} with length {}: {}", incomingAddress, bytesRead, new OctetString(byteBuffer.array(), 0,
-            (int) bytesRead).toHexString());
-      }
-      ByteBuffer bis;
-      if (isAsyncMsgProcessingSupported()) {
-        byte[] bytes = new byte[(int)bytesRead];
-        System.arraycopy(byteBuffer.array(), 0, bytes, 0, (int)bytesRead);
-        bis = ByteBuffer.wrap(bytes);
-      }
-      else {
-        bis = ByteBuffer.wrap(byteBuffer.array(),
-                              0, (int) bytesRead);
-      }
-      TransportStateReference stateReference =
-        new TransportStateReference(DefaultTcpTransportMapping.this, incomingAddress, null,
-                                    SecurityLevel.undefined, SecurityLevel.undefined,
-                                    false, sessionID);
-      fireProcessMessage(incomingAddress, bis, stateReference);
-    }
-
-    private void writeMessage(SocketEntry entry, SocketChannel sc) throws
-        IOException {
-      byte[] message = entry.nextMessage();
-      if (message != null) {
-        ByteBuffer buffer = ByteBuffer.wrap(message);
-        sc.write(buffer);
-        if (logger.isDebugEnabled()) {
-          logger.debug("Send message with length {} to {}: {}", message.length, entry.getPeerAddress(), new OctetString(message).toHexString());
-        }
-        entry.addRegistration(selector, SelectionKey.OP_READ);
-      }
-      else {
-        entry.removeRegistration(selector, SelectionKey.OP_WRITE);
-        // Make sure that we did not clear a selection key that was concurrently
-        // added:
-        if (entry.hasMessage() && !entry.isRegistered(SelectionKey.OP_WRITE)) {
-          entry.addRegistration(selector, SelectionKey.OP_WRITE);
-          logger.debug("Waking up selector");
-          selector.wakeup();
-        }
+        close(sk);
       }
     }
 
@@ -960,4 +552,32 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
     }
   }
 
+  private class SocketEntry {
+    public final ByteBuffer inputBuffer;
+    public final InetSocketAddress remoteAddress;
+
+    private final ArrayDeque<ByteBuffer> messages;
+
+    SocketEntry(InetSocketAddress theRemoteAddress) {
+      remoteAddress = Objects.requireNonNull(theRemoteAddress);
+      inputBuffer = ByteBuffer.allocate(getMaxInboundMessageSize());
+      messages = new ArrayDeque<>();
+    }
+
+    public void resetInputBuffer() {
+      inputBuffer.clear();
+      inputBuffer.limit(messageLengthDecoder.getMinHeaderLength());
+    }
+
+    public ByteBuffer copyMessage() {
+      ByteBuffer messageBuffer = ByteBuffer.allocate(inputBuffer.position());
+      inputBuffer.flip();
+      messageBuffer.put(inputBuffer);
+      return messageBuffer;
+    }
+
+    public void addMessage(ByteBuffer message) {
+      messages.addLast(message);
+    }
+  }
 }

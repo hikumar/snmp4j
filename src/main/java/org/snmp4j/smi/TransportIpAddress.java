@@ -246,4 +246,7 @@ public abstract class TransportIpAddress extends IpAddress {
     return SMIConstants.SYNTAX_OCTET_STRING;
   }
 
+  public InetSocketAddress toSocketAddress() {
+    return new InetSocketAddress(getInetAddress(), port);
+  }
 }

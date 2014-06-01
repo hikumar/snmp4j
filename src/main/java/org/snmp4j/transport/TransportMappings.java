@@ -176,7 +176,7 @@ public class TransportMappings {
           new Hashtable<>(2);
       t.put(UdpAddress.class.getName(), DefaultUdpTransportMapping.class);
       t.put(TcpAddress.class.getName(), DefaultTcpTransportMapping.class);
-      t.put(TlsAddress.class.getName(), TLSTM.class);
+      t.put(TlsAddress.class.getName(), TlsTransportMapping.class);
       transportMappings = t;
     }
   }

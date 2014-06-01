@@ -66,10 +66,10 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @version 2.0
  * @since 2.0
  */
-public class TLSTM extends TcpTransportMapping {
+public class TlsTransportMapping extends TcpTransportMapping {
 
   private static final Logger logger =
-      LoggerFactory.getLogger(TLSTM.class);
+      LoggerFactory.getLogger(TlsTransportMapping.class);
 
   private Map<Address, SocketEntry> sockets = new Hashtable<>();
   private WorkerTask server;
@@ -103,7 +103,7 @@ public class TLSTM extends TcpTransportMapping {
    * @throws UnknownHostException
    *    if the local host cannot be determined.
    */
-  public TLSTM() throws UnknownHostException {
+  public TlsTransportMapping() throws UnknownHostException {
      super(new TlsAddress(InetAddress.getLocalHost(), 0));
     this.counterSupport = CounterSupport.getInstance();
     super.maxInboundMessageSize = MAX_TLS_PAYLOAD_SIZE;
@@ -117,7 +117,7 @@ public class TLSTM extends TcpTransportMapping {
    * @throws java.io.IOException
    *    on failure of binding a local port.
    */
-  public TLSTM(TlsAddress address)
+  public TlsTransportMapping(TlsAddress address)
       throws IOException {
     super(address);
     super.maxInboundMessageSize = MAX_TLS_PAYLOAD_SIZE;
@@ -158,8 +158,8 @@ public class TLSTM extends TcpTransportMapping {
    * @throws java.io.IOException
    *    if the given address cannot be bound.
    */
-  public TLSTM(TlsTmSecurityCallback<X509Certificate> securityCallback,
-               TlsAddress serverAddress) {
+  public TlsTransportMapping(TlsTmSecurityCallback<X509Certificate> securityCallback,
+                             TlsAddress serverAddress) {
      this(securityCallback, serverAddress, CounterSupport.getInstance());
   }
 
@@ -179,8 +179,8 @@ public class TLSTM extends TcpTransportMapping {
    * @throws java.io.IOException
    *    if the given address cannot be bound.
    */
-  public TLSTM(TlsTmSecurityCallback<X509Certificate> securityCallback,
-               TlsAddress serverAddress, CounterSupport counterSupport) {
+  public TlsTransportMapping(TlsTmSecurityCallback<X509Certificate> securityCallback,
+                             TlsAddress serverAddress, CounterSupport counterSupport) {
     super(serverAddress);
     super.maxInboundMessageSize = MAX_TLS_PAYLOAD_SIZE;
     this.serverEnabled = true;
@@ -607,7 +607,7 @@ public class TLSTM extends TcpTransportMapping {
       sslEngine.setUseClientMode(useClientMode);
 //      sslEngineConfigurator.configure(SSLContext.getDefault(), useClientMode);
       sslEngineConfigurator.configure(sslEngine);
-      synchronized (TLSTM.this) {
+      synchronized (TlsTransportMapping.this) {
         sessionID = nextSessionID++;
       }
     }
@@ -714,7 +714,7 @@ public class TLSTM extends TcpTransportMapping {
     public void checkTransportStateReference() {
       if (tmStateReference == null) {
         tmStateReference =
-            new TransportStateReference(TLSTM.this, peerAddress, new OctetString(),
+            new TransportStateReference(TlsTransportMapping.this, peerAddress, new OctetString(),
                 SecurityLevel.authPriv, SecurityLevel.authPriv,
                 true, sessionID);
         OctetString securityName = null;
@@ -982,7 +982,7 @@ public class TLSTM extends TcpTransportMapping {
             try {
               entry.getSocket().getChannel().close();
               TransportStateEvent e =
-                  new TransportStateEvent(TLSTM.this,
+                  new TransportStateEvent(TlsTransportMapping.this,
                                           entry.getPeerAddress(),
                                           TransportStateEvent.STATE_CLOSED,
                                           null);
@@ -1000,7 +1000,7 @@ public class TLSTM extends TcpTransportMapping {
             try {
               entry.getSocket().getChannel().close();
               TransportStateEvent e =
-                  new TransportStateEvent(TLSTM.this,
+                  new TransportStateEvent(TlsTransportMapping.this,
                                           entry.getPeerAddress(),
                                           TransportStateEvent.STATE_CLOSED,
                                           iox);
@@ -1229,7 +1229,7 @@ public class TLSTM extends TcpTransportMapping {
                     sockets.put(incomingAddress, entry);
                     timeoutSocket(entry);
                     TransportStateEvent e =
-                        new TransportStateEvent(TLSTM.this,
+                        new TransportStateEvent(TlsTransportMapping.this,
                                                 incomingAddress,
                                                 TransportStateEvent.
                                                 STATE_CONNECTED,
@@ -1269,7 +1269,7 @@ public class TLSTM extends TcpTransportMapping {
                       sk.cancel();
                       readChannel.close();
                       TransportStateEvent e =
-                          new TransportStateEvent(TLSTM.this,
+                          new TransportStateEvent(TlsTransportMapping.this,
                                                   incomingAddress,
                                                   TransportStateEvent.
                                                   STATE_DISCONNECTED_REMOTELY,
@@ -1306,7 +1306,7 @@ public class TLSTM extends TcpTransportMapping {
       }
       if (!stop) {
         stop = true;
-        synchronized (TLSTM.this) {
+        synchronized (TlsTransportMapping.this) {
           server = null;
         }
       }
@@ -1338,7 +1338,7 @@ public class TLSTM extends TcpTransportMapping {
                                       entry.getPeerAddress() : incomingAddress;
           logger.debug("Fire connected event for {}", addr);
           TransportStateEvent e =
-              new TransportStateEvent(TLSTM.this,
+              new TransportStateEvent(TlsTransportMapping.this,
                                       addr,
                                       TransportStateEvent.
                                       STATE_CONNECTED,
@@ -1376,7 +1376,7 @@ public class TLSTM extends TcpTransportMapping {
       catch (IOException iox) {
         logger.warn(iox.getMessage(), iox);
         TransportStateEvent e =
-            new TransportStateEvent(TLSTM.this,
+            new TransportStateEvent(TlsTransportMapping.this,
                                     incomingAddress,
                                     TransportStateEvent.
                                     STATE_DISCONNECTED_REMOTELY,
@@ -1424,7 +1424,7 @@ public class TLSTM extends TcpTransportMapping {
           sk.cancel();
           readChannel.close();
           TransportStateEvent e =
-              new TransportStateEvent(TLSTM.this,
+              new TransportStateEvent(TlsTransportMapping.this,
                                       incomingAddress,
                                       TransportStateEvent.
                                       STATE_DISCONNECTED_REMOTELY,
@@ -1831,7 +1831,7 @@ public class TLSTM extends TcpTransportMapping {
       }
       Object entry = null;
       try {
-        entry = TLSTM.getSubjAltName(x509Certificates[0].getSubjectAlternativeNames(), 2);
+        entry = TlsTransportMapping.getSubjAltName(x509Certificates[0].getSubjectAlternativeNames(), 2);
       } catch (CertificateParsingException e) {
         logger.error("CertificateParsingException while verifying server certificate {}", Arrays.asList(x509Certificates));
       }

@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.Address;
 import org.snmp4j.smi.OctetString;
-import org.snmp4j.transport.TLSTM;
+import org.snmp4j.transport.TlsTransportMapping;
 
 import javax.security.auth.x500.X500Principal;
 import java.security.Principal;
@@ -61,7 +61,7 @@ public class DefaultTlsTmSecurityCallback implements TlsTmSecurityCallback<X509C
       OctetString fingerprint = entry.getKey().getFingerprint();
       for (X509Certificate cert : peerCertificateChain) {
         OctetString certFingerprint;
-        certFingerprint = TLSTM.getFingerprint(cert);
+        certFingerprint = TlsTransportMapping.getFingerprint(cert);
         if ((certFingerprint != null) && (certFingerprint.equals(fingerprint))) {
           // possible match found -> now try to map to tmSecurityName
           SecurityNameMapping.CertMappingType mappingType = entry.getKey().getType();
@@ -91,7 +91,7 @@ public class DefaultTlsTmSecurityCallback implements TlsTmSecurityCallback<X509C
       }
       case SANAny:
       case SANRFC822Name: {
-        Object entry = TLSTM.getSubjAltName(cert.getSubjectAlternativeNames(), 1);
+        Object entry = TlsTransportMapping.getSubjAltName(cert.getSubjectAlternativeNames(), 1);
         if (entry != null) {
           String[] rfc822Name = ((String)entry).split("@");
           return new OctetString(rfc822Name[0]+"@"+rfc822Name[1].toLowerCase());
@@ -99,14 +99,14 @@ public class DefaultTlsTmSecurityCallback implements TlsTmSecurityCallback<X509C
         // fall through SANAny
       }
       case SANDNSName: {
-        Object entry = TLSTM.getSubjAltName(cert.getSubjectAlternativeNames(), 2);
+        Object entry = TlsTransportMapping.getSubjAltName(cert.getSubjectAlternativeNames(), 2);
         if (entry != null) {
           String dNSName = ((String)entry).toLowerCase();
           return new OctetString(dNSName);
         }
       }
       case SANIpAddress: {
-        Object entry = TLSTM.getSubjAltName(cert.getSubjectAlternativeNames(), 7);
+        Object entry = TlsTransportMapping.getSubjAltName(cert.getSubjectAlternativeNames(), 7);
         if (entry != null) {
           String ipAddress = ((String)entry).toLowerCase();
           if (ipAddress.indexOf(':')>=0) {
@@ -215,7 +215,7 @@ public class DefaultTlsTmSecurityCallback implements TlsTmSecurityCallback<X509C
   /**
    * Map a target address to a local certificate alias. The security mapping
    * will use the certificate <code>certAlias</code> for a target address
-   * <code>address</code> when applied to a client mode {@link TLSTM}.
+   * <code>address</code> when applied to a client mode {@link org.snmp4j.transport.TlsTransportMapping}.
    * @param address
    *    a {@link org.snmp4j.smi.TlsAddress} instance or <code>null</code>
    *    if the local certificate should mapped to any target address.

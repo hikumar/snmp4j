@@ -27,7 +27,7 @@ import org.snmp4j.security.*;
 import org.snmp4j.security.nonstandard.PrivAES192With3DESKeyExtension;
 import org.snmp4j.security.nonstandard.PrivAES256With3DESKeyExtension;
 import org.snmp4j.smi.*;
-import org.snmp4j.transport.TLSTM;
+import org.snmp4j.transport.TlsTransportMapping;
 import org.snmp4j.transport.tls.PropertiesTlsTmSecurityCallback;
 
 import java.util.Map;
@@ -315,8 +315,8 @@ public class SnmpConfigurator {
     }
     Properties tlsProps = getTlsProperties(settings);
     for (TransportMapping tm : snmp.getMessageDispatcher().getTransportMappings()) {
-      if (tm instanceof TLSTM) {
-        TLSTM tlsTM = (TLSTM) tm;
+      if (tm instanceof TlsTransportMapping) {
+        TlsTransportMapping tlsTM = (TlsTransportMapping) tm;
         tlsTM.setSecurityCallback(new PropertiesTlsTmSecurityCallback(tlsProps, commandResponder));
         if (tlsProps.getProperty(P_TLS_VERSION) != null) {
           String[] versions = tlsProps.getProperty(P_TLS_VERSION).split(",");

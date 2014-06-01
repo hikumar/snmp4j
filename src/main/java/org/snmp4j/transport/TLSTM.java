@@ -1498,16 +1498,11 @@ public class TLSTM extends TcpTransportMapping {
         logger.debug("Received message from {} with length {}: {}", incomingAddress, bytesRead, new OctetString(byteBuffer.array(), 0,
             (int) bytesRead).toHexString());
       }
-      ByteBuffer bis;
-      if (isAsyncMsgProcessingSupported()) {
-        byte[] bytes = new byte[(int)bytesRead];
-        System.arraycopy(byteBuffer.array(), 0, bytes, 0, (int)bytesRead);
-        bis = ByteBuffer.wrap(bytes);
-      }
-      else {
-        bis = ByteBuffer.wrap(byteBuffer.array(),
-                              0, (int) bytesRead);
-      }
+
+      byte[] bytes = new byte[(int) bytesRead];
+      System.arraycopy(byteBuffer.array(), 0, bytes, 0, (int) bytesRead);
+      ByteBuffer bis = ByteBuffer.wrap(bytes);
+
       fireProcessMessage(incomingAddress, bis,tmStateReference);
     }
 

@@ -41,7 +41,6 @@ public abstract class AbstractTransportMapping<A extends Address>
 
   protected List<TransportListener> transportListener = new ArrayList<>(1);
   protected int maxInboundMessageSize = (1 << 16) - 1;
-  protected boolean asyncMsgProcessingSupported = true;
 
   @Override
   public synchronized void addTransportListener(TransportListener l) {
@@ -83,35 +82,4 @@ public abstract class AbstractTransportMapping<A extends Address>
   public int getMaxInboundMessageSize() {
     return maxInboundMessageSize;
   }
-
-  /**
-   * Returns <code>true</code> if asynchronous (multi-threaded) message
-   * processing may be implemented. The default is <code>true</code>.
-   *
-   * @return
-   *    if <code>false</code> is returned the
-   *    {@link MessageDispatcher#processMessage(org.snmp4j.TransportMapping, org.snmp4j.smi.Address, java.nio.ByteBuffer, org.snmp4j.TransportStateReference)}
-   *    method must not return before the message has been entirely processed.
-   */
-  public boolean isAsyncMsgProcessingSupported() {
-    return asyncMsgProcessingSupported;
-  }
-
-  /**
-   * Specifies whether this transport mapping has to support asynchronous
-   * messages processing or not.
-   *
-   * @param asyncMsgProcessingSupported
-   *    if <code>false</code> the {@link MessageDispatcher#processMessage(org.snmp4j.TransportMapping, org.snmp4j.smi.Address, java.nio.ByteBuffer, org.snmp4j.TransportStateReference)}
-   *    method must not return before the message has been entirely processed,
-   *    because the incoming message buffer is not copied before the message
-   *    is being processed. If <code>true</code> the message buffer is copied
-   *    for each call, so that the message processing can be implemented
-   *    asynchronously.
-   */
-  public void setAsyncMsgProcessingSupported(
-      boolean asyncMsgProcessingSupported) {
-    this.asyncMsgProcessingSupported = asyncMsgProcessingSupported;
-  }
-
 }

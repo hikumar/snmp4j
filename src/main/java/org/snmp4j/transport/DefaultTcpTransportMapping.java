@@ -163,6 +163,20 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
     }
   }
 
+  private void close(SelectionKey key, IOException cause) {
+    logger.error("Closing {} due to a {} being thrown during its operation", key, cause, cause);
+
+    close(key);
+
+    TransportStateEvent e =
+        new TransportStateEvent(DefaultTcpTransportMapping.this,
+            new TcpAddress(getEntry(key).remoteAddress),
+            TransportStateEvent.TransportStates.DISCONNECTED_REMOTELY,
+            cause);
+
+    fireConnectionStateChanged(e);
+  }
+
   /**
    * Sends a SNMP message to the supplied address.
    * @param address
@@ -287,7 +301,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
       logger.debug("Read {} bytes from {}", iterationBytesRead, remoteAddress);
 
       if (inputBuffer.position() == messageLengthDecoder.getMinHeaderLength()) {
-        // If we haveve read a complete header decode the message length and
+        // If we have read a complete header decode the message length and
         // do stuff with it
         MessageLength messageLength = messageLengthDecoder.getMessageLength(inputBuffer);
         logger.debug("Message from {} will be {} bytes", remoteAddress, messageLength);
@@ -316,11 +330,9 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
       logger.debug("Reached end-of-stream with {}", remoteAddress);
       close(key);
 
-      TcpAddress incomingAddress = new TcpAddress(entry.remoteAddress);
-
       TransportStateEvent e =
           new TransportStateEvent(DefaultTcpTransportMapping.this,
-              incomingAddress,
+              new TcpAddress(entry.remoteAddress),
               TransportStateEvent.TransportStates.DISCONNECTED_REMOTELY,
               null);
 
@@ -422,11 +434,12 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
             // Someone is ready for I/O, get the ready keys
             Set<SelectionKey> readyKeys = selector.selectedKeys();
             Iterator<SelectionKey> it = readyKeys.iterator();
+            SelectionKey sk = null;
 
             // Walk through the ready keys collection and process date requests.
             while (it.hasNext()) {
               try {
-                SelectionKey sk = it.next();
+                sk = it.next();
                 it.remove();
 
                 if (sk.isAcceptable()) {
@@ -438,20 +451,31 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
                 } else if (sk.isWritable()) {
                   handleWritable(sk);
                 }
+              } catch (ClosedByInterruptException e) {
+                // If the thread gets interrupted we're about to shut down so
+                // we should propagate this exception to a higher level.
+                // Propagate the exception to a higher level
+                throw e;
+              } catch (ClosedChannelException e) {
+                logger.error("Attempted an I/O operation on a closed channel in {}", this, e);
               } catch (CancelledKeyException ckex) {
-                if (logger.isDebugEnabled()) {
-                  logger.debug("Selection key cancelled, skipping it");
-                }
+                logger.debug("Selection key cancelled, skipping it");
+              } catch (IOException e) {
+                close(sk, e);
+                throw e;
               }
             }
           }
         }
-      }
-      catch (IOException iox) {
-        logger.error(iox.getMessage(), iox);
+      } catch (ClosedByInterruptException e) {
+        logger.info("{} was interrupted during I/O on a channel", this);
+      } catch (IOException iox) {
+        logger.error("Encountered an I/O problem in {}", this, iox);
+      } finally {
+        close();
       }
 
-      logger.debug("Worker task finished: {}", this);
+      logger.debug("Exiting listener thread {}", this);
     }
 
     private void handleAcceptable(SelectionKey sk) throws IOException {
@@ -464,11 +488,10 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
       configureChannel(newChannel);
 
       SocketEntry socketEntry = getEntry(sk);
-      TcpAddress incomingAddress = new TcpAddress(socketEntry.remoteAddress);
 
       TransportStateEvent e =
           new TransportStateEvent(DefaultTcpTransportMapping.this,
-              incomingAddress,
+              new TcpAddress(socketEntry.remoteAddress),
               TransportStateEvent.TransportStates.CONNECTED,
               null);
 
@@ -501,46 +524,13 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
     private void handleReadable(SelectionKey sk) throws IOException {
       SocketChannel readChannel = (SocketChannel) sk.channel();
       SocketEntry socketEntry = getEntry(sk);
-      TcpAddress remoteAddress = new TcpAddress(socketEntry.remoteAddress);
-
-      try {
-        readMessage(socketEntry, sk, readChannel);
-      }
-      catch (IOException iox) {
-        // IO exception -> channel closed remotely
-        logger.warn(iox.getMessage(), iox);
-        close(sk);
-
-        TransportStateEvent e =
-            new TransportStateEvent(DefaultTcpTransportMapping.this,
-                remoteAddress,
-                TransportStateEvent.TransportStates.DISCONNECTED_REMOTELY,
-                iox);
-
-        fireConnectionStateChanged(e);
-      }
+      readMessage(socketEntry, sk, readChannel);
     }
 
-    private void handleWritable(SelectionKey sk) {
-      SocketEntry socketEntry = getEntry(sk);
-      TcpAddress incomingAddress = new TcpAddress(socketEntry.remoteAddress);
+    private void handleWritable(SelectionKey sk) throws IOException {
       SocketChannel sc = (SocketChannel) sk.channel();
-
-      try {
-        writeMessages(socketEntry.messages, sc);
-      } catch (IOException iox) {
-        logger.warn(iox.getMessage(), iox);
-
-        TransportStateEvent e =
-            new TransportStateEvent(DefaultTcpTransportMapping.this,
-                incomingAddress,
-                TransportStateEvent.TransportStates.DISCONNECTED_REMOTELY,
-                iox);
-
-        fireConnectionStateChanged(e);
-
-        close(sk);
-      }
+      SocketEntry socketEntry = getEntry(sk);
+      writeMessages(socketEntry.messages, sc);
     }
 
     @Override

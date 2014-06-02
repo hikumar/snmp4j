@@ -206,6 +206,19 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
     receiveBufferSize = newSize;
   }
 
+  private void dispatchMessage(InetSocketAddress address, byte[] message, int messageLength) {
+    logger.debug("Read {} bytes from {}", messageLength, address);
+
+    ByteBuffer bis = ByteBuffer.wrap(message);
+
+    TransportStateReference stateReference =
+        new TransportStateReference(this, udpAddress, null,
+            SecurityLevel.undefined, SecurityLevel.undefined,
+            false, socket);
+
+    fireProcessMessage(new UdpAddress(address), bis, stateReference);
+  }
+
   class SocketListener extends ControlableRunnable {
     @Override
     public void run() {
@@ -226,7 +239,8 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
 
           socket.receive(packet);
 
-          handlePacket(packet);
+          InetSocketAddress address = new InetSocketAddress(packet.getAddress(), packet.getPort());
+          dispatchMessage(address, packet.getData(), packet.getLength());
         }
       } catch (InterruptedIOException iiox) {
         logger.info("{} was interrupted during IO and {} bytes are being discarded", this, iiox.bytesTransferred);
@@ -242,25 +256,6 @@ public class DefaultUdpTransportMapping extends UdpTransportMapping implements C
       }
 
       logger.info("Thread {} is stopping", this);
-    }
-
-    private void handlePacket(DatagramPacket packet) {
-      if (logger.isDebugEnabled()) {
-        logger.debug("Received message from {} with length {}: {}",
-            packet.getSocketAddress(),
-            packet.getLength(),
-            new OctetString(packet.getData()).toHexString());
-      }
-
-      ByteBuffer bis = ByteBuffer.wrap(packet.getData());
-
-      TransportStateReference stateReference =
-          new TransportStateReference(DefaultUdpTransportMapping.this, udpAddress, null,
-              SecurityLevel.undefined, SecurityLevel.undefined,
-              false, socket);
-
-      fireProcessMessage(new UdpAddress(packet.getAddress(),
-          packet.getPort()), bis, stateReference);
     }
 
     @Override

@@ -2,7 +2,6 @@
 apply plugin: 'java'
 apply plugin: 'java-library-distribution'
 
-name = "snmp4j"
 group = "org.snmp4j"
 version = '2.3.0'
 

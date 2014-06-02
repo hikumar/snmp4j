@@ -1,5 +1,7 @@
 *.class
 *.jar
 
-classes/
+# Gradle
+.gradle
+build/
 shippable/

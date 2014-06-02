@@ -457,14 +457,14 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
 
     private void handleAcceptable(SelectionKey sk) throws IOException {
       // Accept the incoming connection
-      SocketChannel s = ((ServerSocketChannel) sk.channel()).accept();
-      SocketEntry socketEntry = getEntry(sk);
+      SocketChannel newChannel = ((ServerSocketChannel) sk.channel()).accept();
 
-      SocketAddress remoteAddress = s.getRemoteAddress();
+      SocketAddress remoteAddress = newChannel.getRemoteAddress();
       logger.debug("Accepting incoming connection from {}", remoteAddress);
 
-      configureChannel(s);
+      configureChannel(newChannel);
 
+      SocketEntry socketEntry = getEntry(sk);
       TcpAddress incomingAddress = new TcpAddress(socketEntry.remoteAddress);
 
       TransportStateEvent e =
@@ -476,7 +476,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
       fireConnectionStateChanged(e);
 
       if (e.isCancelled()) {
-        logger.warn("Incoming connection cancelled");
+        logger.warn("Incoming accepted connection to {} cancelled", remoteAddress);
         close(sk);
       }
     }
@@ -485,18 +485,16 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
       SocketEntry entry = getEntry(sk);
       logger.debug("Connection to {} established", entry.remoteAddress);
 
-      TcpAddress incomingAddress = new TcpAddress(entry.remoteAddress);
-
       TransportStateEvent e =
           new TransportStateEvent(DefaultTcpTransportMapping.this,
-              incomingAddress,
+              new TcpAddress(entry.remoteAddress),
               TransportStateEvent.STATE_CONNECTED,
               null);
 
       fireConnectionStateChanged(e);
 
       if (e.isCancelled()) {
-        logger.warn("Incoming connection cancelled");
+        logger.warn("Outgoing connection to {} cancelled", entry.remoteAddress);
         close(sk);
       }
     }
@@ -504,7 +502,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
     private void handleReadable(SelectionKey sk) throws IOException {
       SocketChannel readChannel = (SocketChannel) sk.channel();
       SocketEntry socketEntry = getEntry(sk);
-      TcpAddress incomingAddress = new TcpAddress(socketEntry.remoteAddress);
+      TcpAddress remoteAddress = new TcpAddress(socketEntry.remoteAddress);
 
       try {
         readMessage(socketEntry, sk, readChannel);
@@ -516,7 +514,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
 
         TransportStateEvent e =
             new TransportStateEvent(DefaultTcpTransportMapping.this,
-                incomingAddress,
+                remoteAddress,
                 TransportStateEvent.STATE_DISCONNECTED_REMOTELY,
                 iox);
 

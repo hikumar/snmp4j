@@ -28,7 +28,6 @@ import org.snmp4j.asn1.BER.MutableByte;
 import org.snmp4j.asn1.BERInputStream;
 import org.snmp4j.concurrent.ControlableRunnable;
 import org.snmp4j.security.SecurityLevel;
-import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.TcpAddress;
 
 import java.io.IOException;
@@ -322,7 +321,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
       TransportStateEvent e =
           new TransportStateEvent(DefaultTcpTransportMapping.this,
               incomingAddress,
-              TransportStateEvent.STATE_DISCONNECTED_REMOTELY,
+              TransportStateEvent.TransportStates.DISCONNECTED_REMOTELY,
               null);
 
       fireConnectionStateChanged(e);
@@ -470,7 +469,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
       TransportStateEvent e =
           new TransportStateEvent(DefaultTcpTransportMapping.this,
               incomingAddress,
-              TransportStateEvent.STATE_CONNECTED,
+              TransportStateEvent.TransportStates.CONNECTED,
               null);
 
       fireConnectionStateChanged(e);
@@ -488,7 +487,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
       TransportStateEvent e =
           new TransportStateEvent(DefaultTcpTransportMapping.this,
               new TcpAddress(entry.remoteAddress),
-              TransportStateEvent.STATE_CONNECTED,
+              TransportStateEvent.TransportStates.CONNECTED,
               null);
 
       fireConnectionStateChanged(e);
@@ -515,7 +514,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
         TransportStateEvent e =
             new TransportStateEvent(DefaultTcpTransportMapping.this,
                 remoteAddress,
-                TransportStateEvent.STATE_DISCONNECTED_REMOTELY,
+                TransportStateEvent.TransportStates.DISCONNECTED_REMOTELY,
                 iox);
 
         fireConnectionStateChanged(e);
@@ -535,7 +534,7 @@ public class DefaultTcpTransportMapping extends TcpTransportMapping {
         TransportStateEvent e =
             new TransportStateEvent(DefaultTcpTransportMapping.this,
                 incomingAddress,
-                TransportStateEvent.STATE_DISCONNECTED_REMOTELY,
+                TransportStateEvent.TransportStates.DISCONNECTED_REMOTELY,
                 iox);
 
         fireConnectionStateChanged(e);

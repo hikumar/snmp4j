@@ -984,7 +984,7 @@ public class TlsTransportMapping extends TcpTransportMapping {
               TransportStateEvent e =
                   new TransportStateEvent(TlsTransportMapping.this,
                                           entry.getPeerAddress(),
-                                          TransportStateEvent.STATE_CLOSED,
+                                          TransportStateEvent.TransportStates.CLOSED,
                                           null);
               fireConnectionStateChanged(e);
             }
@@ -1002,7 +1002,7 @@ public class TlsTransportMapping extends TcpTransportMapping {
               TransportStateEvent e =
                   new TransportStateEvent(TlsTransportMapping.this,
                                           entry.getPeerAddress(),
-                                          TransportStateEvent.STATE_CLOSED,
+                                          TransportStateEvent.TransportStates.CLOSED,
                                           iox);
               fireConnectionStateChanged(e);
             }
@@ -1231,8 +1231,7 @@ public class TlsTransportMapping extends TcpTransportMapping {
                     TransportStateEvent e =
                         new TransportStateEvent(TlsTransportMapping.this,
                                                 incomingAddress,
-                                                TransportStateEvent.
-                                                STATE_CONNECTED,
+                                                TransportStateEvent.TransportStates.CONNECTED,
                                                 null);
                     fireConnectionStateChanged(e);
                     if (e.isCancelled()) {
@@ -1271,8 +1270,7 @@ public class TlsTransportMapping extends TcpTransportMapping {
                       TransportStateEvent e =
                           new TransportStateEvent(TlsTransportMapping.this,
                                                   incomingAddress,
-                                                  TransportStateEvent.
-                                                  STATE_DISCONNECTED_REMOTELY,
+                                                  TransportStateEvent.TransportStates.DISCONNECTED_REMOTELY,
                                                   iox);
                       fireConnectionStateChanged(e);
                     }
@@ -1340,8 +1338,7 @@ public class TlsTransportMapping extends TcpTransportMapping {
           TransportStateEvent e =
               new TransportStateEvent(TlsTransportMapping.this,
                                       addr,
-                                      TransportStateEvent.
-                                      STATE_CONNECTED,
+                                      TransportStateEvent.TransportStates.CONNECTED,
                                       null);
           fireConnectionStateChanged(e);
         }
@@ -1378,8 +1375,7 @@ public class TlsTransportMapping extends TcpTransportMapping {
         TransportStateEvent e =
             new TransportStateEvent(TlsTransportMapping.this,
                                     incomingAddress,
-                                    TransportStateEvent.
-                                    STATE_DISCONNECTED_REMOTELY,
+                                    TransportStateEvent.TransportStates.DISCONNECTED_REMOTELY,
                                     iox);
         fireConnectionStateChanged(e);
         // make sure channel is closed properly:
@@ -1426,8 +1422,7 @@ public class TlsTransportMapping extends TcpTransportMapping {
           TransportStateEvent e =
               new TransportStateEvent(TlsTransportMapping.this,
                                       incomingAddress,
-                                      TransportStateEvent.
-                                      STATE_DISCONNECTED_REMOTELY,
+                                      TransportStateEvent.TransportStates.DISCONNECTED_REMOTELY,
                                       null);
           fireConnectionStateChanged(e);
           return;

@@ -34,24 +34,25 @@ import java.util.EventObject;
  * @since 1.7
  */
 public class TransportStateEvent extends EventObject {
-
   private static final long serialVersionUID = 6440139076579035559L;
 
-  public static final int STATE_UNKNOWN = 0;
-  public static final int STATE_CONNECTED = 1;
-  public static final int STATE_DISCONNECTED_REMOTELY = 2;
-  public static final int STATE_DISCONNECTED_TIMEOUT = 3;
-  public static final int STATE_CLOSED = 4;
+  public enum TransportStates {
+    UNKNOWN,
+    CONNECTED,
+    DISCONNECTED_REMOTELY,
+    DISCONNECTED_TIMEOUT,
+    CLOSED
+  }
 
-  private int newState;
-  private Address peerAddress;
-  private IOException causingException;
+  private final TransportStates newState;
+  private final Address peerAddress;
+  private final IOException causingException;
 
   private boolean cancelled = false;
 
   public TransportStateEvent(TcpTransportMapping source,
                              Address peerAddress,
-                             int newState,
+                             TransportStates newState,
                              IOException causingException) {
     super(source);
     this.newState = newState;
@@ -63,7 +64,7 @@ public class TransportStateEvent extends EventObject {
     return causingException;
   }
 
-  public int getNewState() {
+  public TransportStates getNewState() {
     return newState;
   }
 
@@ -73,7 +74,7 @@ public class TransportStateEvent extends EventObject {
 
   /**
    * Indicates whether this event has been canceled. Only
-   * {@link #STATE_CONNECTED} events can be canceled.
+   * {@link org.snmp4j.transport.TransportStateEvent.TransportStates#CONNECTED} events can be canceled.
    * @return
    *    <code>true</code> if the event has been canceled.
    * @since 1.8
@@ -92,7 +93,7 @@ public class TransportStateEvent extends EventObject {
 
   /**
    * Sets the canceled state of the transport event. Only
-   * {@link #STATE_CONNECTED} events can be canceled.
+   * {@link org.snmp4j.transport.TransportStateEvent.TransportStates#CONNECTED} events can be canceled.
    * @param cancelled
    *    <code>true</code> if the event should be canceled, i.e. a connection
    *    attempt should be rejected.
